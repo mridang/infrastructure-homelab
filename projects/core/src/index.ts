@@ -1,0 +1,96 @@
+import * as pulumi from "@pulumi/pulumi";
+import * as k8s from "@pulumi/kubernetes";
+import './dns'
+import './service.elk'
+import provider from "./provider";
+
+const traefik = new k8s.helm.v3.Chart("traefik", {
+	chart: "traefik",
+	version: "10.3.0",
+	fetchOpts: {
+		repo: "https://helm.traefik.io/traefik",
+	},
+	values: {
+		ports: {
+			traefik: {
+				expose: true, // Enable external access to the Admin UI
+				exposedPort: 8080, // The external port
+				nodePort: 32000, // Optional: specify a NodePort
+				protocol: "TCP",
+			},
+		},
+		ingressRoute: {
+			dashboard: {
+				enabled: true
+			},
+			healthcheck: {
+				enabled: true
+			}
+		},
+	},
+}, { provider });
+
+
+const nginx = new k8s.helm.v3.Chart("nginx", {
+	chart: "nginx",
+	version: "13.2.1", // The version of the NGINX Helm chart
+	fetchOpts: {
+		repo: "https://charts.bitnami.com/bitnami", // Bitnami Helm chart repository URL
+	},
+	values: {
+		service: {
+			type: "ClusterIP",
+			port: 8080,
+		},
+	},
+}, { provider });
+
+const nginxIngressRoute = new k8s.apiextensions.CustomResource("nginx-ingressroute", {
+	apiVersion: "traefik.containo.us/v1alpha1",
+	kind: "IngressRoute",
+	metadata: {
+		name: "nginx-ingressroute",
+		namespace: "default",
+	},
+	spec: {
+		entryPoints: ["web"], // HTTP entry point
+		routes: [
+			{
+				match: "PathPrefix(`/nginx`)", // Route traffic with /nginx prefix
+				kind: "Rule",
+				middlewares: [
+					{
+						name: "strip-nginx-prefix", // Use the strip middleware
+					},
+				],
+				services: [
+					{
+						name: "nginx", // NGINX service name
+						port: 80,
+					},
+				],
+			},
+		],
+	},
+}, { provider });
+
+const stripMiddleware = new k8s.apiextensions.CustomResource("strip-nginx-prefix", {
+	apiVersion: "traefik.containo.us/v1alpha1",
+	kind: "Middleware",
+	metadata: {
+		name: "strip-nginx-prefix",
+		namespace: "default",
+	},
+	spec: {
+		stripPrefix: {
+			prefixes: ["/nginx"],
+		},
+	},
+}, { provider });
+
+const nginxService = nginx.getResource("v1/Service", "nginx");
+
+// Correctly handle the service metadata and export the URL
+export const nginxServiceUrl = nginxService.status.loadBalancer
+	? nginxService.status.loadBalancer.ingress[0].hostname
+	: pulumi.interpolate`http://localhost:8080`; // fallback for NodePort
