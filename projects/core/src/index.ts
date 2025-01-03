@@ -9,8 +9,6 @@ import * as path from "node:path";
 const certPath = path.resolve(__dirname, "../../../etc/archive/internal.mrida.ng/fullchain1.pem");
 const keyPath = path.resolve(__dirname, "../../../etc/archive/internal.mrida.ng/privkey1.pem");
 
-console.log(certPath)
-
 const tlsSecret = new k8s.core.v1.Secret("internal-mrida-tls", {
 	metadata: {
 		name: "internal-mrida-tls",
@@ -43,14 +41,24 @@ const traefik = new k8s.helm.v3.Chart("traefik", {
 				expose: {
 					default: true
 				},
-				exposedPort: 8080, // The external port
-				nodePort: 32000, // Optional: specify a NodePort
+				exposedPort: 8080,
+				nodePort: 32000,
 				protocol: "TCP",
 			},
+			websecure: {
+				http3: {
+					enabled: true,
+				}
+			}
 		},
 		ingressRoute: {
 			dashboard: {
-				enabled: true
+				enabled: true,
+				tls: {
+					secretName: "internal-mrida-tls",
+				},
+				entryPoints: ["websecure", "traefik"],
+				matchRule: "Host(`traefik.internal.mrida.ng`)"
 			},
 			healthcheck: {
 				enabled: true
@@ -59,12 +67,11 @@ const traefik = new k8s.helm.v3.Chart("traefik", {
 	},
 }, {provider});
 
-
 const nginx = new k8s.helm.v3.Chart("nginx", {
 	chart: "nginx",
-	version: "13.2.1", // The version of the NGINX Helm chart
+	version: "18.2.1",
 	fetchOpts: {
-		repo: "https://charts.bitnami.com/bitnami", // Bitnami Helm chart repository URL
+		repo: "https://charts.bitnami.com/bitnami",
 	},
 	values: {
 		service: {
@@ -74,48 +81,29 @@ const nginx = new k8s.helm.v3.Chart("nginx", {
 	},
 }, {provider});
 
-const nginxIngressRoute = new k8s.apiextensions.CustomResource("nginx-ingressroute", {
+const nginxSubdomainIngressRoute = new k8s.apiextensions.CustomResource("nginx-subdomain-ingressroute", {
 	apiVersion: "traefik.io/v1alpha1",
 	kind: "IngressRoute",
 	metadata: {
-		name: "nginx-ingressroute",
+		name: "nginx-subdomain-ingressroute",
 		namespace: "default",
 	},
 	spec: {
-		entryPoints: ["websecure"], // HTTP entry point
+		entryPoints: ["websecure"],
 		routes: [
 			{
-				match: "PathPrefix(`/nginx`)", // Route traffic with /nginx prefix
+				match: "Host(`nginx.internal.mrida.ng`)",
 				kind: "Rule",
-				middlewares: [
-					{
-						name: "strip-nginx-prefix", // Use the strip middleware
-					},
-				],
 				services: [
 					{
-						name: "nginx", // NGINX service name
+						name: "nginx",
 						port: 80,
 					},
 				],
 			},
 		],
 		tls: {
-			secretName: tlsSecret.metadata.name,
-		}
-	},
-}, {provider});
-
-const stripMiddleware = new k8s.apiextensions.CustomResource("strip-nginx-prefix", {
-	apiVersion: "traefik.io/v1alpha1",
-	kind: "Middleware",
-	metadata: {
-		name: "strip-nginx-prefix",
-		namespace: "default",
-	},
-	spec: {
-		stripPrefix: {
-			prefixes: ["/nginx"],
+			secretName: tlsSecret.metadata.name
 		},
 	},
 }, {provider});
@@ -125,4 +113,4 @@ const nginxService = nginx.getResource("v1/Service", "nginx");
 // Correctly handle the service metadata and export the URL
 export const nginxServiceUrl = nginxService.status.loadBalancer
 	? nginxService.status.loadBalancer.ingress[0].hostname
-	: pulumi.interpolate`http://localhost:8080`; // fallback for NodePort
+	: pulumi.interpolate`http://localhost:8080`;
