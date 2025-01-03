@@ -21,18 +21,28 @@ const tlsSecret = new k8s.core.v1.Secret("internal-mrida-tls", {
 		"tls.crt": Buffer.from(fs.readFileSync(certPath)).toString("base64"),
 		"tls.key": Buffer.from(fs.readFileSync(keyPath)).toString("base64"),
 	},
-}, { provider });
+}, {provider});
 
 const traefik = new k8s.helm.v3.Chart("traefik", {
 	chart: "traefik",
-	version: "10.3.0",
+	version: "33.2.1",
 	fetchOpts: {
 		repo: "https://helm.traefik.io/traefik",
 	},
 	values: {
+		logs: {
+			general: {
+				level: 'TRACE'
+			},
+			access: {
+				enabled: true,
+			}
+		},
 		ports: {
 			traefik: {
-				expose: true, // Enable external access to the Admin UI
+				expose: {
+					default: true
+				},
 				exposedPort: 8080, // The external port
 				nodePort: 32000, // Optional: specify a NodePort
 				protocol: "TCP",
@@ -47,7 +57,7 @@ const traefik = new k8s.helm.v3.Chart("traefik", {
 			}
 		},
 	},
-}, { provider });
+}, {provider});
 
 
 const nginx = new k8s.helm.v3.Chart("nginx", {
@@ -62,17 +72,17 @@ const nginx = new k8s.helm.v3.Chart("nginx", {
 			port: 8080,
 		},
 	},
-}, { provider });
+}, {provider});
 
 const nginxIngressRoute = new k8s.apiextensions.CustomResource("nginx-ingressroute", {
-	apiVersion: "traefik.containo.us/v1alpha1",
+	apiVersion: "traefik.io/v1alpha1",
 	kind: "IngressRoute",
 	metadata: {
 		name: "nginx-ingressroute",
 		namespace: "default",
 	},
 	spec: {
-		entryPoints: ["web"], // HTTP entry point
+		entryPoints: ["websecure"], // HTTP entry point
 		routes: [
 			{
 				match: "PathPrefix(`/nginx`)", // Route traffic with /nginx prefix
@@ -90,11 +100,14 @@ const nginxIngressRoute = new k8s.apiextensions.CustomResource("nginx-ingressrou
 				],
 			},
 		],
+		tls: {
+			secretName: tlsSecret.metadata.name,
+		}
 	},
-}, { provider });
+}, {provider});
 
 const stripMiddleware = new k8s.apiextensions.CustomResource("strip-nginx-prefix", {
-	apiVersion: "traefik.containo.us/v1alpha1",
+	apiVersion: "traefik.io/v1alpha1",
 	kind: "Middleware",
 	metadata: {
 		name: "strip-nginx-prefix",
@@ -105,7 +118,7 @@ const stripMiddleware = new k8s.apiextensions.CustomResource("strip-nginx-prefix
 			prefixes: ["/nginx"],
 		},
 	},
-}, { provider });
+}, {provider});
 
 const nginxService = nginx.getResource("v1/Service", "nginx");
 
