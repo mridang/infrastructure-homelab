@@ -17,7 +17,24 @@ new k8s.helm.v3.Chart("kubernetes-dashboard", {
 		},
 		protocolHttp: true,
 		rbac: {
-			clusterReadOnlyRole: true
+			clusterReadOnlyRole: true,
+			clusterReadOnlyRoleAdditionalRules: [
+				{
+					apiGroups: ["apiextensions.k8s.io"],
+					resources: ["customresourcedefinitions"],
+					verbs: ["get", "list", "watch"],
+				},
+				{
+					apiGroups: [""],
+					resources: ["secrets"],
+					verbs: ["get", "list", "watch"],
+				},
+				{
+					apiGroups: ["networking.k8s.io"],
+					resources: ["ingressclasses"],
+					verbs: ["get", "list", "watch"],
+				},
+			],
 		}
 	},
 }, {provider});
