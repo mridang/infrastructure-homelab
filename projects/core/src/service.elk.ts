@@ -17,7 +17,7 @@ const elasticsearch = new k8s.helm.v3.Chart("elasticsearch", {
 			port: 9200,
 		},
 	},
-}, { provider });
+}, {provider});
 
 const elasticsearchHost = pulumi.interpolate`https://${elasticsearch.getResource("v1/Service", "elasticsearch-master").metadata.name}:9200`;
 

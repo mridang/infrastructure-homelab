@@ -1,8 +1,7 @@
-import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import provider from "./provider";
 
-export const dnsConfig = new k8s.core.v1.ConfigMap("coredns", {
+new k8s.core.v1.ConfigMap("coredns", {
 	metadata: {
 		name: "coredns",
 		namespace: "kube-system",
@@ -35,4 +34,4 @@ export const dnsConfig = new k8s.core.v1.ConfigMap("coredns", {
             }
         `,
 	},
-}, { provider, deleteBeforeReplace: true });
+}, {provider, deleteBeforeReplace: true});
