@@ -108,12 +108,13 @@ const apmServer = new k8s.apiextensions.CustomResource("apm-server-instance", {
 		http: {
 			tls: {
 				selfSignedCertificate: {
-					disabled: true,
+					disabled: true, //Secret token is set, but SSL is not enabled
 				},
 			},
 		},
 		count: 1,
 		elasticsearchRef: { name: elasticsearchCluster.metadata.name },
+		//kibanaRef: { name: kibana.metadata.name },
 		config: {
 			"apm-server.rum.enabled": "true",
 			"apm-server.rum.allowed_origins": ["*"],
