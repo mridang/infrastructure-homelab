@@ -8,12 +8,29 @@ export const traefik = new k8s.helm.v3.Chart("traefik", {
 		repo: "https://helm.traefik.io/traefik",
 	},
 	values: {
+		deployment: {
+			additionalVolumes: [
+				{
+					name: "traefik-logs",
+					emptyDir: {}  // This ensures the logs are stored in an ephemeral directory
+				}
+			]
+		},
+		additionalVolumeMounts: [
+			{
+				name: "traefik-logs",
+				mountPath: "/var/log/traefik",
+				readOnly: false,
+			},
+		],
 		logs: {
 			general: {
-				level: 'TRACE'
+				level: 'INFO',
+				filePath: "/var/log/traefik/general.log"
 			},
 			access: {
 				enabled: true,
+				filePath: "/var/log/traefik/access.log"
 			}
 		},
 		ports: {
