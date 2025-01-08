@@ -1,6 +1,5 @@
 import './dns'
-import './service.elk'
-import './service.filebeat'
+import './elastic'
 import './service.dashboard'
 import './service.hello'
 

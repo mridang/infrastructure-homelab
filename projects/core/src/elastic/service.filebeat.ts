@@ -1,7 +1,7 @@
 import * as k8s from "@pulumi/kubernetes";
-import * as helm from "@pulumi/kubernetes/helm/v3";
 import {elasticsearchCluster} from "./service.elk";
-import provider from "./provider";
+import provider from "../provider";
+import {ELASTIC_VERSION} from "./constants";
 
 const filebeatServiceAccount = new k8s.core.v1.ServiceAccount("filebeat", {
 	metadata: { name: "filebeat", namespace: "default" }
@@ -28,7 +28,7 @@ const filebeatClusterRole = new k8s.rbac.v1.ClusterRole("filebeat", {
 	]
 });
 
-const filebeatClusterRoleBinding = new k8s.rbac.v1.ClusterRoleBinding("filebeat", {
+new k8s.rbac.v1.ClusterRoleBinding("filebeat", {
 	metadata: { name: "filebeat" },
 	subjects: [{
 		kind: "ServiceAccount",
@@ -50,7 +50,7 @@ new k8s.apiextensions.CustomResource("filebeat", {
 	},
 	spec: {
 		type: "filebeat",
-		version: "8.5.0",
+		version: ELASTIC_VERSION,
 		elasticsearchRef: {
 			name: elasticsearchCluster.metadata.name,
 		},
@@ -114,4 +114,6 @@ new k8s.apiextensions.CustomResource("filebeat", {
 			}
 		},
 	},
-}, {provider});
+}, {
+	provider
+});
