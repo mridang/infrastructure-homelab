@@ -1,13 +1,12 @@
 import * as k8s from "@pulumi/kubernetes";
 import {tlsSecret} from "./tls";
 import provider from "./provider";
-import {traefik} from "./service.traefik";
 
 const eckOperatorNamespace = new k8s.core.v1.Namespace("eck-operator", {
-	metadata: { name: "elastic-system" },
+	metadata: {name: "elastic-system"},
 });
 
-const eckOperator = new k8s.helm.v3.Release("eck-operator", {
+new k8s.helm.v3.Release("eck-operator", {
 	namespace: eckOperatorNamespace.metadata.name,
 	chart: "eck-operator",
 	version: "2.16.0",
@@ -16,10 +15,10 @@ const eckOperator = new k8s.helm.v3.Release("eck-operator", {
 	},
 });
 
-const elasticsearchCluster = new k8s.apiextensions.CustomResource("elasticsearch-cluster", {
+export const elasticsearchCluster = new k8s.apiextensions.CustomResource("elasticsearch-cluster", {
 	apiVersion: "elasticsearch.k8s.elastic.co/v1",
 	kind: "Elasticsearch",
-	metadata: { name: "my-cluster" },
+	metadata: {name: "my-cluster"},
 	spec: {
 		version: "8.5.0",
 		http: {
@@ -38,11 +37,11 @@ const elasticsearchCluster = new k8s.apiextensions.CustomResource("elasticsearch
 				},
 				volumeClaimTemplates: [
 					{
-						metadata: { name: "elasticsearch-data" },
+						metadata: {name: "elasticsearch-data"},
 						spec: {
 							accessModes: ["ReadWriteOnce"],
 							storageClassName: "hostpath",
-							resources: { requests: { storage: "10Gi" } },
+							resources: {requests: {storage: "10Gi"}},
 						},
 					},
 				],
@@ -51,11 +50,10 @@ const elasticsearchCluster = new k8s.apiextensions.CustomResource("elasticsearch
 	},
 });
 
-
-const kibana = new k8s.apiextensions.CustomResource("kibana-instance", {
+export const kibana = new k8s.apiextensions.CustomResource("kibana-instance", {
 	apiVersion: "kibana.k8s.elastic.co/v1",
 	kind: "Kibana",
-	metadata: { name: "my-kibana" },
+	metadata: {name: "my-kibana"},
 	spec: {
 		version: "8.5.0",
 		http: {
@@ -66,7 +64,7 @@ const kibana = new k8s.apiextensions.CustomResource("kibana-instance", {
 			},
 		},
 		count: 1,
-		elasticsearchRef: { name: elasticsearchCluster.metadata.name },
+		elasticsearchRef: {name: elasticsearchCluster.metadata.name},
 	},
 });
 
@@ -95,9 +93,9 @@ new k8s.apiextensions.CustomResource("kibana-ingressroute", {
 			secretName: tlsSecret.metadata.name
 		},
 	},
-}, {provider, dependsOn: [traefik]});
+}, {provider});
 
-const apmServer = new k8s.apiextensions.CustomResource("apm-server-instance", {
+export const apmServer = new k8s.apiextensions.CustomResource("apm-server-instance", {
 	apiVersion: "apm.k8s.elastic.co/v1",
 	kind: "ApmServer",
 	metadata: {
@@ -113,11 +111,11 @@ const apmServer = new k8s.apiextensions.CustomResource("apm-server-instance", {
 			},
 		},
 		count: 1,
-		elasticsearchRef: { name: elasticsearchCluster.metadata.name },
+		elasticsearchRef: {name: elasticsearchCluster.metadata.name},
 		//kibanaRef: { name: kibana.metadata.name },
 		config: {
 			"apm-server.rum.enabled": "true",
 			"apm-server.rum.allowed_origins": ["*"],
 		},
 	},
-}, { provider });
+}, {provider});
