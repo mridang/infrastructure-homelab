@@ -26,7 +26,6 @@ export const traefik = new k8s.helm.v3.Chart("traefik", {
 		logs: {
 			general: {
 				level: 'INFO',
-				filePath: "/var/log/traefik/general.log"
 			},
 			access: {
 				enabled: true,
