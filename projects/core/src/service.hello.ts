@@ -32,7 +32,7 @@ new k8s.apiextensions.CustomResource("nginx-subdomain-ingressroute", {
 				kind: "Rule",
 				middlewares: [
 					{
-						name: "nginx-compression",
+						name: "compression-middleware",
 					},
 				],
 				services: [

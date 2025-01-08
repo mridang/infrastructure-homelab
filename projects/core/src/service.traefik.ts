@@ -57,7 +57,7 @@ export const traefik = new k8s.helm.v3.Chart("traefik", {
 				entryPoints: ["websecure", "traefik"],
 				middlwares: [
 					{
-						name: "nginx-compression",
+						name: "compression-middleware",
 					},
 				],
 				matchRule: "Host(`traefik.internal.mrida.ng`)"
@@ -69,14 +69,16 @@ export const traefik = new k8s.helm.v3.Chart("traefik", {
 	},
 }, {provider});
 
-new k8s.apiextensions.CustomResource("nginx-compression-middleware", {
+new k8s.apiextensions.CustomResource("compression-middleware", {
 	apiVersion: "traefik.io/v1alpha1",
 	kind: "Middleware",
 	metadata: {
-		name: "nginx-compression",
+		name: "compression--middleware",
 		namespace: "default",
 	},
 	spec: {
-		compress: {},
+		compress: {
+
+		},
 	},
 }, {provider});
