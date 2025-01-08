@@ -1,16 +1,18 @@
-import * as k8s from "@pulumi/kubernetes";
-import provider from "./provider";
+import * as k8s from '@pulumi/kubernetes';
+import provider from './provider';
 
-new k8s.core.v1.ConfigMap("coredns", {
-	metadata: {
-		name: "coredns",
-		namespace: "kube-system",
-		annotations: {
-			"pulumi.com/patchForce": "true",
-		}
-	},
-	data: {
-		Corefile: `
+new k8s.core.v1.ConfigMap(
+  'coredns',
+  {
+    metadata: {
+      name: 'coredns',
+      namespace: 'kube-system',
+      annotations: {
+        'pulumi.com/patchForce': 'true',
+      },
+    },
+    data: {
+      Corefile: `
             .:53 {
                 errors
                 health {
@@ -33,5 +35,7 @@ new k8s.core.v1.ConfigMap("coredns", {
                 loadbalance
             }
         `,
-	},
-}, {provider, deleteBeforeReplace: true});
+    },
+  },
+  { provider, deleteBeforeReplace: true },
+);

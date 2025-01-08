@@ -8,7 +8,5 @@
     "skipLibCheck": true,
     "outDir": "dist"
   },
-  "include": [
-    "projects/core/src"
-  ]
+  "include": ["projects/core/src"]
 }
