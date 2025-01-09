@@ -1,4 +1,4 @@
 export * from './service.elk';
-export * from './service.filebeat';
-export * from './service.metricbeat';
-export * from './service.packetbeat';
+export * from './beats/service.filebeat';
+export * from './beats/service.metricbeat';
+export * from './beats/service.packetbeat';

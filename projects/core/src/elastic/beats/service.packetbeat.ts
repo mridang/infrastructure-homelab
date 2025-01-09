@@ -1,7 +1,7 @@
 import * as k8s from '@pulumi/kubernetes';
-import { elasticsearchCluster } from './service.elk';
-import provider from '../provider';
-import { ELASTIC_VERSION } from './constants';
+import { elasticsearchCluster } from '../service.elk';
+import provider from '../../provider';
+import { ELASTIC_VERSION } from '../constants';
 
 const packetbeatServiceAccount = new k8s.core.v1.ServiceAccount('packetbeat', {
   metadata: { name: 'packetbeat', namespace: 'default' },
