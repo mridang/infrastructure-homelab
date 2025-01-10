@@ -25,8 +25,8 @@ new k8s.helm.v3.Release(
     },
     values: {
       oauth: {
-        clientId: settings.clientId,
-        clientSecret: settings.clientSecret,
+        clientId: process.env[settings.clientId],
+        clientSecret: process.env[settings.clientSecret],
       },
     },
   },

@@ -1,0 +1,4 @@
+config:
+    tailscale:
+        clientId: "TAILSCALE_CLIENT_ID"
+        clientSecret: "TAILSCALE_CLIENT_SECRET"
