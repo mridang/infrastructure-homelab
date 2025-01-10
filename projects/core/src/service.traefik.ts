@@ -66,6 +66,16 @@ export const traefik = new k8s.helm.v3.Chart(
         healthcheck: {
           enabled: true,
         },
+        metrics: {
+          prometheus: {
+            enabled: true,
+            port: 9100,
+            entryPoint: 'metrics',
+            addEntryPointsLabels: true,
+            addRoutersLabels: true,
+            addServicesLabels: true,
+          },
+        },
       },
     },
   },
