@@ -1,6 +1,6 @@
 import * as k8s from '@pulumi/kubernetes';
 import provider from './provider';
-import { tlsSecret } from './tls';
+import { tlsSecretName } from './tls';
 import { traefik } from './service.traefik';
 
 new k8s.helm.v3.Chart(
@@ -67,7 +67,7 @@ new k8s.apiextensions.CustomResource(
         },
       ],
       tls: {
-        secretName: tlsSecret.metadata.name,
+        secretName: tlsSecretName,
       },
     },
   },

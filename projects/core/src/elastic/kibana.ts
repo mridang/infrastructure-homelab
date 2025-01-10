@@ -1,6 +1,6 @@
 import * as k8s from '@pulumi/kubernetes';
 import { ELASTIC_VERSION } from './constants';
-import { tlsSecret } from '../tls';
+import { tlsSecretName } from '../tls';
 import provider from '../provider';
 import { elasticsearchCluster } from './elastic';
 
@@ -46,7 +46,7 @@ new k8s.apiextensions.CustomResource(
         },
       ],
       tls: {
-        secretName: tlsSecret.metadata.name,
+        secretName: tlsSecretName,
       },
     },
   },
