@@ -1,5 +1,5 @@
 import * as k8s from '@pulumi/kubernetes';
-import { elasticsearchCluster } from '../service.elk';
+import { elasticsearchCluster } from '../elastic';
 import provider from '../../provider';
 import { ELASTIC_VERSION } from '../constants';
 
