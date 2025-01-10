@@ -16,6 +16,10 @@ new k8s.helm.v3.Chart(
         type: 'ClusterIP',
         port: 8080,
       },
+      containerPorts: {
+        http: 8080,
+        https: null,
+      },
     },
   },
   { provider },

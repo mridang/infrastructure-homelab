@@ -75,30 +75,30 @@ new k8s.apiextensions.CustomResource(
 );
 
 new k8s.networking.v1.Ingress(
-	'tailscale-dashboard-ingress',
-	{
-		metadata: {
-			name: 'tailscale-dashboard-ingress',
-		},
-		spec: {
-			ingressClassName: 'tailscale',
-			defaultBackend: {
-				service: {
-					name: 'kubernetes-dashboard',
-					port: {
-						number: 80,
-					},
-				},
-			},
-			tls: [
-				{
-					hosts: ['dashboard'],
-				},
-			],
-		},
-	},
-	{
-		provider,
-		dependsOn: traefik,
-	},
+  'tailscale-dashboard-ingress',
+  {
+    metadata: {
+      name: 'tailscale-dashboard-ingress',
+    },
+    spec: {
+      ingressClassName: 'tailscale',
+      defaultBackend: {
+        service: {
+          name: 'kubernetes-dashboard',
+          port: {
+            number: 80,
+          },
+        },
+      },
+      tls: [
+        {
+          hosts: ['dashboard'],
+        },
+      ],
+    },
+  },
+  {
+    provider,
+    dependsOn: traefik,
+  },
 );

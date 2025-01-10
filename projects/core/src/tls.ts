@@ -12,7 +12,7 @@ const keyPath = path.resolve(
   '../../../etc/archive/internal.mrida.ng/privkey1.pem',
 );
 
- const tlsSecret = new k8s.core.v1.Secret(
+const tlsSecret = new k8s.core.v1.Secret(
   'internal-mrida-tls',
   {
     metadata: {
