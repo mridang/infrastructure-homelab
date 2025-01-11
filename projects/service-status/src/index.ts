@@ -1,27 +1,43 @@
 import * as k8s from '@pulumi/kubernetes';
 import provider from './provider';
 
-new k8s.helm.v3.Chart(
-  'statuspage',
-  {
-    chart: 'nginx',
-    version: '18.2.1',
-    fetchOpts: {
-      repo: 'https://charts.bitnami.com/bitnami',
-    },
-    values: {
-      service: {
-        type: 'ClusterIP',
-        port: 8080,
-      },
-      containerPorts: {
-        http: 8080,
-        https: null,
-      },
-    },
-  },
-  { provider },
-);
+const deployment = new k8s.apps.v1.Deployment("helloworld-deployment", {
+	metadata: {
+		labels: { app: "helloworld" },
+	},
+	spec: {
+		replicas: 1,
+		selector: {
+			matchLabels: { app: "helloworld" },
+		},
+		template: {
+			metadata: {
+				labels: { app: "helloworld" },
+			},
+			spec: {
+				containers: [
+					{
+						name: "helloworld",
+						image: "testcontainers/helloworld:latest",
+						ports: [{ containerPort: 8080 }, { containerPort: 8081 }],
+					},
+				],
+			},
+		},
+	},
+});
+
+const service = new k8s.core.v1.Service("helloworld-service", {
+	metadata: {
+		labels: { app: "helloworld" },
+	},
+	spec: {
+		ports: [
+			{ port: 8080, targetPort: 8080, name: 'hello'},
+		],
+		selector: { app: "helloworld" },
+	},
+});
 
 new k8s.apiextensions.CustomResource(
   'statuspage-subdomain-ingressroute',
@@ -45,8 +61,8 @@ new k8s.apiextensions.CustomResource(
           ],
           services: [
             {
-              name: 'statuspage-nginx',
-              port: 80,
+              name: service.metadata.name,
+              port: 8080,
             },
           ],
         },
