@@ -32,3 +32,32 @@ new k8s.apiextensions.CustomResource(
     provider,
   },
 );
+
+new k8s.networking.v1.Ingress(
+  'tailscale-apm-ingress',
+  {
+    metadata: {
+      name: 'tailscale-apm-ingress',
+    },
+    spec: {
+      ingressClassName: 'tailscale',
+      defaultBackend: {
+        service: {
+          name: 'my-apm-server-apm-http',
+          port: {
+            number: 8200,
+          },
+        },
+      },
+      tls: [
+        {
+          hosts: ['apm'],
+        },
+      ],
+    },
+  },
+  {
+    provider,
+    dependsOn: elasticsearchCluster,
+  },
+);
