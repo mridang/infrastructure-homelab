@@ -10,6 +10,7 @@ const eckOperatorNamespace = new k8s.core.v1.Namespace('elastic', {
 new k8s.helm.v3.Release(
   'eck-operator',
   {
+    name: 'operator-elk',
     namespace: eckOperatorNamespace.metadata.name,
     chart: 'eck-operator',
     version: '2.16.0',
