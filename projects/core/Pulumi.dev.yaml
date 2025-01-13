@@ -2,3 +2,6 @@ config:
     tailscale:
         clientId: "TAILSCALE_CLIENT_ID"
         clientSecret: "TAILSCALE_CLIENT_SECRET"
+    github:
+        registryUsername: "GITHUB_REGISTRY_USERNAME"
+        registryPassword: "GITHUB_REGISTRY_PASSWORD"
