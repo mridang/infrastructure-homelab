@@ -1,7 +1,7 @@
 import * as k8s from '@pulumi/kubernetes';
 import provider from './provider';
 
-const deployment = new k8s.apps.v1.Deployment('helloworld-deployment', {
+new k8s.apps.v1.Deployment('helloworld-deployment', {
   metadata: {
     labels: { app: 'helloworld' },
   },

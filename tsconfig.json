@@ -8,5 +8,5 @@
     "skipLibCheck": true,
     "outDir": "dist"
   },
-  "include": ["projects/core/src"]
+  "include": ["index.ts", "projects/**/src"]
 }
