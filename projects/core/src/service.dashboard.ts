@@ -1,7 +1,6 @@
 import * as k8s from '@pulumi/kubernetes';
 import provider from './provider';
-import { tlsSecretName } from './tls';
-import { traefik } from './service.traefik';
+import { traefik } from './traefik';
 
 new k8s.helm.v3.Chart(
   'kubernetes-dashboard',
@@ -56,7 +55,7 @@ new k8s.apiextensions.CustomResource(
       entryPoints: ['websecure'],
       routes: [
         {
-          match: 'Host(`kubernetes.internal.mrida.ng`)',
+          match: 'Host(`k8.homelab.mrida.ng`)',
           kind: 'Rule',
           services: [
             {
@@ -67,7 +66,7 @@ new k8s.apiextensions.CustomResource(
         },
       ],
       tls: {
-        secretName: tlsSecretName,
+        certResolver: 'letsencrypt',
       },
     },
   },

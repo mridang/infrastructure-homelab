@@ -33,7 +33,7 @@ new k8s.core.v1.ConfigMap(
                     lameduck 5s
                 }
                 ready
-                kubernetes cluster.local in-addr.arpa ip6.arpa internal.mrida.ng {
+                kubernetes cluster.local in-addr.arpa ip6.arpa homelab.mrida.ng {
                     pods insecure
                     fallthrough in-addr.arpa ip6.arpa
                     ttl 30

@@ -5,4 +5,7 @@ config:
   homelab-test:tailscale:
     clientId: TAILSCALE_CLIENT_ID
     clientSecret: TAILSCALE_CLIENT_SECRET
+  homelab-test:cloudflare:
+      userEmail: CLOUDFLARE_USER_EMAIL
+      apiToken: CLOUDFLARE_API_TOKEN
   kubernetes:enableServerSideApply: "true"
