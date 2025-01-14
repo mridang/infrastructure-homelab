@@ -12,7 +12,7 @@
     "@mridang/eslint-defaults": "^1.0.0",
     "@pulumi/eslint-plugin": "^0.2.0",
     "@pulumi/kubernetes": "^4.19.0",
-    "@pulumi/pulumi": "^3.141.0",
+    "@pulumi/pulumi": "^3.145.0",
     "@tsconfig/node20": "latest",
     "@types/node": "^20.3.2",
     "dotenv": "^16.4.5",
