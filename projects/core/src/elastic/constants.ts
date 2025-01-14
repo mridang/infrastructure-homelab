@@ -1,1 +1,1 @@
-export const ELASTIC_VERSION = '8.5.0';
+export const ELASTIC_VERSION = '8.17.0';
