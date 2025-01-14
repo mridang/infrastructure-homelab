@@ -14,7 +14,7 @@ create those as well and make `tag:k8s-operator` an owner.
 
 Your tailnet policy should resemble something like this:
 
-```json
+```
 "tagOwners": {
   "tag:k8s-operator": [],
   "tag:k8s": ["tag:k8s-operator"],
