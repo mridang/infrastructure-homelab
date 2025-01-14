@@ -32,9 +32,3 @@ Traefik is used as the ingress controller for the cluster.
 ##### Dashboard (Chart)
 
 The default K8 dashboard is deployed so that we can inspect the cluster.
-
-### TODO
-
-Set up Cert Manager
-Set up Tailscale
-Use 1.1.1.1 as DNS
