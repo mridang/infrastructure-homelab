@@ -1,6 +1,5 @@
 import * as k8s from '@pulumi/kubernetes';
 import { ELASTIC_VERSION } from './constants';
-import { tlsSecretName } from '../tls';
 import provider from '../provider';
 import { elasticsearchCluster } from './elastic';
 
@@ -35,7 +34,7 @@ new k8s.apiextensions.CustomResource(
       entryPoints: ['websecure'],
       routes: [
         {
-          match: 'Host(`kibana.internal.mrida.ng`)',
+          match: 'Host(`kibana.homelab.mrida.ng`)',
           kind: 'Rule',
           services: [
             {
@@ -46,7 +45,7 @@ new k8s.apiextensions.CustomResource(
         },
       ],
       tls: {
-        secretName: tlsSecretName,
+        certResolver: 'letsencrypt',
       },
     },
   },

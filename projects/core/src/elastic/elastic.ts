@@ -8,11 +8,11 @@ export const elasticsearchCluster = new k8s.apiextensions.CustomResource(
     apiVersion: 'elasticsearch.k8s.elastic.co/v1',
     kind: 'Elasticsearch',
     metadata: {
-		name: 'my-cluster',
-		annotations: {
-			'pulumi.com/patchForce': 'true',
-		}
-	},
+      name: 'my-cluster',
+      annotations: {
+        'pulumi.com/patchForce': 'true',
+      },
+    },
     spec: {
       version: ELASTIC_VERSION,
       http: {

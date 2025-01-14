@@ -1,5 +1,22 @@
 import * as k8s from '@pulumi/kubernetes';
-import provider from './provider';
+import provider from '../provider';
+import { Config } from '@pulumi/pulumi';
+
+const config = new Config();
+const settings = config.requireObject('cloudflare') as {
+  userEmail: string;
+  apiToken: string;
+};
+
+const cloudflareSecret = new k8s.core.v1.Secret('cloudflare-api-token', {
+  metadata: {
+    name: 'cloudflare-api-token',
+  },
+  stringData: {
+    CF_API_EMAIL: process.env[settings.userEmail] + '',
+    CF_DNS_API_TOKEN: process.env[settings.apiToken] + '',
+  },
+});
 
 export const traefik = new k8s.helm.v3.Chart(
   'traefik',
@@ -10,6 +27,9 @@ export const traefik = new k8s.helm.v3.Chart(
       repo: 'https://helm.traefik.io/traefik',
     },
     values: {
+      image: {
+        tag: '3.3.1',
+      },
       deployment: {
         additionalVolumes: [
           {
@@ -53,7 +73,7 @@ export const traefik = new k8s.helm.v3.Chart(
         dashboard: {
           enabled: true,
           tls: {
-            secretName: 'internal-mrida-tls',
+            certResolver: 'letsencrypt',
           },
           entryPoints: ['websecure', 'traefik'],
           middlwares: [
@@ -61,7 +81,7 @@ export const traefik = new k8s.helm.v3.Chart(
               name: 'compression-middleware',
             },
           ],
-          matchRule: 'Host(`traefik.internal.mrida.ng`)',
+          matchRule: 'Host(`traefik.homelab.mrida.ng`)',
         },
         healthcheck: {
           enabled: true,
@@ -77,6 +97,25 @@ export const traefik = new k8s.helm.v3.Chart(
           },
         },
       },
+      certificatesResolvers: {
+        letsencrypt: {
+          acme: {
+            storage: '/tmp/acme.json',
+            dnsChallenge: {
+              provider: 'cloudflare',
+              resolvers: ['1.1.1.1', '1.0.0.1'],
+              delayBeforeCheck: 60,
+            },
+          },
+        },
+      },
+      envFrom: [
+        {
+          secretRef: {
+            name: cloudflareSecret.metadata.name,
+          },
+        },
+      ],
     },
   },
   { provider },
@@ -92,7 +131,9 @@ new k8s.apiextensions.CustomResource(
       namespace: 'default',
     },
     spec: {
-      compress: {},
+      compress: {
+        //
+      },
     },
   },
   { provider },

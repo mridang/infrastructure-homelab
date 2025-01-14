@@ -51,9 +51,9 @@ new k8s.apiextensions.CustomResource(
     kind: 'Beat',
     metadata: {
       name: 'filebeat',
-		annotations: {
-			'pulumi.com/patchForce': 'true',
-		}
+      annotations: {
+        'pulumi.com/patchForce': 'true',
+      },
     },
     spec: {
       type: 'filebeat',

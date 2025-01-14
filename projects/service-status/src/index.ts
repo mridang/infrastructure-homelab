@@ -50,7 +50,7 @@ new k8s.apiextensions.CustomResource(
       entryPoints: ['websecure'],
       routes: [
         {
-          match: 'Host(`status.internal.mrida.ng`)',
+          match: 'Host(`status.homelab.mrida.ng`)',
           kind: 'Rule',
           middlewares: [
             {
@@ -66,7 +66,7 @@ new k8s.apiextensions.CustomResource(
         },
       ],
       tls: {
-        secretName: 'internal-mrida-tls',
+        certResolver: 'letsencrypt',
       },
     },
   },
