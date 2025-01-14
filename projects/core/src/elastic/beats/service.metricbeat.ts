@@ -60,6 +60,9 @@ new k8s.apiextensions.CustomResource(
     kind: 'Beat',
     metadata: {
       name: 'metricbeat',
+		annotations: {
+			'pulumi.com/patchForce': 'true',
+		}
     },
     spec: {
       type: 'metricbeat',
