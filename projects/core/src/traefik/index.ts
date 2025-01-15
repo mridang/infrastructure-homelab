@@ -1,6 +1,5 @@
 import * as k8s from '@pulumi/kubernetes';
 import provider from '../provider';
-import { Config } from '@pulumi/pulumi';
 import { cloudflareSecret } from '../cloudflare';
 
 export const traefik = new k8s.helm.v3.Chart(
