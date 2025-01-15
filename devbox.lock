@@ -113,6 +113,54 @@
           "store_path": "/nix/store/198nxwll988a0a0n2jqa6p8w60n2g4g9-pulumi-3.138.0"
         }
       }
+    },
+    "steampipe@latest": {
+      "last_modified": "2024-12-23T21:10:33Z",
+      "resolved": "github:NixOS/nixpkgs/de1864217bfa9b5845f465e771e0ecb48b30e02d#steampipe",
+      "source": "devbox-search",
+      "version": "1.0.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/3ycnsr6y9n3l6fjlaf7fxzvaarx6ndjh-steampipe-1.0.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/3ycnsr6y9n3l6fjlaf7fxzvaarx6ndjh-steampipe-1.0.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ip45y7jfdi095cvs8q1nwbllb1xxazdg-steampipe-1.0.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/ip45y7jfdi095cvs8q1nwbllb1xxazdg-steampipe-1.0.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ppiiamnsqxyb6bkbnil3z60f18wivxsk-steampipe-1.0.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/ppiiamnsqxyb6bkbnil3z60f18wivxsk-steampipe-1.0.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/s7h7ik8kzqck3fh3bw0nhlr0cb23bfiw-steampipe-1.0.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/s7h7ik8kzqck3fh3bw0nhlr0cb23bfiw-steampipe-1.0.1"
+        }
+      }
     }
   }
 }
