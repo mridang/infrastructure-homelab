@@ -1,7 +1,17 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetpack-io/devbox/0.10.3/.schema/devbox.schema.json",
-  "packages": ["nodejs@20", "pulumi-bin@latest"],
+	"env": {
+		"STEAMPIPE_INSTALL_DIR": ".steampipe"
+	},
+	"packages": [
+    "nodejs@20",
+    "pulumi-bin@latest",
+    "steampipe@latest"
+  ],
   "shell": {
-    "init_hook": ["export $(xargs < .env)"]
+    "init_hook": [
+		"export $(xargs < .env)",
+		"steampipe plugin install kubernetes"
+	]
   }
 }
