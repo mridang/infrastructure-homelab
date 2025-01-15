@@ -32,3 +32,30 @@ Traefik is used as the ingress controller for the cluster.
 ##### Dashboard (Chart)
 
 The default K8 dashboard is deployed so that we can inspect the cluster.
+
+##### Steampipe
+
+[Steampipe](https://steampipe.io/) has been configured on the CLI. This makes
+it easy to query the cluster via SQL.
+
+You can either start the interactive shell using `devbox run steampipe` or run a
+query directly like the example below.
+
+```
+$ steampipe query "SELECT name FROM kubernetes_pod"
+
++-------------------------------------------------+
+| name                                            |
++-------------------------------------------------+
+| elastic-operator-0                              |
+| kube-scheduler-docker-desktop                   |
+| my-kibana-kb-786f98bfc9-v7x7w                   |
+| ts-tailscale-apm-ingress-v9qzc-0                |
+| filebeat-beat-filebeat-g66jc                    |
+| traefik-6f99669b8d-cxxbt                        |
+| ts-tailscale-dashboard-ingress-wz786-0          |
++-------------------------------------------------+
+```
+
+More information about querying Kubernetes via Steampipe can be found on the
+[associated plugin page](https://hub.steampipe.io/plugins/turbot/kubernetes).
