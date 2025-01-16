@@ -32,6 +32,9 @@ new k8s.apiextensions.CustomResource(
     metadata: {
       name: 'nginx-subdomain-ingressroute',
       namespace: 'default',
+      annotations: {
+        'external-dns.alpha.kubernetes.io/hostname': 'nginx.homelab.mrida.ng',
+      },
     },
     spec: {
       entryPoints: ['websecure'],

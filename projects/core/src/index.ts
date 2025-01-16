@@ -1,4 +1,5 @@
-import './dns';
+import './coredns';
+import './extdns';
 import './tailscale';
 import './elastic';
 import './service.dashboard';
