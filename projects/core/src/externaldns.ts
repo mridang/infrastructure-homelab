@@ -1,6 +1,12 @@
 import * as k8s from '@pulumi/kubernetes';
-import { cloudflareSecret } from './cloudflare';
 import provider from './provider';
+import { Config } from '@pulumi/pulumi';
+
+const config = new Config();
+const settings = config.requireObject('cloudflare') as {
+  userEmail: string;
+  apiToken: string;
+};
 
 new k8s.helm.v3.Release(
   'external-dns',
@@ -13,16 +19,16 @@ new k8s.helm.v3.Release(
       repo: 'https://kubernetes-sigs.github.io/external-dns/',
     },
     values: {
-      envFrom: [
+      env: [
         {
-          secretRef: {
-            name: cloudflareSecret.metadata.name,
-          },
+          name: 'CF_API_TOKEN',
+          value: process.env[settings.apiToken],
         },
       ],
       provider: 'cloudflare',
       proxy: 'false',
       sources: ['traefik-proxy'],
+      extraArgs: ['--traefik-disable-legacy'],
     },
   },
   {

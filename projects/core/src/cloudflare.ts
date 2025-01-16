@@ -14,6 +14,5 @@ export const cloudflareSecret = new k8s.core.v1.Secret('cloudflare-api-token', {
   stringData: {
     CF_API_EMAIL: process.env[settings.userEmail] + '',
     CF_DNS_API_TOKEN: process.env[settings.apiToken] + '',
-    CF_API_TOKEN: process.env[settings.apiToken] + '',
   },
 });
