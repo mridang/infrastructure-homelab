@@ -21,7 +21,6 @@ To create a DNS record for given route, the service must be annotated with:
 'external-dns.alpha.kubernetes.io/hostname': 'nginx.homelab.mrida.ng'
 ```
 
-
 ### Upgrading
 
 To upgrade the underlying version of ExternalDNS, you will need to set the necessary
