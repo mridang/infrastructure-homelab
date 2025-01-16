@@ -19,7 +19,7 @@ new k8s.helm.v3.Release(
       repo: 'https://kubernetes-sigs.github.io/external-dns/',
     },
     values: {
-      logLevel: 'debug',
+      logLevel: 'trace',
       env: [
         {
           name: 'CF_API_TOKEN',
