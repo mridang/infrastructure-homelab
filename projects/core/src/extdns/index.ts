@@ -1,5 +1,5 @@
 import * as k8s from '@pulumi/kubernetes';
-import provider from './provider';
+import provider from '../provider';
 import { Config } from '@pulumi/pulumi';
 
 const config = new Config();
@@ -14,11 +14,12 @@ new k8s.helm.v3.Release(
     name: 'external-dns',
     chart: 'external-dns',
     version: '1.15.0',
-    namespace: 'kube-system',
+    //namespace: 'kube-system',
     repositoryOpts: {
       repo: 'https://kubernetes-sigs.github.io/external-dns/',
     },
     values: {
+	  logLevel: 'debug',
       env: [
         {
           name: 'CF_API_TOKEN',

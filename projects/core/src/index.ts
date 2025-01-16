@@ -1,5 +1,5 @@
 import './coredns';
-import './externaldns';
+import './extdns';
 import './tailscale';
 import './elastic';
 import './service.dashboard';
