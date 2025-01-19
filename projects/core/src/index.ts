@@ -1,6 +1,6 @@
 import './dns';
 import './tailscale';
-import './elastic';
+export * from './elastic';
 import './service.dashboard';
 import './service.hello';
 export * from './docker';

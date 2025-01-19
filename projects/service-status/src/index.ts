@@ -1,5 +1,8 @@
 import * as k8s from '@pulumi/kubernetes';
 import provider from './provider';
+import {StackReference} from "@pulumi/pulumi";
+
+const stackRef = new StackReference('mridang/homelab-test/dev');
 
 new k8s.apps.v1.Deployment('helloworld-deployment', {
   metadata: {
@@ -20,6 +23,13 @@ new k8s.apps.v1.Deployment('helloworld-deployment', {
             name: 'helloworld',
             image: 'testcontainers/helloworld:latest',
             ports: [{ containerPort: 8080 }, { containerPort: 8081 }],
+			  env: [
+				  { name: 'OLTP_ENDPOINT', value: stackRef.getOutput('apmServerUrl').apply(url => url) },
+				  { name: 'DOMAIN_NAME', value: 'localhost' },
+				  { name: 'SERVICE_ID', value: 'demoit' },
+				  { name: 'SERVICE_NAME', value: 'demoit' },
+				  { name: 'SERVICE_TYPE', value: 'app' },
+			  ]
           },
         ],
       },
