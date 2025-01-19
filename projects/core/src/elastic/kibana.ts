@@ -18,6 +18,14 @@ new k8s.apiextensions.CustomResource('kibana-instance', {
     },
     count: 1,
     elasticsearchRef: { name: elasticsearchCluster.metadata.name },
+    config: {
+      'xpack.fleet.packages': [
+        {
+          name: 'apm',
+          version: 'latest',
+        },
+      ],
+    },
   },
 });
 
