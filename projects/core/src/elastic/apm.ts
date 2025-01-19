@@ -3,7 +3,7 @@ import { ELASTIC_VERSION } from './constants';
 import provider from '../provider';
 import { elasticsearchCluster } from './elastic';
 
-const APM_PORT = 8200
+const APM_PORT = 8200;
 
 const apmServer = new k8s.apiextensions.CustomResource(
   'apm-server-instance',
@@ -64,6 +64,6 @@ new k8s.networking.v1.Ingress(
   },
 );
 
-export const apmServerUrl = apmServer.metadata.apply(metadata => {
-	return `http://${metadata.name}-apm-http.${metadata.namespace}.svc.cluster.local:${APM_PORT}`;
+export const apmServerUrl = apmServer.metadata.apply((metadata) => {
+  return `http://${metadata.name}-apm-http.${metadata.namespace}.svc.cluster.local:${APM_PORT}`;
 });
