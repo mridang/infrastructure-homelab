@@ -67,7 +67,11 @@ new k8s.networking.v1.Ingress(
 );
 
 export const apmServerUrl = apmServer.metadata.apply((metadata) => {
-	const apmToken = k8s.core.v1.Secret.get("apmToken", `${metadata.namespace}/${metadata.name}-apm-token`, { provider });
+  const apmToken = k8s.core.v1.Secret.get(
+    'apmToken',
+    `${metadata.namespace}/${metadata.name}-apm-token`,
+    { provider },
+  );
 
   return apmToken.data.apply((data) => {
     const token = Buffer.from(data['secret-token'], 'base64').toString();
