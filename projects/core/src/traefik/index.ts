@@ -18,6 +18,20 @@ const cloudflareSecret = new k8s.core.v1.Secret('cloudflare-api-token', {
   },
 });
 
+/**
+ * Traefik acts as the ingress controller for the different services.
+ *
+ * Unfortunately, Traefik does not allow storing the ACME certificates
+ * anywhere but on the disk. This means that when the node is restarted,
+ * the certificates are discarded. We could solve this by using a
+ * persistent-volume but that would not work on multi-node setups e.g. a
+ * RaspberryPi cluster. To get around this, we add a node-affinity to
+ * target the control-plane node.
+ *
+ * We also tolerate the taint on the master node using the tolerations.
+ * When running on Docker Desktop, there is only a single node and that
+ * is not tainted.
+ */
 export const traefik = new k8s.helm.v3.Chart(
   'traefik',
   {
@@ -30,6 +44,33 @@ export const traefik = new k8s.helm.v3.Chart(
       image: {
         tag: '3.3.1',
       },
+      persistence: {
+        enabled: true,
+        size: '128Mi',
+      },
+      affinity: {
+        nodeAffinity: {
+          requiredDuringSchedulingIgnoredDuringExecution: {
+            nodeSelectorTerms: [
+              {
+                matchExpressions: [
+                  {
+                    key: 'node-role.kubernetes.io/control-plane',
+                    operator: 'Exists',
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      },
+      tolerations: [
+        {
+          key: 'node-role.kubernetes.io/control-plane',
+          operator: 'Exists',
+          effect: 'NoSchedule',
+        },
+      ],
       deployment: {
         additionalVolumes: [
           {
@@ -100,7 +141,7 @@ export const traefik = new k8s.helm.v3.Chart(
       certificatesResolvers: {
         letsencrypt: {
           acme: {
-            storage: '/tmp/acme.json',
+            storage: '/data/acme.json',
             dnsChallenge: {
               provider: 'cloudflare',
               resolvers: ['1.1.1.1', '1.0.0.1'],
