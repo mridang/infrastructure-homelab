@@ -2,6 +2,7 @@ import * as k8s from '@pulumi/kubernetes';
 import { ELASTIC_VERSION } from './constants';
 import provider from '../provider';
 import { elasticsearchCluster } from './elastic';
+import { interpolate } from '@pulumi/pulumi';
 
 const APM_PORT = 8200;
 
@@ -27,6 +28,7 @@ const apmServer = new k8s.apiextensions.CustomResource(
       config: {
         'apm-server.rum.enabled': 'true',
         'apm-server.rum.allowed_origins': ['*'],
+        'apm-server.auth.anonymous.enabled': 'true',
       },
     },
   },
@@ -65,5 +67,10 @@ new k8s.networking.v1.Ingress(
 );
 
 export const apmServerUrl = apmServer.metadata.apply((metadata) => {
-  return `http://${metadata.name}-apm-http.${metadata.namespace}.svc.cluster.local:${APM_PORT}`;
+	const apmToken = k8s.core.v1.Secret.get("apmToken", `${metadata.namespace}/${metadata.name}-apm-token`, { provider });
+
+  return apmToken.data.apply((data) => {
+    const token = Buffer.from(data['secret-token'], 'base64').toString();
+    return interpolate`http://${metadata.name}-apm-http.${metadata.namespace}.svc.cluster.local:${APM_PORT}?access_token=${token}`;
+  });
 });
