@@ -11,6 +11,9 @@ new k8s.helm.v3.Chart(
       repo: 'https://charts.bitnami.com/bitnami',
     },
     values: {
+      tls: {
+        enabled: false,
+      },
       service: {
         type: 'ClusterIP',
         port: 8080,
