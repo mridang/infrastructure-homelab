@@ -1,7 +1,7 @@
 import * as k8s from '@pulumi/kubernetes';
 import { ELASTIC_VERSION } from './constants';
 import provider from '../provider';
-import { elasticsearchCluster } from './elastic';
+import { elasticsearch } from './elastic';
 import { interpolate } from '@pulumi/pulumi';
 
 const APM_PORT = 8200;
@@ -24,11 +24,45 @@ const apmServer = new k8s.apiextensions.CustomResource(
         },
       },
       count: 1,
-      elasticsearchRef: { name: elasticsearchCluster.metadata.name },
+      elasticsearchRef: { name: elasticsearch.metadata.name },
       config: {
         'apm-server.rum.enabled': 'true',
         'apm-server.rum.allowed_origins': ['*'],
         'apm-server.auth.anonymous.enabled': 'true',
+      },
+    },
+  },
+  {
+    provider,
+  },
+);
+
+new k8s.apiextensions.CustomResource(
+  'rum-ingressroute',
+  {
+    apiVersion: 'traefik.io/v1alpha1',
+    kind: 'IngressRoute',
+    metadata: {
+      name: 'rum-ingressroute',
+      namespace: 'default',
+    },
+    spec: {
+      entryPoints: ['websecure'],
+      routes: [
+        {
+          match:
+            'Host(`rum.homelab.mrida.ng`) && (Path(`/intake/v2/rum/events`) || Path(`/intake/v3/rum/events`))',
+          kind: 'Rule',
+          services: [
+            {
+              name: interpolate`${apmServer.metadata.name}-apm-http`,
+              port: 8200,
+            },
+          ],
+        },
+      ],
+      tls: {
+        certResolver: 'letsencrypt',
       },
     },
   },
@@ -47,7 +81,7 @@ new k8s.networking.v1.Ingress(
       ingressClassName: 'tailscale',
       defaultBackend: {
         service: {
-          name: 'my-apm-server-apm-http',
+          name: interpolate`${apmServer.metadata.name}-apm-http`,
           port: {
             number: APM_PORT,
           },
@@ -62,7 +96,7 @@ new k8s.networking.v1.Ingress(
   },
   {
     provider,
-    dependsOn: elasticsearchCluster,
+    dependsOn: elasticsearch,
   },
 );
 

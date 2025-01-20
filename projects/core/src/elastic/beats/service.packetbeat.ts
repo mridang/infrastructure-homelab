@@ -1,5 +1,5 @@
 import * as k8s from '@pulumi/kubernetes';
-import { elasticsearchCluster } from '../elastic';
+import { elasticsearch } from '../elastic';
 import provider from '../../provider';
 import { ELASTIC_VERSION } from '../constants';
 
@@ -45,7 +45,7 @@ new k8s.apiextensions.CustomResource(
       type: 'packetbeat',
       version: ELASTIC_VERSION,
       elasticsearchRef: {
-        name: elasticsearchCluster.metadata.name,
+        name: elasticsearch.metadata.name,
       },
       config: {
         packetbeat: {

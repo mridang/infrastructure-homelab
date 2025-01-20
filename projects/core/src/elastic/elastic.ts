@@ -1,8 +1,9 @@
 import * as k8s from '@pulumi/kubernetes';
 import { ELASTIC_VERSION } from './constants';
 import provider from '../provider';
+import { interpolate } from '@pulumi/pulumi';
 
-export const elasticsearchCluster = new k8s.apiextensions.CustomResource(
+export const elasticsearch = new k8s.apiextensions.CustomResource(
   'elasticsearch-cluster',
   {
     apiVersion: 'elasticsearch.k8s.elastic.co/v1',
@@ -55,7 +56,7 @@ new k8s.networking.v1.Ingress(
       ingressClassName: 'tailscale',
       defaultBackend: {
         service: {
-          name: 'my-cluster-es-http',
+          name: interpolate`${elasticsearch.metadata.name}-es-http`,
           port: {
             number: 9200,
           },
@@ -70,6 +71,6 @@ new k8s.networking.v1.Ingress(
   },
   {
     provider,
-    dependsOn: elasticsearchCluster,
+    dependsOn: elasticsearch,
   },
 );

@@ -1,9 +1,10 @@
 import * as k8s from '@pulumi/kubernetes';
 import { ELASTIC_VERSION } from './constants';
 import provider from '../provider';
-import { elasticsearchCluster } from './elastic';
+import { elasticsearch } from './elastic';
+import { interpolate } from '@pulumi/pulumi';
 
-new k8s.apiextensions.CustomResource('kibana-instance', {
+const kibana = new k8s.apiextensions.CustomResource('kibana-instance', {
   apiVersion: 'kibana.k8s.elastic.co/v1',
   kind: 'Kibana',
   metadata: { name: 'my-kibana' },
@@ -17,7 +18,7 @@ new k8s.apiextensions.CustomResource('kibana-instance', {
       },
     },
     count: 1,
-    elasticsearchRef: { name: elasticsearchCluster.metadata.name },
+    elasticsearchRef: { name: elasticsearch.metadata.name },
     config: {
       'xpack.fleet.packages': [
         {
@@ -46,7 +47,7 @@ new k8s.apiextensions.CustomResource(
           kind: 'Rule',
           services: [
             {
-              name: 'my-kibana-kb-http',
+              name: interpolate`${kibana.metadata.name}-kb-http`,
               port: 5601,
             },
           ],
@@ -72,7 +73,7 @@ new k8s.networking.v1.Ingress(
       ingressClassName: 'tailscale',
       defaultBackend: {
         service: {
-          name: 'my-kibana-kb-http',
+          name: interpolate`${kibana.metadata.name}-kb-http`,
           port: {
             number: 5601,
           },
@@ -87,6 +88,6 @@ new k8s.networking.v1.Ingress(
   },
   {
     provider,
-    dependsOn: elasticsearchCluster,
+    dependsOn: elasticsearch,
   },
 );
