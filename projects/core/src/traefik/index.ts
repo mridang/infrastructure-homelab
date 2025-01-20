@@ -72,6 +72,7 @@ export const traefik = new k8s.helm.v3.Chart(
         },
       ],
       deployment: {
+        revisionHistoryLimit: 1,
         additionalVolumes: [
           {
             name: 'traefik-logs',
