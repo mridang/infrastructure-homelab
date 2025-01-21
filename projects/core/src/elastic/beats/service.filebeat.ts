@@ -105,7 +105,7 @@ new k8s.apiextensions.CustomResource(
               lang: 'javascript',
               id: 'remove_ansi_color',
               source: fs.readFileSync(
-                path.join(__dirname, 'strip_color.js'),
+                path.join(__dirname, 'processors', 'strip_color.js'),
                 'utf-8',
               ),
             },
@@ -121,7 +121,7 @@ new k8s.apiextensions.CustomResource(
               lang: 'javascript',
               id: 'parse_traefik',
               source: fs.readFileSync(
-                path.join(__dirname, 'parse.js'),
+                path.join(__dirname, 'processors', 'parse_traefik.js'),
                 'utf-8',
               ),
             },
@@ -137,7 +137,7 @@ new k8s.apiextensions.CustomResource(
               lang: 'javascript',
               id: 'parse_tailscale',
               source: fs.readFileSync(
-                path.join(__dirname, 'parse_tailscale.js'),
+                path.join(__dirname, 'processors', 'parse_tailscale.js'),
                 'utf-8',
               ),
             },
@@ -153,7 +153,7 @@ new k8s.apiextensions.CustomResource(
               lang: 'javascript',
               id: 'parse_vpnkit',
               source: fs.readFileSync(
-                path.join(__dirname, 'parse_vpnkit.js'),
+                path.join(__dirname, 'processors', 'parse_vpnkit.js'),
                 'utf-8',
               ),
             },
@@ -169,7 +169,7 @@ new k8s.apiextensions.CustomResource(
               lang: 'javascript',
               id: 'parse_filebeat',
               source: fs.readFileSync(
-                path.join(__dirname, 'parse_filebeat.js'),
+                path.join(__dirname, 'processors', 'parse_filebeat.js'),
                 'utf-8',
               ),
             },
@@ -185,7 +185,7 @@ new k8s.apiextensions.CustomResource(
               lang: 'javascript',
               id: 'parse_klog',
               source: fs.readFileSync(
-                path.join(__dirname, 'parse_klog.js'),
+                path.join(__dirname, 'processors', 'parse_klog.js'),
                 'utf-8',
               ),
             },

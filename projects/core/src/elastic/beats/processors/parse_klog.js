@@ -22,7 +22,7 @@ function process(event) {
     var ecsLevel = ecsLevels[klogLevel] || 'unknown'; // Map klog level to ECS level
 
     // Set the ECS level
-    event.Put('log_level', ecsLevel);
+    event.Put('log.level', ecsLevel);
 
     // Extract and set the message
     event.Put('message', logMatch[2]);

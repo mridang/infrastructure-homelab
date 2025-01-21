@@ -16,9 +16,9 @@ function process(event) {
   if (logMatch) {
     var logLevel = logMatch[2];
     if (ecsLevels[logLevel]) {
-      event.Put('log_level', ecsLevels[logLevel]);
+      event.Put('log.level', ecsLevels[logLevel]);
     } else {
-      event.Put('log_level', 'unknown');
+      event.Put('log.level', 'unknown');
     }
     event.Put('message', logMatch[3]);
   }
