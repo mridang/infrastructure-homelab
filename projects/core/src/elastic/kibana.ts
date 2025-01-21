@@ -4,7 +4,7 @@ import provider from '../provider';
 import { elasticsearch } from './elastic';
 import { interpolate } from '@pulumi/pulumi';
 
-const kibana = new k8s.apiextensions.CustomResource('kibana-instance', {
+export const kibana = new k8s.apiextensions.CustomResource('kibana-instance', {
   apiVersion: 'kibana.k8s.elastic.co/v1',
   kind: 'Kibana',
   metadata: { name: 'my-kibana' },

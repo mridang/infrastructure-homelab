@@ -2,6 +2,7 @@ import * as k8s from '@pulumi/kubernetes';
 import { elasticsearch } from '../elastic';
 import provider from '../../provider';
 import { ELASTIC_VERSION } from '../constants';
+import { kibana } from '../kibana';
 
 const metricbeatServiceAccount = new k8s.core.v1.ServiceAccount('metricbeat', {
   metadata: { name: 'metricbeat', namespace: 'default' },
@@ -69,6 +70,9 @@ new k8s.apiextensions.CustomResource(
       version: ELASTIC_VERSION,
       elasticsearchRef: {
         name: elasticsearch.metadata.name,
+      },
+      kibanaRef: {
+        name: kibana.metadata.name,
       },
       config: {
         metricbeat: {

@@ -4,6 +4,7 @@ import provider from '../../provider';
 import { ELASTIC_VERSION } from '../constants';
 import path from 'path';
 import * as fs from 'node:fs';
+import { kibana } from '../kibana';
 
 const filebeatServiceAccount = new k8s.core.v1.ServiceAccount('filebeat', {
   metadata: { name: 'filebeat', namespace: 'default' },
@@ -62,6 +63,9 @@ new k8s.apiextensions.CustomResource(
       version: ELASTIC_VERSION,
       elasticsearchRef: {
         name: elasticsearch.metadata.name,
+      },
+      kibanaRef: {
+        name: kibana.metadata.name,
       },
       config: {
         filebeat: {
