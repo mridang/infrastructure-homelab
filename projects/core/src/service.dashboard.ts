@@ -37,6 +37,26 @@ new k8s.helm.v3.Chart(
           },
         ],
       },
+      auth: {
+        scaling: {
+          revisionHistoryLimit: 1,
+        },
+      },
+      api: {
+        scaling: {
+          revisionHistoryLimit: 1,
+        },
+      },
+      web: {
+        scaling: {
+          revisionHistoryLimit: 1,
+        },
+      },
+      metricsScraper: {
+        scaling: {
+          revisionHistoryLimit: 1,
+        },
+      },
     },
   },
   { provider },
