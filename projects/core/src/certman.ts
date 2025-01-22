@@ -1,7 +1,7 @@
 import * as k8s from '@pulumi/kubernetes';
 import * as helm from '@pulumi/kubernetes/helm/v3';
 import provider from './provider';
-import {cloudflareEmail, cloudflareSecret} from "./cloudflare";
+import { cloudflareEmail, cloudflareSecret } from './cloudflare';
 
 const certManagerHelmRelease = new helm.Release('cert-manager', {
   chart: 'cert-manager',
@@ -26,9 +26,9 @@ new k8s.apiextensions.CustomResource(
       acme: {
         email: cloudflareEmail,
         server: 'https://acme-v02.api.letsencrypt.org/directory',
-		  privateKeySecretRef: {
-			  name: "letsencrypt"
-		  },
+        privateKeySecretRef: {
+          name: 'letsencrypt',
+        },
         solvers: [
           {
             dns01: {
