@@ -1,6 +1,7 @@
 import * as pulumi from '@pulumi/pulumi';
 
 import './dns';
+import './certman';
 import './tailscale';
 import './service.dashboard';
 import './service.hello';
