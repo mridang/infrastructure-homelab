@@ -7,7 +7,7 @@ const settings = config.requireObject('cloudflare') as {
   apiToken: string;
 };
 
-export const cloudflareEmail = process.env[settings.userEmail] + ''
+export const cloudflareEmail = process.env[settings.userEmail] + '';
 export const cloudflareSecret = new k8s.core.v1.Secret('cloudflare-api-token', {
   metadata: {
     name: 'cloudflare-api-token',
