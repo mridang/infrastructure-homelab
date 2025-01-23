@@ -145,9 +145,10 @@ new k8s.apiextensions.CustomResource(
         },
         processors: [
           {
-            add_host_metadata: {
-              //
-            },
+            add_host_metadata: {},
+          },
+          {
+            add_kubernetes_metadata: {},
           },
         ],
       },

@@ -92,6 +92,9 @@ new k8s.apiextensions.CustomResource(
             add_host_metadata: {},
           },
           {
+            add_kubernetes_metadata: {},
+          },
+          {
             decode_json_fields: {
               fields: ['message'],
               target: '',
