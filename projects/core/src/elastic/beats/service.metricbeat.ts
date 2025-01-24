@@ -54,6 +54,13 @@ new k8s.rbac.v1.ClusterRoleBinding('metricbeat', {
   },
 });
 
+/**
+ * Metricbeat is configured to read metrics about services that are annotated
+ * with the following annotation `prometheus.io/scrape: true`.
+ *
+ * The prometheus endpoint comes from `prometheus.io/scrape` and the
+ * port from `prometheus.io/port`
+ */
 new k8s.apiextensions.CustomResource(
   'metricbeat',
   {
@@ -85,6 +92,28 @@ new k8s.apiextensions.CustomResource(
                   enabled: true,
                   default_config: {},
                 },
+              },
+              {
+                type: 'kubernetes',
+                host: '${HOSTNAME}',
+                templates: [
+                  {
+                    'condition.equals': {
+                      'kubernetes.annotations.prometheus.io/scrape': 'true',
+                    },
+                    config: [
+                      {
+                        module: 'prometheus',
+                        period: '10s',
+                        hosts: [
+                          '${data.host}:${data.kubernetes.annotations.prometheus.io/port}',
+                        ],
+                        metrics_path:
+                          '${data.kubernetes.annotations.prometheus.io/path:/metrics}',
+                      },
+                    ],
+                  },
+                ],
               },
             ],
           },
