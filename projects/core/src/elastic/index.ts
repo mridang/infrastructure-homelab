@@ -29,3 +29,4 @@ export * from './apm';
 export * from './beats/service.filebeat';
 export * from './beats/service.metricbeat';
 export * from './beats/service.packetbeat';
+// import './config' StackConfigPolicy is an enterprise feature. Enterprise features are disabled
