@@ -3,7 +3,7 @@ import * as pulumi from '@pulumi/pulumi';
 import './dns';
 import './certman';
 import './tailscale';
-import './service.dashboard';
+import './headlamp';
 import './service.hello';
 import path from 'path';
 import * as fs from 'node:fs';
