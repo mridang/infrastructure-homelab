@@ -1,3 +1,0 @@
-name: homelab.svc-status
-runtime: nodejs
-main: src/index.ts
