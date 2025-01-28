@@ -1,6 +1,6 @@
 // noinspection HttpUrlsUsage
 fetch(
-  `http://${process.env['ELASTICSEARCH_HOSTNAME']}:9200/_index_template/my-template`,
+  `http://${process.env['ELASTICSEARCH_HOSTNAME']}:9200/_index_template/no-replication`,
   {
     method: 'PUT',
     headers: {
@@ -8,17 +8,17 @@ fetch(
       Authorization: `Basic ${btoa(`${process.env['ELASTICSEARCH_USERNAME']}:${process.env['ELASTICSEARCH_PASSWORD']}`)}`,
     },
     body: JSON.stringify({
-      index_patterns: ['my-index-*'],
+      index_patterns: ['*'],
       template: {
         settings: {
-          number_of_shards: 1,
+          number_of_replicas: 0,
         },
-        mappings: {
-          properties: {
-            field1: { type: 'text' },
-            field2: { type: 'keyword' },
-          },
-        },
+      },
+      composed_of: [],
+      priority: 999,
+      data_stream: {
+        hidden: false,
+        allow_custom_routing: false,
       },
     }),
   },
