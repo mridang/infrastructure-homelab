@@ -63,7 +63,7 @@ spec:
             middlewares:
                 -   name: compression-middleware
             services:
-                -   name: hello-world-service
+                -   name: testme-service
                     port: 8080
     tls:
         certResolver: letsencrypt
