@@ -5,6 +5,7 @@ import { execSync } from 'node:child_process';
 import kubeexec from '../utils/kubeexec';
 import path from 'path';
 import { log } from '@pulumi/pulumi';
+import { ELASTIC_VERSION } from './constants';
 
 const eckOperatorNamespace = new k8s.core.v1.Namespace('elastic', {
   metadata: {
@@ -60,6 +61,10 @@ elasticsearch.metadata.apply((metadata) => {
           path.join(__dirname, 'scripts', 'index.ts'),
           metadata.namespace,
           [
+            {
+              name: 'ELASTICSEARCH_VERSION',
+              value: ELASTIC_VERSION,
+            },
             {
               name: 'ELASTICSEARCH_HOSTNAME',
               value: `${metadata.name}-es-http`,

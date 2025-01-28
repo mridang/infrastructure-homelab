@@ -73,3 +73,84 @@ fetch(
     console.log('Index template updated successfully:', data);
   })
   .catch((error) => console.error(error));
+
+// noinspection HttpUrlsUsage
+fetch(
+  `http://${process.env['ELASTICSEARCH_HOSTNAME']}:9200/filebeat-${process.env['ELASTICSEARCH_VERSION']}/_rollover`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Basic ${btoa(`${process.env['ELASTICSEARCH_USERNAME']}:${process.env['ELASTICSEARCH_PASSWORD']}`)}`,
+    },
+  },
+)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(
+        `HTTP error! Status: ${response.status} ${response.statusText}`,
+      );
+    }
+    return response.json();
+  })
+  .then((data) => {
+    if (data.acknowledged !== true) {
+      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
+    }
+    console.log('Index template updated successfully:', data);
+  })
+  .catch((error) => console.error(error));
+
+// noinspection HttpUrlsUsage
+fetch(
+  `http://${process.env['ELASTICSEARCH_HOSTNAME']}:9200/packetbeat-${process.env['ELASTICSEARCH_VERSION']}/_rollover`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Basic ${btoa(`${process.env['ELASTICSEARCH_USERNAME']}:${process.env['ELASTICSEARCH_PASSWORD']}`)}`,
+    },
+  },
+)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(
+        `HTTP error! Status: ${response.status} ${response.statusText}`,
+      );
+    }
+    return response.json();
+  })
+  .then((data) => {
+    if (data.acknowledged !== true) {
+      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
+    }
+    console.log('Index template updated successfully:', data);
+  })
+  .catch((error) => console.error(error));
+
+// noinspection HttpUrlsUsage
+fetch(
+  `http://${process.env['ELASTICSEARCH_HOSTNAME']}:9200/metricbeat-${process.env['ELASTICSEARCH_VERSION']}/_rollover`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Basic ${btoa(`${process.env['ELASTICSEARCH_USERNAME']}:${process.env['ELASTICSEARCH_PASSWORD']}`)}`,
+    },
+  },
+)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(
+        `HTTP error! Status: ${response.status} ${response.statusText}`,
+      );
+    }
+    return response.json();
+  })
+  .then((data) => {
+    if (data.acknowledged !== true) {
+      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
+    }
+    console.log('Index template updated successfully:', data);
+  })
+  .catch((error) => console.error(error));
