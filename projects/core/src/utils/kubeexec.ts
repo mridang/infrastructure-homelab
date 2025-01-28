@@ -7,24 +7,26 @@ import { execSync } from 'child_process';
  * @param podName The name of the pod to use - any name will do
  * @param scriptPath The absolute path to the script to run
  * @param namespace The name to run the pod in - defaults to "default"
+ * @param imageName
  * @param envArgs Any additional arguments for the pod
  */
 export default function (
   podName: string,
   scriptPath: string,
   namespace: string = 'default',
+  imageName: string = 'node:22-slim',
   envArgs: { name: string; value?: string; valueFrom?: any }[],
 ) {
   try {
-    console.log(`Creating a Node.js 22 container pod: ${podName}...`);
+    console.log(`Creating a ${imageName} container pod: ${podName}...`);
     execSync(
-      `kubectl run ${podName} --image=node:22 --restart=Never --command --namespace=${namespace} --overrides='${JSON.stringify(
+      `kubectl run ${podName} --image=${imageName} --restart=Never --command --namespace=${namespace} --overrides='${JSON.stringify(
         {
           spec: {
             containers: [
               {
-                name: 'nodejs-container',
-                image: 'node:22',
+                name: podName,
+                image: imageName,
                 env: envArgs,
                 command: ['sh', '-c', 'sleep infinity'],
               },

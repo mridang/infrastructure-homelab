@@ -60,6 +60,7 @@ elasticsearch.metadata.apply((metadata) => {
           'esidx',
           path.join(__dirname, 'scripts', 'index.ts'),
           metadata.namespace,
+          'node:22-slim',
           [
             {
               name: 'ELASTICSEARCH_VERSION',
