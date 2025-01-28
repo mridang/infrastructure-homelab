@@ -1,6 +1,33 @@
 import * as k8s from '@pulumi/kubernetes';
 import provider from './provider';
 
+new k8s.apps.v1.DeploymentPatch(
+  'coredns-annotations-patch',
+  {
+    metadata: {
+      name: 'coredns',
+      namespace: 'kube-system',
+      annotations: {
+        'pulumi.com/patchForce': 'true', // Force overwrite
+      },
+    },
+    spec: {
+      template: {
+        metadata: {
+          annotations: {
+            'prometheus.io/path': '/metrics',
+            'prometheus.io/port': '9402',
+            'prometheus.io/scrape': 'true',
+          },
+        },
+      },
+    },
+  },
+  {
+    provider,
+  },
+);
+
 /**
  * CoreDNS is some scenarios is managed by the K8 environment and this means
  * that we need to edit the configuration that CoreDNS uses.
