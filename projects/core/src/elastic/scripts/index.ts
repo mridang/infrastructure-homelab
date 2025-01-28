@@ -34,8 +34,9 @@ fetch(
   .then((data) => {
     if (data.acknowledged !== true) {
       throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
+    } else {
+      console.log('Index template "no-replication" upserted successfully');
     }
-    console.log('Index template updated successfully:', data);
   })
   .catch((error) => console.error(error));
 
@@ -69,8 +70,9 @@ fetch(
   .then((data) => {
     if (data.acknowledged !== true) {
       throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
+    } else {
+      console.log('Index template "bump-max-fields" upserted successfully');
     }
-    console.log('Index template updated successfully:', data);
   })
   .catch((error) => console.error(error));
 
@@ -110,8 +112,9 @@ fetch(
   .then((data) => {
     if (data.acknowledged !== true) {
       throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
+    } else {
+      console.log('Lifecycle policy "packetbeat" updated successfully');
     }
-    console.log('Index template updated successfully:', data);
   })
   .catch((error) => console.error(error));
 
@@ -137,8 +140,13 @@ fetch(
   .then((data) => {
     if (data.acknowledged !== true) {
       throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
+    } else {
+      if (data.rolled_over) {
+        console.log(`Rolled over ${data.old_index} to ${data.new_index}`);
+      } else {
+        throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
+      }
     }
-    console.log('Index template updated successfully:', data);
   })
   .catch((error) => console.error(error));
 
@@ -164,8 +172,13 @@ fetch(
   .then((data) => {
     if (data.acknowledged !== true) {
       throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
+    } else {
+      if (data.rolled_over) {
+        console.log(`Rolled over ${data.old_index} to ${data.new_index}`);
+      } else {
+        throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
+      }
     }
-    console.log('Index template updated successfully:', data);
   })
   .catch((error) => console.error(error));
 
@@ -191,7 +204,12 @@ fetch(
   .then((data) => {
     if (data.acknowledged !== true) {
       throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
+    } else {
+      if (data.rolled_over) {
+        console.log(`Rolled over ${data.old_index} to ${data.new_index}`);
+      } else {
+        throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
+      }
     }
-    console.log('Index template updated successfully:', data);
   })
   .catch((error) => console.error(error));
