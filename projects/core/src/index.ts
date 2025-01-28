@@ -4,6 +4,7 @@ import './dns';
 import './certman';
 import './tailscale';
 import './headlamp';
+import './argocd';
 import './service.hello';
 import path from 'path';
 import * as fs from 'node:fs';
