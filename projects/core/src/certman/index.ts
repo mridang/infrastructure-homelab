@@ -1,7 +1,7 @@
 import * as k8s from '@pulumi/kubernetes';
 import * as helm from '@pulumi/kubernetes/helm/v3';
-import provider from './provider';
-import { cloudflareEmail, cloudflareSecret } from './cloudflare';
+import provider from '../provider';
+import { cloudflareEmail, cloudflareSecret } from '../cloudflare';
 
 const certManagerHelmRelease = new helm.Release('cert-manager', {
   chart: 'cert-manager',
