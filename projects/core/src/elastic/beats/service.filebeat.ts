@@ -97,7 +97,7 @@ new k8s.apiextensions.CustomResource(
           {
             decode_json_fields: {
               fields: ['message'],
-              target: '',
+              target: 'custom',
               overwrite_keys: true,
             },
           },
@@ -193,6 +193,22 @@ new k8s.apiextensions.CustomResource(
               id: 'parse_klog',
               source: fs.readFileSync(
                 path.join(__dirname, 'processors', 'parse_klog.js'),
+                'utf-8',
+              ),
+            },
+          },
+          {
+            script: {
+              when: {
+                regexp: {
+                  message:
+                    '^time="(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z)"\\s+level=(debug|info|warn|error)\\s+msg="([^"]+)"',
+                },
+              },
+              lang: 'javascript',
+              id: 'parse_argocd',
+              source: fs.readFileSync(
+                path.join(__dirname, 'processors', 'parse_argocd.js'),
                 'utf-8',
               ),
             },
