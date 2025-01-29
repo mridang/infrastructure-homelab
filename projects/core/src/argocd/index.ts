@@ -1,20 +1,6 @@
 import * as k8s from '@pulumi/kubernetes';
-import * as fs from 'node:fs';
-import path from 'node:path';
 import { interpolate } from '@pulumi/pulumi';
 import provider from '../provider';
-
-const githubSSHSecret = new k8s.core.v1.Secret('github-ssh-key', {
-  metadata: {
-    name: 'github-ssh-key',
-  },
-  stringData: {
-    'ssh-privatekey': fs.readFileSync(
-      path.join(__dirname, '..', '..', '..', '..', 'id_rsa_k8'),
-      'utf8',
-    ),
-  },
-});
 
 const webhookSecret = new k8s.core.v1.Secret('argocd-webhook-secret', {
   metadata: {
@@ -46,13 +32,6 @@ const argoCD = new k8s.helm.v3.Release('argocd-operator', {
     controller: {
       enabled: true,
     },
-    repositoryCredentials: [
-      {
-        url: 'git@github.com:your/repo.git',
-        secretName: 'github-ssh-key',
-        knownHostsConfigMap: 'github-known-hosts',
-      },
-    ],
     webhook: {
       enabled: true,
       secretName: 'argocd-webhook-secret',
