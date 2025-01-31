@@ -4,7 +4,7 @@ metadata:
     name: ipfs-kubo
     namespace: default
 spec:
-    type: LoadBalancer
+    type: ClusterIP
     ports:
         -   name: "public-libp2p-port"
             port: 4001
