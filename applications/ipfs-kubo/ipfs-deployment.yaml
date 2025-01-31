@@ -8,6 +8,10 @@ spec:
   selector:
     matchLabels:
       app: ipfs
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0   # Ensure the old pod is shut down first
+      maxSurge: 1         # Allows for one new pod to be created after shutdown
   template:
     metadata:
       labels:
