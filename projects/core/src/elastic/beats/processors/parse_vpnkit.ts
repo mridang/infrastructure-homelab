@@ -1,4 +1,5 @@
-var ecsLevels = {
+// @ts-ignore since this is not actually declared multiple times
+const ecsLevels: Record<string, string> = {
   debug: 'debug',
   info: 'info',
   warning: 'warn',
@@ -7,7 +8,8 @@ var ecsLevels = {
   fatal: 'critical',
 };
 
-var regexLevel =
+// @ts-ignore since this is not actually declared multiple times
+const logPattern =
   /^time="([^"]+)"\s+level=(debug|info|warning|error|panic|fatal)\s+msg="([^"]+)"$/;
 
 /**
@@ -16,10 +18,11 @@ var regexLevel =
  *
  * @param event
  */
-function process(event) {
-  var logMatch = event.Get('message').match(regexLevel);
+// @ts-ignore the unused warning since this method is actually used
+function process(event: Event): void {
+  const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {
-    var logLevel = logMatch[2];
+    const logLevel = logMatch[2];
     if (ecsLevels[logLevel]) {
       event.Put('log.level', ecsLevels[logLevel]);
     } else {

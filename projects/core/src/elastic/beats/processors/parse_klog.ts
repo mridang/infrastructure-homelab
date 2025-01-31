@@ -1,11 +1,13 @@
-var ecsLevels = {
-  I: 'info', // Map klog info level to ECS info
-  W: 'warn', // Map klog warn level to ECS warn
-  E: 'error', // Map klog error level to ECS error
-  F: 'critical', // Map klog fatal level to ECS critical
+// @ts-ignore since this is not actually declared multiple times
+const ecsLevels = {
+  I: 'info',
+  W: 'warn',
+  E: 'error',
+  F: 'critical',
 };
 
-var regexLevel = /^[IWEF](\d{4} \d{2}:\d{2}:\d{2}\.\d+)\s+\d+\s+.*?]\s(.*)$/;
+// @ts-ignore since this is not actually declared multiple times
+const logPattern = /^[IWEF](\d{4} \d{2}:\d{2}:\d{2}\.\d+)\s+\d+\s+.*?]\s(.*)$/;
 
 /**
  * I0117 07:28:57.028111       1 controller.go:1293] provision "default/elasticsearch-data-my-cluster-es-default-0" class "hostpath": volume "pvc-38511ace-7194-496b-b3a4-0df77072775f" provisioned
@@ -15,16 +17,13 @@ var regexLevel = /^[IWEF](\d{4} \d{2}:\d{2}:\d{2}\.\d+)\s+\d+\s+.*?]\s(.*)$/;
  *
  * @param event
  */
-function process(event) {
-  var logMatch = event.Get('message').match(regexLevel);
+// @ts-ignore the unused warning since this method is actually used
+function process(event: Event): void {
+  const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {
-    var klogLevel = logMatch[0][0]; // Extract klog level (I, W, E, F)
-    var ecsLevel = ecsLevels[klogLevel] || 'unknown'; // Map klog level to ECS level
-
-    // Set the ECS level
+    const klogLevel = logMatch[0][0];
+    const ecsLevel = ecsLevels[klogLevel] || 'unknown';
     event.Put('log.level', ecsLevel);
-
-    // Extract and set the message
     event.Put('message', logMatch[2]);
   }
 }

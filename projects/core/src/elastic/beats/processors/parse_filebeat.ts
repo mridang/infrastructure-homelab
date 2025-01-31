@@ -1,14 +1,16 @@
-var ecsLevels = {
+// @ts-ignore since this is not actually declared multiple times
+const ecsLevels: Record<string, string> = {
   debug: 'debug',
   info: 'info',
   warn: 'warn',
   error: 'error',
-  dpanic: 'critical', // Mapping DPanic to 'critical' as it's typically treated as a serious issue.
-  panic: 'critical', // Mapping Panic to 'critical'.
-  fatal: 'critical', // Mapping Fatal to 'critical'.
+  dpanic: 'critical',
+  panic: 'critical',
+  fatal: 'critical',
 };
 
-var regexLevel = /^\[(debug|info|warn|error|dpanic|panic|fatal)\]\s+(.+)$/;
+// @ts-ignore since this is not actually declared multiple times
+const logPattern = /^\[(debug|info|warn|error|dpanic|panic|fatal)\]\s+(.+)$/;
 
 /**
  * time="2025-01-20T15:01:53Z" level=error msg="Port 443 for service traefik is already opened by another service"
@@ -16,10 +18,11 @@ var regexLevel = /^\[(debug|info|warn|error|dpanic|panic|fatal)\]\s+(.+)$/;
  *
  * @param event
  */
-function process(event) {
-  var logMatch = event.Get('message').match(regexLevel);
+// @ts-ignore the unused warning since this method is actually used
+function process(event: Event): void {
+  const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {
-    var logLevel = logMatch[1];
+    const logLevel = logMatch[1];
     if (ecsLevels[logLevel]) {
       event.Put('log.level', ecsLevels[logLevel]);
     } else {

@@ -11,11 +11,14 @@
  * 2025/01/20 02:49:58 health(warnable=not-in-map-poll): ok
  */
 
-var regex = /^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})\s+(.*)$/;
+// @ts-ignore since this is not actually declared multiple times
+const logPattern = /^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})\s+(.*)$/;
 
-function process(event) {
-  var logMatch = event.Get('message').match(regex);
+// @ts-ignore the unused warning since this method is actually used
+function process(event: Event): void {
+  const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {
     event.Put('message', logMatch[2]);
+    event.Put('log.level', 'info');
   }
 }

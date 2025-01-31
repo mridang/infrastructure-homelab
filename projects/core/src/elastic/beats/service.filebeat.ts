@@ -2,9 +2,8 @@ import * as k8s from '@pulumi/kubernetes';
 import { elasticsearch } from '../elastic';
 import provider from '../../provider';
 import { ELASTIC_VERSION } from '../constants';
-import path from 'path';
-import * as fs from 'node:fs';
 import { kibana } from '../kibana';
+import { scriptProcessors } from './processors';
 
 const filebeatServiceAccount = new k8s.core.v1.ServiceAccount('filebeat', {
   metadata: { name: 'filebeat', namespace: 'default' },
@@ -97,122 +96,11 @@ new k8s.apiextensions.CustomResource(
           {
             decode_json_fields: {
               fields: ['message'],
-              target: 'custom',
+              target: '',
               overwrite_keys: true,
             },
           },
-          {
-            script: {
-              when: {
-                regexp: {
-                  message:
-                    '[\\\\u001b\\\\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]',
-                },
-              },
-              lang: 'javascript',
-              id: 'remove_ansi_color',
-              source: fs.readFileSync(
-                path.join(__dirname, 'processors', 'strip_color.js'),
-                'utf-8',
-              ),
-            },
-          },
-          {
-            script: {
-              when: {
-                regexp: {
-                  message:
-                    '^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z)\\s+(TRC|DBG|INF|WRN|ERR|FTL|PNC)\\s+(.*)',
-                },
-              },
-              lang: 'javascript',
-              id: 'parse_traefik',
-              source: fs.readFileSync(
-                path.join(__dirname, 'processors', 'parse_traefik.js'),
-                'utf-8',
-              ),
-            },
-          },
-          {
-            script: {
-              when: {
-                regexp: {
-                  message:
-                    '^(\\d{4}\\/\\d{2}\\/\\d{2} \\d{2}:\\d{2}:\\d{2})\\s+(.*)',
-                },
-              },
-              lang: 'javascript',
-              id: 'parse_tailscale',
-              source: fs.readFileSync(
-                path.join(__dirname, 'processors', 'parse_tailscale.js'),
-                'utf-8',
-              ),
-            },
-          },
-          {
-            script: {
-              when: {
-                regexp: {
-                  message:
-                    '^time="([^"]+)"\\s+level=(debug|info|warning|error|panic|fatal)\\s+msg="([^"]+)"$',
-                },
-              },
-              lang: 'javascript',
-              id: 'parse_vpnkit',
-              source: fs.readFileSync(
-                path.join(__dirname, 'processors', 'parse_vpnkit.js'),
-                'utf-8',
-              ),
-            },
-          },
-          {
-            script: {
-              when: {
-                regexp: {
-                  message:
-                    '^time="([^"]+)"\\s+level=(debug|info|warning|error|panic|fatal)\\s+msg="([^"]+)"$',
-                },
-              },
-              lang: 'javascript',
-              id: 'parse_filebeat',
-              source: fs.readFileSync(
-                path.join(__dirname, 'processors', 'parse_filebeat.js'),
-                'utf-8',
-              ),
-            },
-          },
-          {
-            script: {
-              when: {
-                regexp: {
-                  message:
-                    '^[IWEF](\\d{4} \\d{2}:\\d{2}:\\d{2}\\.\\d+)\\s+\\d+\\s+.*?](.*)$',
-                },
-              },
-              lang: 'javascript',
-              id: 'parse_klog',
-              source: fs.readFileSync(
-                path.join(__dirname, 'processors', 'parse_klog.js'),
-                'utf-8',
-              ),
-            },
-          },
-          {
-            script: {
-              when: {
-                regexp: {
-                  message:
-                    '^time="(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z)"\\s+level=(debug|info|warn|error)\\s+msg="([^"]+)"',
-                },
-              },
-              lang: 'javascript',
-              id: 'parse_argocd',
-              source: fs.readFileSync(
-                path.join(__dirname, 'processors', 'parse_argocd.js'),
-                'utf-8',
-              ),
-            },
-          },
+          ...scriptProcessors,
         ],
       },
       daemonSet: {
