@@ -2,6 +2,7 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRouteTCP
 metadata:
     name: ipfs-kubo-tcp-ingress
+    namespace: default
 spec:
     entryPoints:
         - ipfstcp
@@ -15,6 +16,7 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRouteUDP
 metadata:
     name: ipfs-kubo-udp-ingress
+    namespace: default
 spec:
     entryPoints:
         - ipfsudp
@@ -28,6 +30,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
     name: tailscale-ipfs-ingress
+    namespace: default
 spec:
     ingressClassName: tailscale
     defaultBackend:
