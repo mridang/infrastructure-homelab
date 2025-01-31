@@ -8,9 +8,6 @@ data:
         {
             "API": {
                 "HTTPHeaders": {
-                  "Access-Control-Allow-Origin": "[\"*\"]",
-                  "Access-Control-Allow-Methods": "[\"PUT\", \"POST\"]",
-                  "Access-Control-Allow-Credentials": "[\"true\"]"
                 }
             },
             "Addresses": {
