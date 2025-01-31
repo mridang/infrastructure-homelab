@@ -20,7 +20,7 @@ spec:
       containers:
         - name: ipfs
           image: ipfs/kubo:latest
-          args: [ "daemon", "--migrate=true", "--agent-version-suffix=docker", "--config=/etc/config/config.json" ]
+          args: [ "daemon", "--migrate=true", "--agent-version-suffix=docker", "--config-file=/etc/config/config.json" ]
           ports:
             - containerPort: 4001
             - containerPort: 4002
@@ -29,8 +29,6 @@ spec:
             - containerPort: 5001
             - containerPort: 8080
           env:
-            - name: IPFS_PATH
-              value: /data/ipfs
             - name: IPFS_LOGGING_FMT
               value: "nocolor"
               #value: "color"
