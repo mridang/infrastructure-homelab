@@ -94,6 +94,18 @@ export const traefik = new k8s.helm.v3.Chart(
             enabled: true,
           },
         },
+        ipfstcp: {
+          containerPort: 4001,
+          exposedPort: 4001,
+          nodePort: 32004,
+          protocol: 'TCP',
+        },
+        ipfsudp: {
+          containerPort: 4001,
+          exposedPort: 4001,
+          nodePort: 32005,
+          protocol: 'UDP',
+        },
       },
       ingressRoute: {
         dashboard: {
