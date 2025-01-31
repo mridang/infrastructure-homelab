@@ -1,17 +1,18 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: ipfs
   namespace: default
 spec:
+  serviceName: "ipfs"
   replicas: 1
   selector:
     matchLabels:
       app: ipfs
-  strategy:
+  updateStrategy:
+    type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 0   # Ensure the old pod is shut down first
-      maxSurge: 1         # Allows for one new pod to be created after shutdown
+      partition: 0
   template:
     metadata:
       labels:
