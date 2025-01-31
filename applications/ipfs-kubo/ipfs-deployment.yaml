@@ -17,6 +17,16 @@ spec:
       labels:
         app: ipfs
     spec:
+      initContainers:
+        - name: init-copy-config
+          image: busybox
+          command: [ "sh", "-c", "cp /etc/config/config.json /data/ipfs/config" ]
+          volumeMounts:
+            - name: ipfs-kubo-data
+              mountPath: /data/ipfs
+            - name: ipfs-kubo-config
+              mountPath: /etc/config
+              readOnly: true
       containers:
         - name: ipfs
           image: ipfs/kubo:latest
