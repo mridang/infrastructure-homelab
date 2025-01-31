@@ -43,8 +43,8 @@ spec:
               value: "nocolor"
               #value: "color"
             - name: IPFS_LOGGING
-              value: "debug"
-              #value: "info"
+              #value: "debug"
+              value: "info"
               #value: "warn"
               #value: "error"
               #value: "dpanic"
