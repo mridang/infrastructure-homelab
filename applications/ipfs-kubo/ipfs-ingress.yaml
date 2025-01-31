@@ -21,8 +21,7 @@ spec:
     entryPoints:
         - ipfsudp
     routes:
-        -   match: HostSNI(`*`)
-            services:
+        -   services:
                 -   name: ipfs-kubo
                     port: 4001
 ---
