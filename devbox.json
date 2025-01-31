@@ -13,8 +13,8 @@
     "init_hook": ["export $(xargs < .env)"],
     "scripts": {
       "steampipe": ["steampipe plugin install kubernetes", "steampipe query"],
-      "nsenter":   "docker run -it --rm --privileged --pid=host justincormack/nsenter1 -- hostname",
-      "curl":      "kubectl run --stdin --tty --rm curl-test --image=curlimages/curl:latest --restart=Never -- /bin/sh"
+      "nsenter": "docker run -it --rm --privileged --pid=host justincormack/nsenter1 -- hostname",
+      "curl": "kubectl run --stdin --tty --rm curl-test --image=curlimages/curl:latest --restart=Never -- /bin/sh"
     }
   }
 }
