@@ -1,4 +1,4 @@
-// @ts-ignore since this is not actually declared multiple times
+// @ts-expect-error since this is not actually declared multiple times
 const ecsLevels: Record<string, string> = {
   debug: 'debug',
   info: 'info',
@@ -9,7 +9,7 @@ const ecsLevels: Record<string, string> = {
   fatal: 'critical',
 };
 
-// @ts-ignore since this is not actually declared multiple times
+// @ts-expect-error since this is not actually declared multiple times
 const logPattern = /^\[(debug|info|warn|error|dpanic|panic|fatal)\]\s+(.+)$/;
 
 /**
@@ -18,7 +18,8 @@ const logPattern = /^\[(debug|info|warn|error|dpanic|panic|fatal)\]\s+(.+)$/;
  *
  * @param event
  */
-// @ts-ignore the unused warning since this method is actually used
+// @ts-expect-error the unused warning since this method is actually used
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function process(event: Event): void {
   const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {

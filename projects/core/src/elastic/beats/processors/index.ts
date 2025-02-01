@@ -7,7 +7,7 @@ import * as vm from 'vm';
 const dummyEvent = {
   data: {
     message: 'foo',
-  } as Record<string, string | any>,
+  } as Record<string, string>,
 
   Get<T>(key: string): T | undefined {
     if (this.data[key]) {
@@ -42,7 +42,7 @@ const dummyEvent = {
     //
   },
 
-  Tag(_tag: string): void {
+  Tag(): void {
     //
   },
 

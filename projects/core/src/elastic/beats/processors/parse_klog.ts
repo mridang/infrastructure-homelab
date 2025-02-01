@@ -1,4 +1,4 @@
-// @ts-ignore since this is not actually declared multiple times
+// @ts-expect-error since this is not actually declared multiple times
 const ecsLevels = {
   I: 'info',
   W: 'warn',
@@ -6,7 +6,7 @@ const ecsLevels = {
   F: 'critical',
 };
 
-// @ts-ignore since this is not actually declared multiple times
+// @ts-expect-error since this is not actually declared multiple times
 const logPattern = /^[IWEF](\d{4} \d{2}:\d{2}:\d{2}\.\d+)\s+\d+\s+.*?]\s(.*)$/;
 
 /**
@@ -17,7 +17,8 @@ const logPattern = /^[IWEF](\d{4} \d{2}:\d{2}:\d{2}\.\d+)\s+\d+\s+.*?]\s(.*)$/;
  *
  * @param event
  */
-// @ts-ignore the unused warning since this method is actually used
+// @ts-expect-error the unused warning since this method is actually used
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function process(event: Event): void {
   const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {
