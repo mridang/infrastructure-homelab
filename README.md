@@ -47,7 +47,8 @@ $ steampipe query "SELECT name FROM kubernetes_pod"
 +-------------------------------------------------+
 | name                                            |
 +-------------------------------------------------+
-| elastic-operator-0                              |
+| elastic-operator-0
+|
 | kube-scheduler-docker-desktop                   |
 | my-kibana-kb-786f98bfc9-v7x7w                   |
 | ts-tailscale-apm-ingress-v9qzc-0                |
@@ -59,3 +60,5 @@ $ steampipe query "SELECT name FROM kubernetes_pod"
 
 More information about querying Kubernetes via Steampipe can be found on the
 [associated plugin page](https://hub.steampipe.io/plugins/turbot/kubernetes).
+
+## Issues
