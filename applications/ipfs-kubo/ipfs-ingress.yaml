@@ -1,0 +1,42 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRouteTCP
+metadata:
+    name: ipfs-kubo-tcp-ingress
+    namespace: default
+spec:
+    entryPoints:
+        - ipfstcp
+    routes:
+        -   match: HostSNI(`*`)
+            services:
+                -   name: ipfs-kubo
+                    port: 4001
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRouteUDP
+metadata:
+    name: ipfs-kubo-udp-ingress
+    namespace: default
+spec:
+    entryPoints:
+        - ipfsudp
+    routes:
+        -   services:
+                -   name: ipfs-kubo
+                    port: 4001
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: tailscale-ipfs-ingress
+    namespace: default
+spec:
+    ingressClassName: tailscale
+    defaultBackend:
+        service:
+            name: "ipfs-kubo"
+            port:
+                number: 5001
+    tls:
+        -   hosts:
+                - ipfs
