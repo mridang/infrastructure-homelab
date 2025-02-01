@@ -1,6 +1,7 @@
 import * as k8s from '@pulumi/kubernetes';
 import provider from '../provider';
 import { cloudflareSecret } from '../cloudflare';
+import { apmServerUrl } from '../elastic';
 
 /**
  * Traefik acts as the ingress controller for the different services.
@@ -32,29 +33,13 @@ export const traefik = new k8s.helm.v3.Chart(
         enabled: true,
         size: '128Mi',
       },
-      affinity: {
-        nodeAffinity: {
-          requiredDuringSchedulingIgnoredDuringExecution: {
-            nodeSelectorTerms: [
-              {
-                matchExpressions: [
-                  {
-                    key: 'node-role.kubernetes.io/control-plane',
-                    operator: 'Exists',
-                  },
-                ],
-              },
-            ],
+      tracing: {
+        otlp: {
+          grpc: {
+            endpoint: apmServerUrl,
           },
         },
       },
-      tolerations: [
-        {
-          key: 'node-role.kubernetes.io/control-plane',
-          operator: 'Exists',
-          effect: 'NoSchedule',
-        },
-      ],
       deployment: {
         revisionHistoryLimit: 1,
         additionalVolumes: [
