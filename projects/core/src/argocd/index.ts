@@ -2,7 +2,7 @@ import * as k8s from '@pulumi/kubernetes';
 import { interpolate } from '@pulumi/pulumi';
 import provider from '../provider';
 
-const webhookSecret = new k8s.core.v1.Secret('argocd-webhook-secret', {
+new k8s.core.v1.Secret('argocd-webhook-secret', {
   metadata: {
     name: 'argocd-webhook-secret',
   },

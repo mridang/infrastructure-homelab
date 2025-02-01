@@ -1,4 +1,4 @@
-// @ts-ignore since this is not actually declared multiple times
+// @ts-expect-error since this is not actually declared multiple times
 const ecsLevels: Record<string, string> = {
   TRC: 'debug',
   DBG: 'debug',
@@ -9,11 +9,12 @@ const ecsLevels: Record<string, string> = {
   PNC: 'critical',
 };
 
-// @ts-ignore since this is not actually declared multiple times
+// @ts-expect-error since this is not actually declared multiple times
 const logPattern =
   /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)\s+(TRC|DBG|INF|WRN|ERR|FTL|PNC)\s+(.*)$/;
 
-// @ts-ignore the unused warning since this method is actually used
+// @ts-expect-error the unused warning since this method is actually used
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function process(event: Event): void {
   const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {

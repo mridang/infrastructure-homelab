@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Event {
   Get<T>(key: string): T | undefined;
   Put(key: string, value: string): string;

@@ -15,7 +15,7 @@ export default function (
   scriptPath: string,
   namespace: string = 'default',
   imageName: string = 'node:22-slim',
-  envArgs: { name: string; value?: string; valueFrom?: any }[],
+  envArgs: { name: string; value?: string; valueFrom?: unknown }[],
 ) {
   try {
     console.log(`Creating a ${imageName} container pod: ${podName}...`);

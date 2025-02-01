@@ -4,7 +4,7 @@ import { elasticsearch } from './elastic';
 import { execSync } from 'node:child_process';
 import kubeexec from '../utils/kubeexec';
 import path from 'path';
-import { log } from '@pulumi/pulumi';
+import * as pulumi from '@pulumi/pulumi';
 import { ELASTIC_VERSION } from './constants';
 
 const eckOperatorNamespace = new k8s.core.v1.Namespace('elastic', {
@@ -36,11 +36,14 @@ export * from './beats/service.filebeat';
 export * from './beats/service.metricbeat';
 export * from './beats/service.packetbeat';
 
-elasticsearch.metadata.apply((metadata) => {
+elasticsearch.metadata.apply(async (metadata) => {
   const name = metadata.name;
   const namespace = metadata.namespace;
 
-  log.debug('Waiting for Elasticsearch cluster to become healthy...');
+  // eslint-disable-next-line testing-library/no-debugging-utils
+  await pulumi.log.debug(
+    'Waiting for Elasticsearch cluster to become healthy...',
+  );
 
   let health = '';
   for (let i = 0; i < 10; i++) {
@@ -52,10 +55,11 @@ elasticsearch.metadata.apply((metadata) => {
       const jsonResult = JSON.parse(result);
       health = jsonResult?.status?.health || '';
 
-      log.debug(`Cluster health status: ${health}`);
+      // eslint-disable-next-line testing-library/no-debugging-utils
+      await pulumi.log.debug(`Cluster health status: ${health}`);
 
       if (health) {
-        log.info('Elasticsearch cluster is healthy!');
+        await pulumi.log.info('Elasticsearch cluster is healthy!');
         kubeexec(
           'esidx',
           path.join(__dirname, 'scripts', 'index.ts'),
