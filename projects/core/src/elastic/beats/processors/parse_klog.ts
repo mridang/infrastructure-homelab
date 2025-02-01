@@ -1,13 +1,14 @@
 // @ts-expect-error since this is not actually declared multiple times
 const ecsLevels = {
-  I: 'info',
-  W: 'warn',
-  E: 'error',
-  F: 'critical',
+  i: 'info',
+  w: 'warn',
+  e: 'error',
+  f: 'critical',
 };
 
 // @ts-expect-error since this is not actually declared multiple times
-const logPattern = /^[IWEF](\d{4} \d{2}:\d{2}:\d{2}\.\d+)\s+\d+\s+.*?]\s(.*)$/;
+const logPattern =
+  /^([IWEF])(\d{4} \d{2}:\d{2}:\d{2}\.\d+)\s+\d+\s+.*?]\s(.*)$/;
 
 /**
  * I0117 07:28:57.028111       1 controller.go:1293] provision "default/elasticsearch-data-my-cluster-es-default-0" class "hostpath": volume "pvc-38511ace-7194-496b-b3a4-0df77072775f" provisioned
@@ -19,12 +20,10 @@ const logPattern = /^[IWEF](\d{4} \d{2}:\d{2}:\d{2}\.\d+)\s+\d+\s+.*?]\s(.*)$/;
  */
 // @ts-expect-error the unused warning since this method is actually used
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function process(event: Event): void {
+function processLog(event: Event): void {
   const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {
-    const klogLevel = logMatch[0][0];
-    const ecsLevel = ecsLevels[klogLevel] || 'unknown';
-    event.Put('log.level', ecsLevel);
-    event.Put('message', logMatch[2]);
+    event.Put('log.level', ecsLevels[logMatch[1]?.toLowerCase()] || 'unknown');
+    event.Put('message', logMatch[3]);
   }
 }

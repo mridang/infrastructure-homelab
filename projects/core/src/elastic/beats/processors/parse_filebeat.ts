@@ -20,15 +20,10 @@ const logPattern = /^\[(debug|info|warn|error|dpanic|panic|fatal)\]\s+(.+)$/;
  */
 // @ts-expect-error the unused warning since this method is actually used
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function process(event: Event): void {
+function processLog(event: Event): void {
   const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {
-    const logLevel = logMatch[1];
-    if (ecsLevels[logLevel]) {
-      event.Put('log.level', ecsLevels[logLevel]);
-    } else {
-      event.Put('log.level', 'unknown');
-    }
+    event.Put('log.level', ecsLevels[logMatch[1]?.toLowerCase()] || 'unknown');
     event.Put('message', logMatch[2]);
   }
 }

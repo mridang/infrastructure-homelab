@@ -92,8 +92,8 @@ export const scriptProcessors = fs
 
     vm.runInContext(transpiledCode, context);
 
-    if (typeof context.process === 'function') {
-      context.process(context.dummyEvent);
+    if (typeof context.processLog === 'function') {
+      context.processLog(context.dummyEvent);
       if (context.logPattern) {
         return {
           script: {
@@ -110,7 +110,7 @@ export const scriptProcessors = fs
             },
             lang: 'javascript',
             id: processorId,
-            source: transpiledCode,
+            source: transpiledCode.replace('processLog', 'process'),
           },
         };
       } else {

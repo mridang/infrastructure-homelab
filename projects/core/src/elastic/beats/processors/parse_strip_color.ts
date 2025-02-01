@@ -4,7 +4,7 @@ const logPattern =
 
 // @ts-expect-error the unused warning since this method is actually used
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function process(event: Event): void {
+function processLog(event: Event): void {
   const message = event.Get<string>('message');
   if (message) {
     event.Put('message', message.replace(logPattern, ''));
