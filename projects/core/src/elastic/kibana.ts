@@ -20,6 +20,23 @@ export const kibana = new k8s.apiextensions.CustomResource('kibana-instance', {
     count: 1,
     elasticsearchRef: { name: elasticsearch.metadata.name },
     config: {
+      logging: {
+        appenders: {
+          jason: {
+            type: 'console',
+            layout: {
+              type: 'json',
+            },
+          },
+        },
+        loggers: [
+          {
+            name: 'root',
+            appenders: ['jason'],
+            level: 'info',
+          },
+        ],
+      },
       'xpack.fleet.packages': [
         {
           name: 'apm',
