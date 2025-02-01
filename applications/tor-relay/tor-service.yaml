@@ -5,5 +5,9 @@ metadata:
     namespace: default
 spec:
     type: ClusterIP
+    ports:
+        -   name: "public-libp2p-port"
+            port: 30000
+            targetPort: 30000
     selector:
         app: tor-relay
