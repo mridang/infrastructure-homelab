@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: deployment-tor-relay
+    namespace: default
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: tor-relay
+    template:
+        metadata:
+            labels:
+                app: tor-relay
+        spec:
+            containers:
+                -   name: tor-relay
+                    image: thetorproject/snowflake-proxy:latest
