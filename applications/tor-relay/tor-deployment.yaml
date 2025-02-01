@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: deployment-tor-relay
+    name: tor-relay
     namespace: default
 spec:
     replicas: 1
@@ -16,3 +16,4 @@ spec:
             containers:
                 -   name: tor-relay
                     image: thetorproject/snowflake-proxy:latest
+                    args: [ "-verbose" ]
