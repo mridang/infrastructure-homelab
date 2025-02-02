@@ -3,6 +3,7 @@ import { ELASTIC_VERSION } from './constants';
 import provider from '../provider';
 import { elasticsearch } from './elastic';
 import { interpolate } from '@pulumi/pulumi';
+import { settings } from '../settings';
 
 const APM_PORT = 8200;
 
@@ -51,8 +52,7 @@ new k8s.apiextensions.CustomResource(
       entryPoints: ['websecure'],
       routes: [
         {
-          match:
-            'Host(`rum.homelab.mrida.ng`) && (Path(`/intake/v2/rum/events`) || Path(`/intake/v3/rum/events`))',
+          match: `Host(\`rum.${settings.clusterDomain}\`) && (Path(\`/intake/v2/rum/events\`) || Path(\`/intake/v3/rum/events\`))`,
           kind: 'Rule',
           services: [
             {

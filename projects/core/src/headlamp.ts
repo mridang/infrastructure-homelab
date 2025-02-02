@@ -1,6 +1,7 @@
 import * as k8s from '@pulumi/kubernetes';
 import provider from './provider';
 import { traefik } from './traefik';
+import { settings } from './settings';
 
 new k8s.helm.v3.Chart('headlamp', {
   chart: 'headlamp',
@@ -26,7 +27,7 @@ new k8s.apiextensions.CustomResource(
       entryPoints: ['websecure'],
       routes: [
         {
-          match: 'Host(`headlamp.homelab.mrida.ng`)',
+          match: `Host(\`headlamp.${settings.clusterDomain}\`)`,
           kind: 'Rule',
           services: [
             {

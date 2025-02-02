@@ -1,6 +1,7 @@
 import * as k8s from '@pulumi/kubernetes';
 import { interpolate } from '@pulumi/pulumi';
 import provider from '../provider';
+import { settings } from '../settings';
 
 new k8s.core.v1.Secret('argocd-webhook-secret', {
   metadata: {
@@ -52,7 +53,7 @@ new k8s.apiextensions.CustomResource(
       entryPoints: ['websecure'],
       routes: [
         {
-          match: 'Host(`argocd.homelab.mrida.ng`)',
+          match: `Host(\`argocd.${settings.clusterDomain}\`)`,
           kind: 'Rule',
           services: [
             {

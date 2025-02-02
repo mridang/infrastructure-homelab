@@ -2,6 +2,7 @@ import * as k8s from '@pulumi/kubernetes';
 import provider from '../provider';
 import { cloudflareSecret } from '../cloudflare';
 import { apmServerUrl } from '../elastic';
+import { settings } from '../settings';
 
 /**
  * Traefik acts as the ingress controller for the different services.
@@ -104,7 +105,7 @@ export const traefik = new k8s.helm.v3.Chart(
               name: 'compression-middleware',
             },
           ],
-          matchRule: 'Host(`traefik.homelab.mrida.ng`)',
+          matchRule: `Host(\`traefik.${settings.clusterDomain}\`)`,
         },
         healthcheck: {
           enabled: true,

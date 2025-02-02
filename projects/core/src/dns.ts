@@ -1,5 +1,6 @@
 import * as k8s from '@pulumi/kubernetes';
 import provider from './provider';
+import { settings } from './settings';
 
 new k8s.apps.v1.DeploymentPatch(
   'coredns-annotations-patch',
@@ -60,7 +61,7 @@ new k8s.core.v1.ConfigMap(
                     lameduck 5s
                 }
                 ready
-                kubernetes cluster.local in-addr.arpa ip6.arpa homelab.mrida.ng {
+                kubernetes cluster.local in-addr.arpa ip6.arpa ${settings.clusterDomain} {
                     pods insecure
                     fallthrough in-addr.arpa ip6.arpa
                     ttl 30

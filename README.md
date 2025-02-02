@@ -1,3 +1,22 @@
+## Setup
+
+Create a cluster using Kind
+
+```
+kind create cluster --name=homelab-dev
+```
+
+You should be able to see the newly created cluster along with the Docker Desktop
+cluster (if you are running it)
+
+```
+$ kubectl config get-clusters
+
+NAME
+kind-homelab-dev
+docker-desktop
+```
+
 ### Setting up SSL
 
 Once you've set up the Cloudflare credentials, you'll need to run

@@ -3,6 +3,7 @@ import { ELASTIC_VERSION } from './constants';
 import provider from '../provider';
 import { elasticsearch } from './elastic';
 import { interpolate } from '@pulumi/pulumi';
+import { settings } from '../settings';
 
 export const kibana = new k8s.apiextensions.CustomResource('kibana-instance', {
   apiVersion: 'kibana.k8s.elastic.co/v1',
@@ -60,7 +61,7 @@ new k8s.apiextensions.CustomResource(
       entryPoints: ['websecure'],
       routes: [
         {
-          match: 'Host(`kibana.homelab.mrida.ng`)',
+          match: `Host(\`kibana.${settings.clusterDomain}\`)`,
           kind: 'Rule',
           services: [
             {

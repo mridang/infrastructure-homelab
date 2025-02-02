@@ -2,6 +2,7 @@ import * as k8s from '@pulumi/kubernetes';
 import * as helm from '@pulumi/kubernetes/helm/v3';
 import provider from '../provider';
 import { cloudflareEmail, cloudflareSecret } from '../cloudflare';
+import { settings } from '../settings';
 
 const certManagerHelmRelease = new helm.Release('cert-manager', {
   chart: 'cert-manager',
@@ -79,7 +80,7 @@ new k8s.apiextensions.CustomResource(
         name: 'letsencrypt-cloudflare',
         kind: 'ClusterIssuer',
       },
-      dnsNames: ['test.homelab.mrida.ng'],
+      dnsNames: [`test.${settings.clusterDomain}`],
     },
   },
   { provider, dependsOn: [certificateIssuer] },
