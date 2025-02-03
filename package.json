@@ -1,18 +1,20 @@
 {
   "name": "@mridang/k8",
   "scripts": {
-    "format": "prettier --write \"**/*.{js,ts,jsx,tsx,json,css,md,html}\"",
-    "format:check": "prettier --check \"**/*.{js,ts,jsx,tsx,json,css,md,html}\"",
-    "lint": "npx eslint .",
-    "lint:fix": "npx eslint . --fix",
+    "format": "nx format --all",
+    "format:check": "nx format:check --all",
+    "lint": "nx run-many --target=lint --all --verbose",
+    "lint:fix": "nx run-many --target=lint --all --verbose --fix",
     "test": "nx run-many --target=test --all --verbose",
     "build": "nx run-many --target=build --all --verbose",
     "deploy": "nx run-many --target=deploy --all --verbose",
-	"deploy:dev": "nx run-many --target=deploy --all --verbose --yes --stack=dev --non-interactive"
+    "deploy:dev": "nx run-many --target=deploy --all --verbose --yes --stack=dev --non-interactive"
   },
   "devDependencies": {
     "@mridang/eslint-defaults": "^1.0.0",
+    "@nx/eslint-plugin": "^20.4.0",
     "@nx/jest": "^20.4.0",
+    "@nx/linter": "^19.8.4",
     "@pulumi/eslint-plugin": "^0.2.0",
     "@pulumi/kubernetes": "^4.19.0",
     "@pulumi/pulumi": "^3.141.0",

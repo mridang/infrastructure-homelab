@@ -8,8 +8,8 @@ config:
   cloudflare:
     userEmail: CLOUDFLARE_USER_EMAIL
     apiToken: CLOUDFLARE_API_TOKEN
-  kubernetes:enableServerSideApply: "true"
+  kubernetes:enableServerSideApply: 'true'
   cluster:
-      environmentName: "test"
-      clusterName: "docker-desktop"
-      clusterDomain: "testlab.mrida.ng"
+    environmentName: 'test'
+    clusterName: 'docker-desktop'
+    clusterDomain: 'testlab.mrida.ng'

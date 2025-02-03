@@ -1,3 +1,3 @@
 module.exports = {
-  entry: ["{apps,libs}/**/src/index.{ts,tsx}"],
+  entry: ['{apps,libs}/**/src/index.{ts,tsx}'],
 };

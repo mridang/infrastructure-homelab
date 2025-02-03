@@ -24,7 +24,7 @@ function parseVpnkit(event: FilebeatEvent): void {
   if (logMatch) {
     event.Put(
       'log.level',
-		parseVpnkitLevels[logMatch[2]?.toLowerCase()] || 'unknown',
+      parseVpnkitLevels[logMatch[2]?.toLowerCase()] || 'unknown',
     );
     event.Put('message', logMatch[3]);
   }
