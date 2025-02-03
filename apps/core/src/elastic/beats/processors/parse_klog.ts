@@ -1,13 +1,13 @@
-// @ts-expect-error since this is not actually declared multiple times
-const ecsLevels = {
+import { FilebeatEvent } from './event';
+
+const parseKlogLevels: Record<string, string> = {
   i: 'info',
   w: 'warn',
   e: 'error',
   f: 'critical',
 };
 
-// @ts-expect-error since this is not actually declared multiple times
-const logPattern =
+const parseKlogPattern =
   /^([IWEF])(\d{4} \d{2}:\d{2}:\d{2}\.\d+)\s+\d+\s+.*?]\s(.*)$/;
 
 /**
@@ -18,12 +18,14 @@ const logPattern =
  *
  * @param event
  */
-// @ts-expect-error the unused warning since this method is actually used
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function processLog(event: Event): void {
-  const logMatch = event.Get<string>('message')?.match(logPattern);
+function parseKlog(event: FilebeatEvent): void {
+  const logMatch = event.Get<string>('message')?.match(parseKlogPattern);
   if (logMatch) {
-    event.Put('log.level', ecsLevels[logMatch[1]?.toLowerCase()] || 'unknown');
+    event.Put(
+      'log.level',
+      parseKlogLevels[logMatch[1]?.toLowerCase()] || 'unknown',
+    );
     event.Put('message', logMatch[3]);
   }
 }

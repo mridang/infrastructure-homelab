@@ -10,14 +10,14 @@
  * 2025/01/20 02:49:58 control: netmap: got new dial plan from control
  * 2025/01/20 02:49:58 health(warnable=not-in-map-poll): ok
  */
+import { FilebeatEvent } from './event';
 
-// @ts-expect-error since this is not actually declared multiple times
-const logPattern = /^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})\s+(.*)$/;
+const parseTailscalePattern =
+  /^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})\s+(.*)$/;
 
-// @ts-expect-error the unused warning since this method is actually used
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function processLog(event: Event): void {
-  const logMatch = event.Get<string>('message')?.match(logPattern);
+function parseTailscale(event: FilebeatEvent): void {
+  const logMatch = event.Get<string>('message')?.match(parseTailscalePattern);
   if (logMatch) {
     event.Put('message', logMatch[2]);
     event.Put('log.level', 'info');

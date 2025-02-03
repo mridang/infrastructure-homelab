@@ -1,5 +1,6 @@
-// @ts-expect-error since this is not actually declared multiple times
-const ecsLevels: Record<string, string> = {
+import { FilebeatEvent } from './event';
+
+const parseVpnKitLevels: Record<string, string> = {
   debug: 'debug',
   info: 'info',
   warning: 'warn',
@@ -8,8 +9,7 @@ const ecsLevels: Record<string, string> = {
   fatal: 'critical',
 };
 
-// @ts-expect-error since this is not actually declared multiple times
-const logPattern =
+const parseVpnkitPattern =
   /^time="([^"]+)"\s+level=(debug|info|warning|error|panic|fatal)\s+msg="([^"]+)"$/;
 
 /**
@@ -18,12 +18,14 @@ const logPattern =
  *
  * @param event
  */
-// @ts-expect-error the unused warning since this method is actually used
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function processLog(event: Event): void {
-  const logMatch = event.Get<string>('message')?.match(logPattern);
+function parseVpnkit(event: FilebeatEvent): void {
+  const logMatch = event.Get<string>('message')?.match(parseVpnkitPattern);
   if (logMatch) {
-    event.Put('log.level', ecsLevels[logMatch[2]?.toLowerCase()] || 'unknown');
+    event.Put(
+      'log.level',
+      parseVpnKitLevels[logMatch[2]?.toLowerCase()] || 'unknown',
+    );
     event.Put('message', logMatch[3]);
   }
 }

@@ -76,6 +76,7 @@ export const scriptProcessors = fs
     if (!transpiledCode) {
       throw new Error(`Transpilation failed for file: ${processorId}`);
     } else {
+      console.log(transpiledCode);
       return {
         processorId,
         transpiledCode,
@@ -120,3 +121,5 @@ export const scriptProcessors = fs
       throw new Error(`'process' function not found in file: ${processorId}`);
     }
   });
+
+console.log('moo');

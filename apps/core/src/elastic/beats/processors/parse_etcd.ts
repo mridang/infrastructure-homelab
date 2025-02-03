@@ -1,10 +1,10 @@
-// @ts-expect-error since this is not actually declared multiple times
-const logPattern = /.*\shash.*/;
+import { FilebeatEvent } from './event';
 
-// @ts-expect-error the unused warning since this method is actually used
+const parseEtcdPattern = /.*\shash.*/;
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function processLog(event: Event): void {
-  const logMatch = event.Get<string>('message')?.match(logPattern);
+function parseEtcd(event: FilebeatEvent): void {
+  const logMatch = event.Get<string>('message')?.match(parseEtcdPattern);
   if (logMatch) {
     event.Delete('hash');
   }

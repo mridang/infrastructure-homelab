@@ -1,21 +1,15 @@
 {
-	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "apps/service-status",
-	"projectType": "application",
-	"targets": {
-		"test": {
-			"executor": "@nrwl/jest:jest",
-			"outputs": [
-				"coverage/apps/service-status"
-			],
-			"options": {
-				"jestConfig": "apps/my-backend/jest.config.ts",
-				"passWithNoTests": true
-			}
-		}
-	},
-	"tags": [
-		"scope:my-backend"
-	],
-	"implicitDependencies": ["core"]
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/service-status",
+  "projectType": "application",
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  }
 }

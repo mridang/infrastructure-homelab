@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-interface Event {
+export interface FilebeatEvent {
   Get<T>(key: string): T | undefined;
   Put(key: string, value: string): string;
   Rename(sourceKey: string, targetKey: string): boolean;
