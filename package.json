@@ -1,13 +1,14 @@
 {
   "name": "@mridang/k8",
   "scripts": {
-    "build": "pulumi preview",
-    "deploy": "pulumi up",
     "format": "prettier --write \"**/*.{js,ts,jsx,tsx,json,css,md,html}\"",
     "format:check": "prettier --check \"**/*.{js,ts,jsx,tsx,json,css,md,html}\"",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint . --fix",
-	  "test": "nx run-many --target=test --all --verbose"
+    "test": "nx run-many --target=test --all --verbose",
+    "build": "nx run-many --target=build --all --verbose",
+    "deploy": "nx run-many --target=deploy --all --verbose",
+	"deploy:dev": "nx run-many --target=deploy --all --verbose --yes --stack=dev --non-interactive"
   },
   "devDependencies": {
     "@mridang/eslint-defaults": "^1.0.0",

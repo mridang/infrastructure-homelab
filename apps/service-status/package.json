@@ -1,3 +1,7 @@
 {
-  "name": "svc-status"
+  "name": "svc-status",
+  "scripts": {
+    "build": "pulumi preview",
+    "deploy": "pulumi up"
+  }
 }

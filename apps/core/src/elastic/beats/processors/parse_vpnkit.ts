@@ -1,6 +1,6 @@
 import { FilebeatEvent } from './event';
 
-const parseVpnKitLevels: Record<string, string> = {
+const parseVpnkitLevels: Record<string, string> = {
   debug: 'debug',
   info: 'info',
   warning: 'warn',
@@ -24,7 +24,7 @@ function parseVpnkit(event: FilebeatEvent): void {
   if (logMatch) {
     event.Put(
       'log.level',
-      parseVpnKitLevels[logMatch[2]?.toLowerCase()] || 'unknown',
+		parseVpnkitLevels[logMatch[2]?.toLowerCase()] || 'unknown',
     );
     event.Put('message', logMatch[3]);
   }

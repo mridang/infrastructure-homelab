@@ -61,10 +61,13 @@ export const scriptProcessors = fs
   .map((file) => {
     return {
       processorId: path.basename(file, '.ts'),
+      commonName: path
+        .basename(file, '.ts')
+        .replace(/_./g, (match) => match[1].toUpperCase()),
       fileContent: fs.readFileSync(path.join(__dirname, file), 'utf8'),
     };
   })
-  .map(({ processorId, fileContent }) => {
+  .map(({ processorId, fileContent, commonName }) => {
     const { outputText: transpiledCode } = ts.transpileModule(fileContent, {
       compilerOptions: {
         target: ts.ScriptTarget.ES5,
@@ -76,14 +79,14 @@ export const scriptProcessors = fs
     if (!transpiledCode) {
       throw new Error(`Transpilation failed for file: ${processorId}`);
     } else {
-      console.log(transpiledCode);
       return {
         processorId,
+		  commonName,
         transpiledCode,
       };
     }
   })
-  .map(({ processorId, transpiledCode }) => {
+  .map(({ processorId, transpiledCode, commonName }) => {
     const context = vm.createContext({
       module: { exports: {} },
       exports: {},
@@ -93,25 +96,25 @@ export const scriptProcessors = fs
 
     vm.runInContext(transpiledCode, context);
 
-    if (typeof context.processLog === 'function') {
-      context.processLog(context.dummyEvent);
-      if (context.logPattern) {
+    if (typeof context[commonName] === 'function') {
+      context[commonName](context.dummyEvent);
+      if (context[`${commonName}Pattern`]) {
         return {
           script: {
             when: {
               regexp: {
-                message: context.logPattern
+                message: context[`${commonName}Pattern`]
                   .toString()
                   .slice(
                     1,
-                    context.logPattern.toString().endsWith('/g') ? -2 : -1,
+					  context[`${commonName}Pattern`].toString().endsWith('/g') ? -2 : -1,
                   )
                   .replace(/\\u00/g, '\\\\u0000'),
               },
             },
             lang: 'javascript',
             id: processorId,
-            source: transpiledCode.replace('processLog', 'process'),
+            source: transpiledCode.replaceAll(commonName, 'process'),
           },
         };
       } else {
@@ -121,5 +124,3 @@ export const scriptProcessors = fs
       throw new Error(`'process' function not found in file: ${processorId}`);
     }
   });
-
-console.log('moo');

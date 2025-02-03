@@ -1,3 +1,7 @@
 {
-  "name": "core"
+  "name": "core",
+  "scripts": {
+    "build": "pulumi preview",
+    "deploy": "pulumi up"
+  }
 }

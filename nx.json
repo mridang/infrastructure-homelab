@@ -8,5 +8,10 @@
         "targetName": "test"
       }
     }
-  ]
+  ],
+  "targetDefaults": {
+    "deploy": {
+      "dependsOn": ["^deploy"]
+    }
+  }
 }
