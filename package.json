@@ -8,7 +8,7 @@
     "test": "nx run-many --target=test --all --verbose",
     "build": "nx run-many --target=build --all --verbose",
     "deploy": "nx run-many --target=deploy --all --verbose",
-	"deploy:dev": "nx run-many --target=deploy --all --verbose --yes --stack=dev --non-interactive"
+    "deploy:dev": "nx run-many --target=deploy --all --verbose --yes --stack=dev --non-interactive"
   },
   "devDependencies": {
     "@mridang/eslint-defaults": "^1.0.0",

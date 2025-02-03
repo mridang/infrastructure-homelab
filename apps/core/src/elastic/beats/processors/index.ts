@@ -81,7 +81,7 @@ export const scriptProcessors = fs
     } else {
       return {
         processorId,
-		  commonName,
+        commonName,
         transpiledCode,
       };
     }
@@ -107,7 +107,9 @@ export const scriptProcessors = fs
                   .toString()
                   .slice(
                     1,
-					  context[`${commonName}Pattern`].toString().endsWith('/g') ? -2 : -1,
+                    context[`${commonName}Pattern`].toString().endsWith('/g')
+                      ? -2
+                      : -1,
                   )
                   .replace(/\\u00/g, '\\\\u0000'),
               },
