@@ -28,6 +28,6 @@
   },
   "private": true,
   "workspaces": [
-    "projects/*"
+    "apps/*"
   ]
 }
