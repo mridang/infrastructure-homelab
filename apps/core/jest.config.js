@@ -13,7 +13,7 @@ module.exports = {
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json', 'node'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   resetModules: false,
-  //globalSetup: './test/setup.ts',
+  globalSetup: './test/setup.ts',
   collectCoverage: true,
   coverageDirectory: './.out',
   collectCoverageFrom: ['src/**/*.{js,ts,dts}'],
