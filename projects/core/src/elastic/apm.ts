@@ -4,6 +4,7 @@ import provider from '../provider';
 import { elasticsearch } from './elastic';
 import { interpolate } from '@pulumi/pulumi';
 import { settings } from '../settings';
+import { traefik } from '../traefik';
 
 const APM_PORT = 8200;
 
@@ -69,6 +70,7 @@ new k8s.apiextensions.CustomResource(
   },
   {
     provider,
+    dependsOn: [traefik],
   },
 );
 

@@ -2,6 +2,7 @@ import * as k8s from '@pulumi/kubernetes';
 import { interpolate } from '@pulumi/pulumi';
 import provider from '../provider';
 import { settings } from '../settings';
+import { traefik } from '../traefik';
 
 new k8s.core.v1.Secret('argocd-webhook-secret', {
   metadata: {
@@ -70,7 +71,7 @@ new k8s.apiextensions.CustomResource(
   },
   {
     provider,
-    dependsOn: [argoCD],
+    dependsOn: [argoCD, traefik],
   },
 );
 

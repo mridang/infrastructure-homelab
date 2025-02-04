@@ -4,6 +4,7 @@ import provider from '../provider';
 import { elasticsearch } from './elastic';
 import { interpolate } from '@pulumi/pulumi';
 import { settings } from '../settings';
+import { traefik } from '../traefik';
 
 export const kibana = new k8s.apiextensions.CustomResource('kibana-instance', {
   apiVersion: 'kibana.k8s.elastic.co/v1',
@@ -78,6 +79,7 @@ new k8s.apiextensions.CustomResource(
   },
   {
     provider,
+    dependsOn: [traefik],
   },
 );
 
