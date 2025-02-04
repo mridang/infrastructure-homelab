@@ -1,4 +1,8 @@
 module.exports = {
-  entry: ['src/main.ts', 'src/lambda.ts', 'serverless.ts'],
-  ignoreDependencies: [/.*serverless-.*/, 'preact'],
+	entry: ['projects/**/src/index.{ts,tsx}'],
+	ignore: [
+		'projects/core/src/elastic/beats/processors/**',
+		'projects/core/src/elastic/scripts/index.ts',
+	],
+	ignoreBinaries: ['pulumi'],
 };
