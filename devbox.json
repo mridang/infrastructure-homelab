@@ -1,7 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetpack-io/devbox/0.10.3/.schema/devbox.schema.json",
   "env": {
-    "STEAMPIPE_INSTALL_DIR": ".steampipe"
+    "STEAMPIPE_INSTALL_DIR": ".steampipe",
+    "PULUMI_K8S_AWAIT_ALL": "true"
   },
   "packages": [
     "nodejs@20",
