@@ -7,6 +7,7 @@ import './headlamp';
 import './argocd';
 import path from 'path';
 import * as fs from 'node:fs';
+import '@mridang/controller-image-sizer/src';
 
 export * from './elastic';
 export * from './docker';
