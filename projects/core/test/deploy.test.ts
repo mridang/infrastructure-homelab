@@ -17,8 +17,8 @@ describe('Pulumi Stack Deployment', () => {
       {
         workDir: process.cwd(),
         envVars: {
-			//
-		},
+          //
+        },
       } satisfies LocalWorkspaceOptions,
     );
 
@@ -28,9 +28,9 @@ describe('Pulumi Stack Deployment', () => {
     });
     console.log('Pulumi stack deployed:', refreshResult.summary);
     const upResult = await stack.up({
-		onOutput: console.info,
-		color: 'never'
-	});
+      onOutput: console.info,
+      color: 'never',
+    });
     console.log('Pulumi stack deployed:', upResult.summary);
   }, 300000);
 
