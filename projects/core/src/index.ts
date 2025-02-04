@@ -4,8 +4,8 @@ import './traefik';
 import './dns';
 import './certman';
 import './tailscale';
-import './headlamp';
 import './argocd';
+import './headlamp';
 import path from 'path';
 import * as fs from 'node:fs';
 
