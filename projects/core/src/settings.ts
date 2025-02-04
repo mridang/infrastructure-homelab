@@ -5,4 +5,5 @@ export const settings = new Config().requireObject('cluster') as {
   clusterName: string;
   clusterDomain: string;
   loadBalancer: boolean;
+  lazyOps: boolean;
 };

@@ -10,7 +10,8 @@ config:
     apiToken: CLOUDFLARE_API_TOKEN
   kubernetes:enableServerSideApply: "true"
   cluster:
-      environmentName: "test"
-      clusterName: "kind-homelab-dev"
-      clusterDomain: "testlab.mrida.ng"
-      loadBalancer: false
+    environmentName: "test"
+    clusterName: "kind-homelab-dev"
+    clusterDomain: "testlab.mrida.ng"
+    loadBalancer: false
+    lazyOps: false
