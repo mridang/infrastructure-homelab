@@ -1,0 +1,15 @@
+config:
+  github:
+    registryPassword: GITHUB_REGISTRY_PASSWORD
+    registryUsername: GITHUB_REGISTRY_USERNAME
+  tailscale:
+    clientId: TAILSCALE_CLIENT_ID
+    clientSecret: TAILSCALE_CLIENT_SECRET
+  cloudflare:
+    userEmail: CLOUDFLARE_USER_EMAIL
+    apiToken: CLOUDFLARE_API_TOKEN
+  kubernetes:enableServerSideApply: 'true'
+  cluster:
+    environmentName: 'test'
+    clusterName: 'docker-desktop'
+    clusterDomain: 'testlab.mrida.ng'

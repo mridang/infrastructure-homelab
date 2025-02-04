@@ -1,0 +1,10 @@
+{
+  "name": "core",
+  "scripts": {
+    "build": "pulumi preview",
+    "deploy": "pulumi up"
+  },
+  "dependencies": {
+    "@mridang/controller-image-sizer": "*"
+  }
+}

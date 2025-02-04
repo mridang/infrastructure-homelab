@@ -78,3 +78,8 @@ Thumbs.db
 
 # Steampipe
 .steampipe
+
+
+
+.nx/cache
+.nx/workspace-data
