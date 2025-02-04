@@ -3,7 +3,7 @@ import provider from './provider';
 import { traefik } from './traefik';
 import { settings } from './settings';
 
-new k8s.helm.v3.Chart('headlamp', {
+const headlamp = new k8s.helm.v3.Chart('headlamp', {
   chart: 'headlamp',
   version: '0.28.0',
   fetchOpts: {
@@ -42,7 +42,7 @@ new k8s.apiextensions.CustomResource(
       },
     },
   },
-  { provider, dependsOn: [traefik] },
+  { provider, dependsOn: [headlamp, traefik] },
 );
 
 new k8s.networking.v1.Ingress(
@@ -70,6 +70,6 @@ new k8s.networking.v1.Ingress(
   },
   {
     provider,
-    dependsOn: traefik,
+    dependsOn: [headlamp],
   },
 );
