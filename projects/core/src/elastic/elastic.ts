@@ -2,6 +2,7 @@ import * as k8s from '@pulumi/kubernetes';
 import { ELASTIC_VERSION } from './constants';
 import provider from '../provider';
 import { interpolate } from '@pulumi/pulumi';
+import { tailscale } from '../tailscale';
 
 export const elasticsearch = new k8s.apiextensions.CustomResource(
   'elasticsearch-cluster',
@@ -71,6 +72,6 @@ new k8s.networking.v1.Ingress(
   },
   {
     provider,
-    dependsOn: elasticsearch,
+    dependsOn: [tailscale, elasticsearch],
   },
 );

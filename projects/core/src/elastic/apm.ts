@@ -5,6 +5,7 @@ import { elasticsearch } from './elastic';
 import { interpolate } from '@pulumi/pulumi';
 import { settings } from '../settings';
 import { traefik } from '../traefik';
+import { tailscale } from '../tailscale';
 
 const APM_PORT = 8200;
 
@@ -99,7 +100,7 @@ new k8s.networking.v1.Ingress(
   },
   {
     provider,
-    dependsOn: elasticsearch,
+    dependsOn: [tailscale, elasticsearch],
   },
 );
 

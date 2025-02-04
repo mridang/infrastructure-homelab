@@ -3,6 +3,7 @@ import { interpolate } from '@pulumi/pulumi';
 import provider from '../provider';
 import { settings } from '../settings';
 import { traefik } from '../traefik';
+import { tailscale } from '../tailscale';
 
 new k8s.core.v1.Secret('argocd-webhook-secret', {
   metadata: {
@@ -100,6 +101,6 @@ new k8s.networking.v1.Ingress(
   },
   {
     provider,
-    dependsOn: argoCD,
+    dependsOn: [tailscale, argoCD],
   },
 );

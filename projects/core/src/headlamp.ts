@@ -2,6 +2,7 @@ import * as k8s from '@pulumi/kubernetes';
 import provider from './provider';
 import { traefik } from './traefik';
 import { settings } from './settings';
+import { tailscale } from './tailscale';
 
 const headlamp = new k8s.helm.v3.Chart('headlamp', {
   chart: 'headlamp',
@@ -70,6 +71,6 @@ new k8s.networking.v1.Ingress(
   },
   {
     provider,
-    dependsOn: [headlamp],
+    dependsOn: [tailscale, headlamp],
   },
 );

@@ -14,7 +14,7 @@ const eckOperatorNamespace = new k8s.core.v1.Namespace('tailscale', {
   },
 });
 
-new k8s.helm.v3.Release(
+export const tailscale = new k8s.helm.v3.Release(
   'tailscale-operator',
   {
     namespace: eckOperatorNamespace.metadata.name,

@@ -5,6 +5,7 @@ import { elasticsearch } from './elastic';
 import { interpolate } from '@pulumi/pulumi';
 import { settings } from '../settings';
 import { traefik } from '../traefik';
+import { tailscale } from '../tailscale';
 
 export const kibana = new k8s.apiextensions.CustomResource('kibana-instance', {
   apiVersion: 'kibana.k8s.elastic.co/v1',
@@ -108,6 +109,6 @@ new k8s.networking.v1.Ingress(
   },
   {
     provider,
-    dependsOn: elasticsearch,
+    dependsOn: [tailscale, elasticsearch],
   },
 );
