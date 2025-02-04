@@ -29,10 +29,12 @@ fetch(
         `HTTP error! Status: ${response.status} ${response.statusText}`,
       );
     }
-    return response.json();
+    return response.json() as Promise<{
+      acknowledged: boolean;
+    }>;
   })
   .then((data) => {
-    if (data.acknowledged !== true) {
+    if (!data.acknowledged) {
       throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
     } else {
       console.log('Index template "no-replication" upserted successfully');
@@ -65,10 +67,12 @@ fetch(
         `HTTP error! Status: ${response.status} ${response.statusText}`,
       );
     }
-    return response.json();
+    return response.json() as Promise<{
+      acknowledged: boolean;
+    }>;
   })
   .then((data) => {
-    if (data.acknowledged !== true) {
+    if (!data.acknowledged) {
       throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
     } else {
       console.log('Index template "bump-max-fields" upserted successfully');
@@ -107,10 +111,12 @@ fetch(
         `HTTP error! Status: ${response.status} ${response.statusText}`,
       );
     }
-    return response.json();
+    return response.json() as Promise<{
+      acknowledged: boolean;
+    }>;
   })
   .then((data) => {
-    if (data.acknowledged !== true) {
+    if (!data.acknowledged) {
       throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
     } else {
       console.log('Lifecycle policy "packetbeat" updated successfully');
@@ -135,10 +141,15 @@ fetch(
         `HTTP error! Status: ${response.status} ${response.statusText}`,
       );
     }
-    return response.json();
+    return response.json() as Promise<{
+      acknowledged: boolean;
+      rolled_over: boolean;
+      old_index: string;
+      new_index: string;
+    }>;
   })
   .then((data) => {
-    if (data.acknowledged !== true) {
+    if (!data.acknowledged) {
       throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
     } else {
       if (data.rolled_over) {
@@ -167,10 +178,15 @@ fetch(
         `HTTP error! Status: ${response.status} ${response.statusText}`,
       );
     }
-    return response.json();
+    return response.json() as Promise<{
+      acknowledged: boolean;
+      rolled_over: boolean;
+      old_index: string;
+      new_index: string;
+    }>;
   })
   .then((data) => {
-    if (data.acknowledged !== true) {
+    if (!data.acknowledged) {
       throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
     } else {
       if (data.rolled_over) {
@@ -199,10 +215,15 @@ fetch(
         `HTTP error! Status: ${response.status} ${response.statusText}`,
       );
     }
-    return response.json();
+    return response.json() as Promise<{
+      acknowledged: boolean;
+      rolled_over: boolean;
+      old_index: string;
+      new_index: string;
+    }>;
   })
   .then((data) => {
-    if (data.acknowledged !== true) {
+    if (!data.acknowledged) {
       throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
     } else {
       if (data.rolled_over) {
