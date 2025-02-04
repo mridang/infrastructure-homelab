@@ -17,6 +17,14 @@ kind-homelab-dev
 docker-desktop
 ```
 
+When you're done, simply delete it using the name `homelab-dev`. Even though
+listing the clusters, gives the name as `kind-homelab-dev`, the `kind-` prefix
+is not needed.
+
+```
+$ kind delete cluster --name=homelab-dev
+```
+
 ### Setting up SSL
 
 Once you've set up the Cloudflare credentials, you'll need to run

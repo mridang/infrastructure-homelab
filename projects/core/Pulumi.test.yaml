@@ -11,5 +11,5 @@ config:
   kubernetes:enableServerSideApply: "true"
   cluster:
       environmentName: "test"
-      clusterName: "docker-desktop"
+      clusterName: "kind-homelab-dev"
       clusterDomain: "testlab.mrida.ng"
