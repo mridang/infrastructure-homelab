@@ -1,5 +1,6 @@
 import * as pulumi from '@pulumi/pulumi';
 
+import './traefik';
 import './dns';
 import './certman';
 import './tailscale';
