@@ -13,3 +13,4 @@ config:
       environmentName: "development"
       clusterName: "docker-desktop"
       clusterDomain: "homelab.mrida.ng"
+      loadBalancer: true

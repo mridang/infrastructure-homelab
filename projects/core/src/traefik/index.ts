@@ -27,6 +27,9 @@ export const traefik = new k8s.helm.v3.Chart(
       repo: 'https://helm.traefik.io/traefik',
     },
     values: {
+      service: {
+        type: settings.loadBalancer ? 'LoadBalancer' : 'NodePort',
+      },
       image: {
         tag: '3.3.1',
       },

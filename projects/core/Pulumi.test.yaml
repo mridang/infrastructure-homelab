@@ -13,3 +13,4 @@ config:
       environmentName: "test"
       clusterName: "kind-homelab-dev"
       clusterDomain: "testlab.mrida.ng"
+      loadBalancer: false
