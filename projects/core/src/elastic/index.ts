@@ -8,17 +8,10 @@ import * as pulumi from '@pulumi/pulumi';
 import { ELASTIC_VERSION } from './constants';
 import { settings } from '../settings';
 
-const eckOperatorNamespace = new k8s.core.v1.Namespace('elastic', {
-  metadata: {
-    name: 'elastic',
-  },
-});
-
 new k8s.helm.v3.Release(
   'eck-operator',
   {
     name: 'operator-elk',
-    namespace: eckOperatorNamespace.metadata.name,
     chart: 'eck-operator',
     version: '2.16.0',
     repositoryOpts: {

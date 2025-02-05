@@ -8,16 +8,9 @@ const settings = config.requireObject('tailscale') as {
   clientSecret: string;
 };
 
-const eckOperatorNamespace = new k8s.core.v1.Namespace('tailscale', {
-  metadata: {
-    name: 'tailscale',
-  },
-});
-
 export const tailscale = new k8s.helm.v3.Release(
   'tailscale-operator',
   {
-    namespace: eckOperatorNamespace.metadata.name,
     chart: 'tailscale-operator',
     version: '1.78.3',
     repositoryOpts: {
