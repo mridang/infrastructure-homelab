@@ -2,7 +2,7 @@
 import { execSync } from 'child_process';
 import { config } from 'dotenv';
 import * as fs from 'node:fs';
-import path = require('node:path');
+import * as path from 'node:path';
 import * as os from 'node:os';
 
 config();
