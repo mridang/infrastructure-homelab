@@ -13,12 +13,6 @@
     "typeRoots": ["./node_modules/@types", "./types"],
     "declaration": true
   },
-	"include": [
-		"**/*"
-	],
-	"exclude": [
-		"node_modules",
-		"**/*.spec.ts",
-		"dist"
-	]
+  "include": ["**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts", "dist"]
 }
