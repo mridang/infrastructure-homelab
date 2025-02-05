@@ -10,9 +10,6 @@ const packetbeatServiceAccount = new k8s.core.v1.ServiceAccount('packetbeat', {
 
 const packetbeatClusterRole = new k8s.rbac.v1.ClusterRole('packetbeat', {
   metadata: { name: 'packetbeat' },
-  rules: [
-    //
-  ],
 });
 
 new k8s.rbac.v1.ClusterRoleBinding('packetbeat', {
