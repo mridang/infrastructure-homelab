@@ -1,6 +1,7 @@
 import * as k8s from '@pulumi/kubernetes';
 import provider from './provider';
 import { tailscale } from './tailscale';
+import { settings } from './settings';
 
 const headlamp = new k8s.helm.v3.Chart('headlamp', {
   chart: 'headlamp',
@@ -18,6 +19,11 @@ new k8s.networking.v1.Ingress(
   {
     metadata: {
       name: 'tailscale-headlamp-ingress',
+      annotations: {
+        'tailscale.com/tags': [`environment:${settings.environmentName}`].join(
+          ',',
+        ),
+      },
     },
     spec: {
       ingressClassName: 'tailscale',

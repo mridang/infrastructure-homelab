@@ -4,6 +4,7 @@ import provider from '../provider';
 import { elasticsearch } from './elastic';
 import { interpolate } from '@pulumi/pulumi';
 import { tailscale } from '../tailscale';
+import { settings } from '../settings';
 
 export const kibana = new k8s.apiextensions.CustomResource('kibana-instance', {
   apiVersion: 'kibana.k8s.elastic.co/v1',
@@ -53,6 +54,11 @@ new k8s.networking.v1.Ingress(
   {
     metadata: {
       name: 'tailscale-kibana-ingress',
+      annotations: {
+        'tailscale.com/tags': [`environment:${settings.environmentName}`].join(
+          ',',
+        ),
+      },
     },
     spec: {
       ingressClassName: 'tailscale',

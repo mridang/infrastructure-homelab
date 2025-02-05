@@ -2,6 +2,7 @@ import * as k8s from '@pulumi/kubernetes';
 import { interpolate } from '@pulumi/pulumi';
 import provider from '../provider';
 import { tailscale } from '../tailscale';
+import { settings } from '../settings';
 
 new k8s.core.v1.Secret('argocd-webhook-secret', {
   metadata: {
@@ -45,6 +46,11 @@ new k8s.networking.v1.Ingress(
   {
     metadata: {
       name: 'tailscale-argocd-ingress',
+      annotations: {
+        'tailscale.com/tags': [`environment:${settings.environmentName}`].join(
+          ',',
+        ),
+      },
     },
     spec: {
       ingressClassName: 'tailscale',

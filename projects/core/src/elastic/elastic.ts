@@ -3,6 +3,7 @@ import { ELASTIC_VERSION } from './constants';
 import provider from '../provider';
 import { interpolate } from '@pulumi/pulumi';
 import { tailscale } from '../tailscale';
+import { settings } from '../settings';
 
 export const elasticsearch = new k8s.apiextensions.CustomResource(
   'elasticsearch-cluster',
@@ -52,6 +53,11 @@ new k8s.networking.v1.Ingress(
   {
     metadata: {
       name: 'tailscale-elasticsearch-ingress',
+      annotations: {
+        'tailscale.com/tags': [`environment:${settings.environmentName}`].join(
+          ',',
+        ),
+      },
     },
     spec: {
       ingressClassName: 'tailscale',

@@ -1,6 +1,6 @@
 import * as k8s from '@pulumi/kubernetes';
 import provider from '../provider';
-import { Config } from '@pulumi/pulumi';
+import { Config, getStack } from '@pulumi/pulumi';
 
 const config = new Config();
 const settings = config.requireObject('tailscale') as {
@@ -20,6 +20,9 @@ export const tailscale = new k8s.helm.v3.Release(
       oauth: {
         clientId: process.env[settings.clientId],
         clientSecret: process.env[settings.clientSecret],
+      },
+      operatorConfig: {
+        defaultTags: ['tag:k8s', `tag:${getStack()}`],
       },
     },
   },
