@@ -3,6 +3,7 @@ import provider from '../provider';
 import { cloudflareSecret } from '../cloudflare';
 import { apmServerUrl } from '../elastic';
 import { settings } from '../settings';
+import { tailscale } from '../tailscale';
 
 /**
  * Traefik acts as the ingress controller for the different services.
@@ -148,20 +149,52 @@ export const traefik = new k8s.helm.v3.Chart(
   { provider },
 );
 
-new k8s.apiextensions.CustomResource(
-  'compression-middleware',
+new k8s.networking.v1.Ingress(
+  'tailscale-traefik-ingress',
   {
-    apiVersion: 'traefik.io/v1alpha1',
-    kind: 'Middleware',
     metadata: {
-      name: 'compression--middleware',
-      namespace: 'default',
+      name: 'tailscale-traefik-ingress',
     },
     spec: {
-      compress: {
-        //
+      ingressClassName: 'tailscale',
+      defaultBackend: {
+        service: {
+          name: 'traefik',
+          port: {
+            number: 8080,
+          },
+        },
       },
+      tls: [
+        {
+          hosts: ['traefik'],
+        },
+      ],
     },
   },
-  { provider },
+  {
+    provider,
+    dependsOn: [tailscale, traefik],
+  },
 );
+
+//
+// traefik.ready.apply((t) => {
+//   new k8s.apiextensions.CustomResource(
+//     'compression-middleware',
+//     {
+//       apiVersion: 'traefik.io/v1alpha1',
+//       kind: 'Middleware',
+//       metadata: {
+//         name: 'compression-middleware',
+//         namespace: 'default',
+//       },
+//       spec: {
+//         compress: {
+//           //
+//         },
+//       },
+//     },
+//     { provider },
+//   );
+// });

@@ -1,7 +1,5 @@
 import * as k8s from '@pulumi/kubernetes';
 import provider from './provider';
-import { traefik } from './traefik';
-import { settings } from './settings';
 import { tailscale } from './tailscale';
 
 const headlamp = new k8s.helm.v3.Chart('headlamp', {
@@ -14,37 +12,6 @@ const headlamp = new k8s.helm.v3.Chart('headlamp', {
     //
   },
 });
-
-new k8s.apiextensions.CustomResource(
-  'headlamp-ingressroute',
-  {
-    apiVersion: 'traefik.io/v1alpha1',
-    kind: 'IngressRoute',
-    metadata: {
-      name: 'headlamp-ingressroute',
-      namespace: 'default',
-    },
-    spec: {
-      entryPoints: ['websecure'],
-      routes: [
-        {
-          match: `Host(\`headlamp.${settings.clusterDomain}\`)`,
-          kind: 'Rule',
-          services: [
-            {
-              name: 'headlamp',
-              port: 80,
-            },
-          ],
-        },
-      ],
-      tls: {
-        certResolver: 'letsencrypt',
-      },
-    },
-  },
-  { provider, dependsOn: [headlamp, traefik] },
-);
 
 new k8s.networking.v1.Ingress(
   'tailscale-headlamp-ingress',

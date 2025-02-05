@@ -3,8 +3,6 @@ import { ELASTIC_VERSION } from './constants';
 import provider from '../provider';
 import { elasticsearch } from './elastic';
 import { interpolate } from '@pulumi/pulumi';
-import { settings } from '../settings';
-import { traefik } from '../traefik';
 import { tailscale } from '../tailscale';
 
 export const kibana = new k8s.apiextensions.CustomResource('kibana-instance', {
@@ -49,40 +47,6 @@ export const kibana = new k8s.apiextensions.CustomResource('kibana-instance', {
     },
   },
 });
-
-new k8s.apiextensions.CustomResource(
-  'kibana-ingressroute',
-  {
-    apiVersion: 'traefik.io/v1alpha1',
-    kind: 'IngressRoute',
-    metadata: {
-      name: 'kibana-ingressroute',
-      namespace: 'default',
-    },
-    spec: {
-      entryPoints: ['websecure'],
-      routes: [
-        {
-          match: `Host(\`kibana.${settings.clusterDomain}\`)`,
-          kind: 'Rule',
-          services: [
-            {
-              name: interpolate`${kibana.metadata.name}-kb-http`,
-              port: 5601,
-            },
-          ],
-        },
-      ],
-      tls: {
-        certResolver: 'letsencrypt',
-      },
-    },
-  },
-  {
-    provider,
-    dependsOn: [traefik],
-  },
-);
 
 new k8s.networking.v1.Ingress(
   'tailscale-kibana-ingress',

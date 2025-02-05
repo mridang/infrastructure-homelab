@@ -1,8 +1,6 @@
 import * as k8s from '@pulumi/kubernetes';
 import { interpolate } from '@pulumi/pulumi';
 import provider from '../provider';
-import { settings } from '../settings';
-import { traefik } from '../traefik';
 import { tailscale } from '../tailscale';
 
 new k8s.core.v1.Secret('argocd-webhook-secret', {
@@ -41,40 +39,6 @@ const argoCD = new k8s.helm.v3.Release('argocd-operator', {
     },
   },
 });
-
-new k8s.apiextensions.CustomResource(
-  'argocd-ingressroute',
-  {
-    apiVersion: 'traefik.io/v1alpha1',
-    kind: 'IngressRoute',
-    metadata: {
-      name: 'argocd-ingressroute',
-      namespace: 'default',
-    },
-    spec: {
-      entryPoints: ['websecure'],
-      routes: [
-        {
-          match: `Host(\`argocd.${settings.clusterDomain}\`)`,
-          kind: 'Rule',
-          services: [
-            {
-              name: interpolate`${argoCD.name}-server`,
-              port: 80,
-            },
-          ],
-        },
-      ],
-      tls: {
-        certResolver: 'letsencrypt',
-      },
-    },
-  },
-  {
-    provider,
-    dependsOn: [argoCD, traefik],
-  },
-);
 
 new k8s.networking.v1.Ingress(
   'tailscale-argocd-ingress',
