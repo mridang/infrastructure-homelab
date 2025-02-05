@@ -1,4 +1,6 @@
 config:
+  pulumi:autonaming:
+    pattern: ${project}-${stack}-${name}${alphanum(6)}
   github:
     registryPassword: GITHUB_REGISTRY_PASSWORD
     registryUsername: GITHUB_REGISTRY_USERNAME
