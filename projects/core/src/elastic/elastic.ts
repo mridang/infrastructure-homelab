@@ -14,6 +14,7 @@ export const elasticsearch = new k8s.apiextensions.CustomResource(
       name: 'my-cluster',
       annotations: {
         'pulumi.com/patchForce': 'true',
+        'pulumi.com/waitFor': 'jsonpath={.status.phase}=Ready',
       },
     },
     spec: {

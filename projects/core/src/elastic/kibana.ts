@@ -9,7 +9,12 @@ import { settings } from '../settings';
 export const kibana = new k8s.apiextensions.CustomResource('kibana-instance', {
   apiVersion: 'kibana.k8s.elastic.co/v1',
   kind: 'Kibana',
-  metadata: { name: 'my-kibana' },
+  metadata: {
+    name: 'my-kibana',
+    annotations: {
+      'pulumi.com/waitFor': 'jsonpath={.status.health}=green',
+    },
+  },
   spec: {
     version: ELASTIC_VERSION,
     http: {

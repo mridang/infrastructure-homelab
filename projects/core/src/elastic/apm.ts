@@ -16,6 +16,9 @@ const apmServer = new k8s.apiextensions.CustomResource(
     kind: 'ApmServer',
     metadata: {
       name: 'my-apm-server',
+      annotations: {
+        'pulumi.com/waitFor': 'jsonpath={.status.health}=green',
+      },
     },
     spec: {
       version: ELASTIC_VERSION,
