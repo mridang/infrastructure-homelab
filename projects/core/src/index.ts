@@ -6,25 +6,24 @@ import './certman';
 import './tailscale';
 import './argocd';
 import './headlamp';
-import path from 'path';
-import * as fs from 'node:fs';
+import { settings } from './settings';
+import { getOrganization, getProject, getStack } from '@pulumi/pulumi';
 
 export * from './elastic';
 export * from './docker';
 
-const packageJsonPath = path.resolve(__dirname, '..', 'package.json');
-const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
-
 pulumi.runtime.registerResourceTransform(
   (args: pulumi.ResourceTransformArgs) => {
-    if (args.props.metadata) {
-      args.props.metadata.labels = args.props.metadata.labels || {};
-      args.props.metadata.labels['custom.mrida.ng/project'] = packageJson.name;
-    } else {
-      args.props.metadata = {
-        labels: { 'custom.mrida.ng/project': packageJson.name },
-      };
-    }
+    args.props.metadata = {
+      labels: {
+        'custom.mrida.ng/organization': getOrganization(),
+        'custom.mrida.ng/project': getProject(),
+        'custom.mrida.ng/stack': getStack(),
+        'custom.mrida.ng/environment': settings.environmentName,
+        ...(args.props.metadata?.labels || {}),
+      },
+      ...(args.props.metadata || {}),
+    };
 
     return {
       props: args.props,
