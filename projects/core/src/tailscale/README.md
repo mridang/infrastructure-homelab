@@ -15,10 +15,13 @@ create those as well and make `tag:k8s-operator` an owner.
 Your tailnet policy should resemble something like this:
 
 ```
-"tagOwners": {
-  "tag:k8s-operator": [],
-  "tag:k8s": ["tag:k8s-operator"],
-}
+	"tagOwners": {
+		"tag:k8s-operator": [],
+		"tag:k8s":          ["tag:k8s-operator"],
+		"tag:env-dev":      ["tag:k8s-operator"],
+		"tag:env-test":     ["tag:k8s-operator"],
+		"tag:env-prod":     ["tag:k8s-operator"],
+	}
 ```
 
 2. Create an OAuth client in the [OAuth clients page of the admin console](https://login.tailscale.com/admin/settings/oauth).
