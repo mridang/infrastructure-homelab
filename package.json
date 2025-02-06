@@ -1,5 +1,5 @@
 {
-  "name": "@mridang/k8",
+  "name": "@mridang/homelab",
   "scripts": {
     "build": "pulumi preview",
     "deploy": "pulumi up",
