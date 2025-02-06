@@ -115,50 +115,50 @@
       }
     },
     "pulumi-bin@latest": {
-      "last_modified": "2024-11-16T04:25:12Z",
-      "resolved": "github:NixOS/nixpkgs/34a626458d686f1b58139620a8b2793e9e123bba#pulumi-bin",
+      "last_modified": "2025-01-31T04:26:24Z",
+      "resolved": "github:NixOS/nixpkgs/9189ac18287c599860e878e905da550aa6dec1cd#pulumi-bin",
       "source": "devbox-search",
-      "version": "3.138.0",
+      "version": "3.147.0",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/fahfxrm8m259bimp5nf326cfaxr41vgp-pulumi-3.138.0",
+              "path": "/nix/store/14y5iq08wzp6xrg99bqz4jij499d7yqm-pulumi-3.147.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/fahfxrm8m259bimp5nf326cfaxr41vgp-pulumi-3.138.0"
+          "store_path": "/nix/store/14y5iq08wzp6xrg99bqz4jij499d7yqm-pulumi-3.147.0"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/vhy43i8fm8c4gxbglffa7qdrjd0845xy-pulumi-3.138.0",
+              "path": "/nix/store/jp60im89g0f3cl0xjr6idvnwihaj5s6l-pulumi-3.147.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/vhy43i8fm8c4gxbglffa7qdrjd0845xy-pulumi-3.138.0"
+          "store_path": "/nix/store/jp60im89g0f3cl0xjr6idvnwihaj5s6l-pulumi-3.147.0"
         },
         "x86_64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/q81nqwphad1c5c51431ydkrwgqn3bdg8-pulumi-3.138.0",
+              "path": "/nix/store/62fvkqmx3d7gsqrp04rr3bshmxbdcqj3-pulumi-3.147.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/q81nqwphad1c5c51431ydkrwgqn3bdg8-pulumi-3.138.0"
+          "store_path": "/nix/store/62fvkqmx3d7gsqrp04rr3bshmxbdcqj3-pulumi-3.147.0"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/198nxwll988a0a0n2jqa6p8w60n2g4g9-pulumi-3.138.0",
+              "path": "/nix/store/lr5prw5lx83zv91vmn9g84sp3qyphlxz-pulumi-3.147.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/198nxwll988a0a0n2jqa6p8w60n2g4g9-pulumi-3.138.0"
+          "store_path": "/nix/store/lr5prw5lx83zv91vmn9g84sp3qyphlxz-pulumi-3.147.0"
         }
       }
     },
@@ -207,6 +207,70 @@
             }
           ],
           "store_path": "/nix/store/s7h7ik8kzqck3fh3bw0nhlr0cb23bfiw-steampipe-1.0.1"
+        }
+      }
+    },
+    "tailscale@latest": {
+      "last_modified": "2025-01-21T12:51:11Z",
+      "resolved": "github:NixOS/nixpkgs/e1996d7bdaf4eafdb85690079b9e02b25dc14e4f#tailscale",
+      "source": "devbox-search",
+      "version": "1.78.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/sqm0mqmnyzxbdcxzh52808xpz5xpq51p-tailscale-1.78.1",
+              "default": true
+            },
+            {
+              "name": "derper",
+              "path": "/nix/store/9gzk1s0dwyl7qbwl18h5w134yrps6bch-tailscale-1.78.1-derper"
+            }
+          ],
+          "store_path": "/nix/store/sqm0mqmnyzxbdcxzh52808xpz5xpq51p-tailscale-1.78.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/znhn0knbznvwmz993z4rkwan10zby5zm-tailscale-1.78.1",
+              "default": true
+            },
+            {
+              "name": "derper",
+              "path": "/nix/store/bk9307j33fyz9bl18mzalpl1j4nnmy5r-tailscale-1.78.1-derper"
+            }
+          ],
+          "store_path": "/nix/store/znhn0knbznvwmz993z4rkwan10zby5zm-tailscale-1.78.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/wpwak5gyihis3hi10ysjsscnmi75b95h-tailscale-1.78.1",
+              "default": true
+            },
+            {
+              "name": "derper",
+              "path": "/nix/store/3p364mmssisrm6r48bzq2m9m3igz8bq6-tailscale-1.78.1-derper"
+            }
+          ],
+          "store_path": "/nix/store/wpwak5gyihis3hi10ysjsscnmi75b95h-tailscale-1.78.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/vxw6q4r5rs0z102qzs7zmr9jhh5fwkqn-tailscale-1.78.1",
+              "default": true
+            },
+            {
+              "name": "derper",
+              "path": "/nix/store/i8gpq5g8l80c2ahn7fihbv1gj2s352vx-tailscale-1.78.1-derper"
+            }
+          ],
+          "store_path": "/nix/store/vxw6q4r5rs0z102qzs7zmr9jhh5fwkqn-tailscale-1.78.1"
         }
       }
     }
