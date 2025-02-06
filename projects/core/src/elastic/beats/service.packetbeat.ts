@@ -101,5 +101,6 @@ new k8s.apiextensions.CustomResource(
   },
   {
     provider,
+    dependsOn: [elasticsearch, kibana],
   },
 );
