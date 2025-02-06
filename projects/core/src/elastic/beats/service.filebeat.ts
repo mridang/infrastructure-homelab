@@ -6,7 +6,7 @@ import { kibana } from '../kibana';
 import { scriptProcessors } from './processors';
 
 const filebeatServiceAccount = new k8s.core.v1.ServiceAccount('filebeat', {
-  metadata: { name: 'filebeat', namespace: 'default' },
+  metadata: { name: 'filebeat' },
 });
 
 const filebeatClusterRole = new k8s.rbac.v1.ClusterRole('filebeat', {

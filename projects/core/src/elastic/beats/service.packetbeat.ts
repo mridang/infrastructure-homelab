@@ -5,7 +5,7 @@ import { ELASTIC_VERSION } from '../constants';
 import { kibana } from '../kibana';
 
 const packetbeatServiceAccount = new k8s.core.v1.ServiceAccount('packetbeat', {
-  metadata: { name: 'packetbeat', namespace: 'default' },
+  metadata: { name: 'packetbeat' },
 });
 
 const packetbeatClusterRole = new k8s.rbac.v1.ClusterRole('packetbeat', {

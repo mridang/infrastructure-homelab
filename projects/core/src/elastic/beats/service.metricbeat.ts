@@ -5,7 +5,7 @@ import { ELASTIC_VERSION } from '../constants';
 import { kibana } from '../kibana';
 
 const metricbeatServiceAccount = new k8s.core.v1.ServiceAccount('metricbeat', {
-  metadata: { name: 'metricbeat', namespace: 'default' },
+  metadata: { name: 'metricbeat' },
 });
 
 const metricbeatClusterRole = new k8s.rbac.v1.ClusterRole('metricbeat', {
