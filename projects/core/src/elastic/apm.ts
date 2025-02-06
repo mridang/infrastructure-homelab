@@ -51,7 +51,6 @@ new k8s.apiextensions.CustomResource(
     kind: 'IngressRoute',
     metadata: {
       name: 'rum-ingressroute',
-      namespace: 'default',
     },
     spec: {
       entryPoints: ['websecure'],
@@ -84,9 +83,9 @@ new k8s.networking.v1.Ingress(
     metadata: {
       name: 'tailscale-apm-ingress',
       annotations: {
-        'tailscale.com/tags': [`environment:${settings.environmentName}`].join(
-          ',',
-        ),
+        'pulumi.com/patchForce': 'true',
+        // Must be declared in the tailnet policy
+        'tailscale.com/tags': [`tag:env-${settings.environmentName}`].join(','),
       },
     },
     spec: {

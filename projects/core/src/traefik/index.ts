@@ -155,9 +155,8 @@ new k8s.networking.v1.Ingress(
     metadata: {
       name: 'tailscale-traefik-ingress',
       annotations: {
-        'tailscale.com/tags': [`environment:${settings.environmentName}`].join(
-          ',',
-        ),
+        // Must be declared in the tailnet policy
+        'tailscale.com/tags': [`tag:env-${settings.environmentName}`].join(','),
       },
     },
     spec: {
