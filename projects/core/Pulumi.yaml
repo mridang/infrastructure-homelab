@@ -1,3 +1,7 @@
 name: kub-homelab
 runtime: nodejs
 main: src/index.ts
+config:
+    pulumi:autonaming:
+        value:
+            mode: default
