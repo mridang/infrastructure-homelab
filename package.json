@@ -11,7 +11,7 @@
   "devDependencies": {
     "@mridang/eslint-defaults": "^1.0.0",
     "@pulumi/kubernetes": "^4.19.0",
-    "@pulumi/pulumi": "^3.141.0",
+    "@pulumi/pulumi": "^3.149.0",
     "@tsconfig/node20": "latest",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.3.2",
