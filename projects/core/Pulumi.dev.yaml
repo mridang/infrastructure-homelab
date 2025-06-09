@@ -6,12 +6,12 @@ config:
     clientId: TAILSCALE_CLIENT_ID
     clientSecret: TAILSCALE_CLIENT_SECRET
   cloudflare:
-      userEmail: CLOUDFLARE_USER_EMAIL
-      apiToken: CLOUDFLARE_API_TOKEN
-  kubernetes:enableServerSideApply: "true"
+    userEmail: CLOUDFLARE_USER_EMAIL
+    apiToken: CLOUDFLARE_API_TOKEN
+  kubernetes:enableServerSideApply: 'true'
   cluster:
-      environmentName: "dev"
-      clusterName: "docker-desktop"
-      clusterDomain: "homelab.mrida.ng"
-      loadBalancer: true
-      lazyOps: true
+    environmentName: 'dev'
+    clusterName: 'docker-desktop'
+    clusterDomain: 'homelab.mrida.ng'
+    loadBalancer: true
+    lazyOps: true

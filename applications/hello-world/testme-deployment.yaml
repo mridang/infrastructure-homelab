@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: hello-world
-    namespace: default
+  name: hello-world
+  namespace: default
 spec:
-    replicas: 1
-    selector:
-        matchLabels:
-            app: hello-world
-    template:
-        metadata:
-            labels:
-                app: hello-world
-        spec:
-            containers:
-                -   name: hello-world
-                    image: 'testcontainers/helloworld:latest'
-                    ports:
-                        -   containerPort: 8080
-                        -   containerPort: 8081
-                    env:
-                        -   name: 'OLTP_ENDPOINT'
-                            value: stackRef.getOutput('apmServerUrl').apply((url) => url)
-                        -   name: 'DOMAIN_NAME'
-                            value: 'localhost'
-                        -   name: 'SERVICE_ID'
-                            value: 'demoit'
-                        -   name: 'SERVICE_NAME'
-                            value: 'demoit'
-                        -   name: 'SERVICE_TYPE'
-                            value: 'app'
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-world
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+        - name: hello-world
+          image: 'testcontainers/helloworld:latest'
+          ports:
+            - containerPort: 8080
+            - containerPort: 8081
+          env:
+            - name: 'OLTP_ENDPOINT'
+              value: stackRef.getOutput('apmServerUrl').apply((url) => url)
+            - name: 'DOMAIN_NAME'
+              value: 'localhost'
+            - name: 'SERVICE_ID'
+              value: 'demoit'
+            - name: 'SERVICE_NAME'
+              value: 'demoit'
+            - name: 'SERVICE_TYPE'
+              value: 'app'
