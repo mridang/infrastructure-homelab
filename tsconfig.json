@@ -14,5 +14,11 @@
     "declaration": true
   },
   "include": ["**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts", "dist"]
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "dist",
+    "projects/core/src/elastic/beats/processors/parse_*.ts",
+    "projects/core/src/elastic/beats/processors/event.ts"
+  ]
 }

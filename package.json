@@ -1,12 +1,14 @@
 {
   "name": "@mridang/homelab",
+  "type": "module",
   "scripts": {
-    "build": "pulumi preview",
+    "build": "tsc --noEmit",
     "deploy": "pulumi up",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "npx eslint .",
-    "lint:fix": "npx eslint . --fix"
+    "lint:fix": "npx eslint . --fix",
+    "test": "jest --verbose --config=jest.config.mjs"
   },
   "devDependencies": {
     "@mridang/eslint-defaults": "^1.0.0",
@@ -20,6 +22,7 @@
     "jest": "^30.0.3",
     "knip": "^5.43.6",
     "prettier": "^3.1.1",
+    "jest-junit": "^16.0.0",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.1.3"
