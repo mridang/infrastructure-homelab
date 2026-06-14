@@ -26,7 +26,6 @@ export default {
     '/frontend/',
     '/dist/',
     '/packages/',
-    '/deploy\\.test\\.ts$',
   ],
   resetModules: false,
   globalSetup: './test/setup.ts',
