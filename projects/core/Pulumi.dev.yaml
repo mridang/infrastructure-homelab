@@ -10,8 +10,8 @@ config:
     apiToken: CLOUDFLARE_API_TOKEN
   kubernetes:enableServerSideApply: 'true'
   cluster:
-    environmentName: 'dev'
-    clusterName: 'docker-desktop'
-    clusterDomain: 'homelab.mrida.ng'
+    environmentName: dev
+    clusterName: docker-desktop
+    clusterDomain: homelab.mrida.ng
     loadBalancer: true
     lazyOps: true

@@ -36,6 +36,6 @@ You configuration file should resemble something like this:
 ```yaml
 config:
   tailscale:
-    clientId: 'clientid'
-    clientSecret: 'tskey-client-x'
+    clientId: clientid
+    clientSecret: tskey-client-x
 ```
