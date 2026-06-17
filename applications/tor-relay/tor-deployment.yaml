@@ -16,4 +16,4 @@ spec:
       containers:
         - name: tor-relay
           image: thetorproject/snowflake-proxy:latest
-          args: ['-verbose']
+          args: [-verbose]

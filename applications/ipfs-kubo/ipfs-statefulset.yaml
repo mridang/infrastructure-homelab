@@ -4,7 +4,7 @@ metadata:
   name: ipfs
   namespace: default
 spec:
-  serviceName: 'ipfs'
+  serviceName: ipfs
   replicas: 1
   selector:
     matchLabels:
@@ -21,7 +21,7 @@ spec:
       initContainers:
         - name: init-copy-config
           image: busybox
-          command: ['sh', '-c', 'cp /etc/config/config.json /data/ipfs/config']
+          command: [sh, -c, cp /etc/config/config.json /data/ipfs/config]
           volumeMounts:
             - name: ipfs-kubo-data
               mountPath: /data/ipfs
@@ -32,12 +32,11 @@ spec:
         - name: ipfs
           image: ipfs/kubo:latest
           args:
-            [
-              'daemon',
-              '--migrate=true',
-              '--agent-version-suffix=docker',
-              '--config-file=/etc/config/config.json',
-            ]
+            - daemon
+            - --migrate=true
+            - --agent-version-suffix=docker
+            - --config-file=/etc/config/config.json
+
           ports:
             - containerPort: 4001
             - containerPort: 4002
@@ -47,15 +46,15 @@ spec:
             - containerPort: 8080
           env:
             - name: IPFS_LOGGING_FMT
-              value: 'nocolor'
-              #value: "color"
+              value: nocolor
+              # value: "color"
             - name: IPFS_LOGGING
-              #value: "debug"
-              value: 'info'
-              #value: "warn"
-              #value: "error"
-              #value: "dpanic"
-              #value: "fatal"
+              # value: "debug"
+              value: info
+              # value: "warn"
+              # value: "error"
+              # value: "dpanic"
+              # value: "fatal"
           volumeMounts:
             - name: ipfs-kubo-data
               mountPath: /data/ipfs

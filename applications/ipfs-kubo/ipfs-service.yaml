@@ -6,13 +6,13 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - name: 'public-libp2p-port'
+    - name: public-libp2p-port
       port: 4001
       targetPort: 4001
-    - name: 'private-daemon-api-http'
+    - name: private-daemon-api-http
       port: 5001
       targetPort: 5001
-    - name: 'public-gateway-api-http'
+    - name: public-gateway-api-http
       port: 8080
       targetPort: 8080
   selector:

@@ -34,7 +34,7 @@ spec:
   ingressClassName: tailscale
   defaultBackend:
     service:
-      name: 'ipfs-kubo'
+      name: ipfs-kubo
       port:
         number: 5001
   tls:

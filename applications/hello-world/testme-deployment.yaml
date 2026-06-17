@@ -20,13 +20,13 @@ spec:
             - containerPort: 8080
             - containerPort: 8081
           env:
-            - name: 'OLTP_ENDPOINT'
+            - name: OLTP_ENDPOINT
               value: stackRef.getOutput('apmServerUrl').apply((url) => url)
-            - name: 'DOMAIN_NAME'
-              value: 'localhost'
-            - name: 'SERVICE_ID'
-              value: 'demoit'
-            - name: 'SERVICE_NAME'
-              value: 'demoit'
-            - name: 'SERVICE_TYPE'
-              value: 'app'
+            - name: DOMAIN_NAME
+              value: localhost
+            - name: SERVICE_ID
+              value: demoit
+            - name: SERVICE_NAME
+              value: demoit
+            - name: SERVICE_TYPE
+              value: app

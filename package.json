@@ -11,18 +11,19 @@
     "test": "jest --verbose --config=jest.config.mjs"
   },
   "devDependencies": {
-    "@mridang/eslint-defaults": "^1.0.0",
+    "@eslint/compat": "^2.1.0",
+    "@mridang/eslint-defaults": "^1.6.3",
     "@pulumi/kubernetes": "^4.19.0",
     "@pulumi/pulumi": "^3.141.0",
     "@tsconfig/node20": "latest",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.3.2",
     "dotenv": "^16.4.7",
-    "eslint": "^8.57.1",
+    "eslint": "^9.39.4",
     "jest": "^30.0.3",
-    "knip": "^5.43.6",
-    "prettier": "^3.1.1",
     "jest-junit": "^16.0.0",
+    "knip": "^6.17.1",
+    "prettier": "^3.1.1",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.1.3"
