@@ -1,6 +1,7 @@
 {
   "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
+    "types": ["jest", "node"],
     "preserveConstEnums": true,
     "allowJs": true,
     "sourceMap": true,
