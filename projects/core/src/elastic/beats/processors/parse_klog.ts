@@ -13,7 +13,7 @@ const ecsLevels = {
 
 // @ts-expect-error since this is not actually declared multiple times
 const logPattern =
-  // eslint-disable-next-line sonarjs/super-linear-regex -- anchored to one log line, so backtracking stays bounded
+  // eslint-disable-next-line sonarjs/super-linear-regex -- the overlapping whitespace and wildcard have no exactly equivalent non-overlapping form, and the input is one log line
   /^([IWEF])(\d{4} \d{2}:\d{2}:\d{2}\.\d+)\s+\d+\s+.*?]\s(.*)$/;
 
 /**

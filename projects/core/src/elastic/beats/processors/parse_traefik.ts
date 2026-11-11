@@ -16,8 +16,7 @@ const ecsLevels: Record<string, string> = {
 
 // @ts-expect-error since this is not actually declared multiple times
 const logPattern =
-  // eslint-disable-next-line sonarjs/super-linear-regex -- anchored to one log line, so backtracking stays bounded
-  /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)\s+(TRC|DBG|INF|WRN|ERR|FTL|PNC)\s+(.*)$/;
+  /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)\s+(TRC|DBG|INF|WRN|ERR|FTL|PNC)\s+((?:\S.*)?)$/;
 
 /**
  * Maps the level and message of a Traefik log line onto ECS fields.

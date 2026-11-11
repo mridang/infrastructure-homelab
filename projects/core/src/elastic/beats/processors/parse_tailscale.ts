@@ -4,8 +4,7 @@
  * @file Beats script processor that strips the date and time from a Tailscale log line and sets its level to info.
  */
 // @ts-expect-error since this is not actually declared multiple times
-// eslint-disable-next-line sonarjs/super-linear-regex -- anchored to one log line, so backtracking stays bounded
-const logPattern = /^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})\s+(.*)$/;
+const logPattern = /^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})\s+((?:\S.*)?)$/;
 
 /**
  * Strips the date and time from a Tailscale log line and sets its level to info.

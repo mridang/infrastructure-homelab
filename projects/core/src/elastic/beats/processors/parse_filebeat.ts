@@ -15,7 +15,7 @@ const ecsLevels: Record<string, string> = {
 };
 
 // @ts-expect-error since this is not actually declared multiple times
-// eslint-disable-next-line sonarjs/super-linear-regex -- anchored to one log line, so backtracking stays bounded
+// eslint-disable-next-line sonarjs/super-linear-regex -- the overlapping whitespace and wildcard have no exactly equivalent non-overlapping form, and the input is one log line
 const logPattern = /^\[(debug|info|warn|error|dpanic|panic|fatal)\]\s+(.+)$/;
 
 /**
