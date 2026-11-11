@@ -8,7 +8,7 @@
  * 2025/01/20 02:49:57 control: controlhttp: forcing port 443 dial due to recent noise dial
  * 2025/01/20 02:49:57 [RATELIMIT] format("control: controlhttp: forcing port 443 dial due to recent noise dial")
  * 2025/01/20 02:49:58 control: netmap: got new dial plan from control
- * 2025/01/20 02:49:58 health(warnable=not-in-map-poll): ok
+ * 2025/01/20 02:49:58 health(warnable=not-in-map-poll): ok.
  */
 
 // @ts-expect-error since this is not actually declared multiple times

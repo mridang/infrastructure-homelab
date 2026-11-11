@@ -20,9 +20,9 @@ pulumi.runtime.registerResourceTransform(
         'custom.mrida.ng/project': getProject(),
         'custom.mrida.ng/stack': getStack(),
         'custom.mrida.ng/environment': settings.environmentName,
-        ...(args.props.metadata?.labels || {}),
+        ...args.props.metadata?.labels,
       },
-      ...(args.props.metadata || {}),
+      ...args.props.metadata,
     };
 
     return {

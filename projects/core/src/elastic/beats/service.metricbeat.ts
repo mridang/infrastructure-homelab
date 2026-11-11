@@ -59,7 +59,7 @@ new k8s.rbac.v1.ClusterRoleBinding('metricbeat', {
  * with the following annotation `prometheus.io/scrape: true`.
  *
  * The prometheus endpoint comes from `prometheus.io/scrape` and the
- * port from `prometheus.io/port`
+ * port from `prometheus.io/port`.
  */
 new k8s.apiextensions.CustomResource(
   'metricbeat',

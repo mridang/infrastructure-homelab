@@ -3,7 +3,7 @@ import provider from '../provider';
 import { elasticsearch } from './elastic';
 import { execSync } from 'node:child_process';
 import kubeexec from '../utils/kubeexec';
-import path from 'path';
+import path from 'node:path';
 import * as pulumi from '@pulumi/pulumi';
 import { ELASTIC_VERSION } from './constants';
 import { settings } from '../settings';

@@ -60,7 +60,7 @@ const certificateIssuer = new k8s.apiextensions.CustomResource(
  * requires the cert-manager webhook server, which takes some time to start up.
  *
  * If everything is configured correctly, you should be able to see the issued
- * cert with this command
+ * cert with this command.
  *
  * ```
  * kubectl get secret test-certificate-secret -o=jsonpath='{.data.tls\.crt}' | base64 --decode | openssl x509 -noout -text

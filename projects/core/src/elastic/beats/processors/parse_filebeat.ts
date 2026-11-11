@@ -13,9 +13,8 @@ const ecsLevels: Record<string, string> = {
 const logPattern = /^\[(debug|info|warn|error|dpanic|panic|fatal)\]\s+(.+)$/;
 
 /**
- * time="2025-01-20T15:01:53Z" level=error msg="Port 443 for service traefik is already opened by another service"
- * time="2025-01-20T15:01:53Z" level=error msg="Port 443 for service traefik is already opened by another service"
- *
+ * Time="2025-01-20T15:01:53Z" level=error msg="Port 443 for service traefik is already opened by another service".
+ * Time="2025-01-20T15:01:53Z" level=error msg="Port 443 for service traefik is already opened by another service".
  * @param event
  */
 // @ts-expect-error the unused warning since this method is actually used

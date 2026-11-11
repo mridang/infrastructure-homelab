@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { execSync } from 'node:child_process';
 import { config } from 'dotenv';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -15,8 +15,8 @@ export default async function setup(): Promise<void> {
     execSync('kind create cluster --name=homelab-dev', {
       stdio: 'inherit',
     });
-  } catch (err) {
-    console.error('Error during global setup:', err);
+  } catch (error) {
+    console.error('Error during global setup:', error);
     process.exit(1);
   }
 }

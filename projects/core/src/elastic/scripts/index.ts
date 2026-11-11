@@ -34,10 +34,10 @@ fetch(
     }>;
   })
   .then((data) => {
-    if (!data.acknowledged) {
-      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
-    } else {
+    if (data.acknowledged) {
       console.log('Index template "no-replication" upserted successfully');
+    } else {
+      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
     }
   })
   .catch((error) => console.error(error));
@@ -55,7 +55,7 @@ fetch(
       index_patterns: ['.ds-metricbeat-*'],
       template: {
         settings: {
-          'index.mapping.total_fields.limit': 110000,
+          'index.mapping.total_fields.limit': 110_000,
         },
       },
     }),
@@ -72,10 +72,10 @@ fetch(
     }>;
   })
   .then((data) => {
-    if (!data.acknowledged) {
-      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
-    } else {
+    if (data.acknowledged) {
       console.log('Index template "bump-max-fields" upserted successfully');
+    } else {
+      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
     }
   })
   .catch((error) => console.error(error));
@@ -116,10 +116,10 @@ fetch(
     }>;
   })
   .then((data) => {
-    if (!data.acknowledged) {
-      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
-    } else {
+    if (data.acknowledged) {
       console.log('Lifecycle policy "packetbeat" updated successfully');
+    } else {
+      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
     }
   })
   .catch((error) => console.error(error));
@@ -149,14 +149,14 @@ fetch(
     }>;
   })
   .then((data) => {
-    if (!data.acknowledged) {
-      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
-    } else {
+    if (data.acknowledged) {
       if (data.rolled_over) {
         console.log(`Rolled over ${data.old_index} to ${data.new_index}`);
       } else {
         throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
       }
+    } else {
+      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
     }
   })
   .catch((error) => console.error(error));
@@ -186,14 +186,14 @@ fetch(
     }>;
   })
   .then((data) => {
-    if (!data.acknowledged) {
-      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
-    } else {
+    if (data.acknowledged) {
       if (data.rolled_over) {
         console.log(`Rolled over ${data.old_index} to ${data.new_index}`);
       } else {
         throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
       }
+    } else {
+      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
     }
   })
   .catch((error) => console.error(error));
@@ -223,14 +223,14 @@ fetch(
     }>;
   })
   .then((data) => {
-    if (!data.acknowledged) {
-      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
-    } else {
+    if (data.acknowledged) {
       if (data.rolled_over) {
         console.log(`Rolled over ${data.old_index} to ${data.new_index}`);
       } else {
         throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
       }
+    } else {
+      throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
     }
   })
   .catch((error) => console.error(error));

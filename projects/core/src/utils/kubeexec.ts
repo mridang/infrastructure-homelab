@@ -1,14 +1,13 @@
-import { execSync } from 'child_process';
+import { execSync } from 'node:child_process';
 
 /**
  * Utility function to run Typescript scripts inside the cluster using an
  * ephemeral Node.Js pod.
- *
- * @param podName The name of the pod to use - any name will do
- * @param scriptPath The absolute path to the script to run
- * @param namespace The name to run the pod in - defaults to "default"
+ * @param podName - The name of the pod to use - any name will do.
+ * @param scriptPath - The absolute path to the script to run.
+ * @param namespace - The name to run the pod in - defaults to "default".
  * @param imageName
- * @param envArgs Any additional arguments for the pod
+ * @param envArgs - Any additional arguments for the pod.
  */
 export default function (
   podName: string,

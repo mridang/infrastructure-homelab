@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as vm from 'vm';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import * as vm from 'node:vm';
 
 // noinspection JSUnusedGlobalSymbols
 const dummyEvent = {
@@ -73,13 +73,13 @@ export const scriptProcessors = fs
       },
     });
 
-    if (!transpiledCode) {
-      throw new Error(`Transpilation failed for file: ${processorId}`);
-    } else {
+    if (transpiledCode) {
       return {
         processorId,
         transpiledCode,
       };
+    } else {
+      throw new Error(`Transpilation failed for file: ${processorId}`);
     }
   })
   .map(({ processorId, transpiledCode }) => {
@@ -105,7 +105,7 @@ export const scriptProcessors = fs
                     1,
                     context.logPattern.toString().endsWith('/g') ? -2 : -1,
                   )
-                  .replace(/\\u00/g, '\\\\u0000'),
+                  .replaceAll(String.raw`\u00`, String.raw`\\u0000`),
               },
             },
             lang: 'javascript',
@@ -117,6 +117,8 @@ export const scriptProcessors = fs
         throw new Error(`Invalid data encountered in file: ${processorId}`);
       }
     } else {
-      throw new Error(`'process' function not found in file: ${processorId}`);
+      throw new TypeError(
+        `'process' function not found in file: ${processorId}`,
+      );
     }
   });
