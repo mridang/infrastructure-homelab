@@ -41,7 +41,6 @@ if (settings.lazyOps) {
   elasticsearch.metadata.apply(async (metadata) => {
     const { name, namespace } = metadata;
 
-    // eslint-disable-next-line testing-library/no-debugging-utils -- progress is logged while the cluster comes up
     await log.debug('Waiting for Elasticsearch cluster to become healthy...');
 
     /**
@@ -58,7 +57,6 @@ if (settings.lazyOps) {
         const jsonResult = JSON.parse(result);
         const health = jsonResult?.status?.health || '';
 
-        // eslint-disable-next-line testing-library/no-debugging-utils -- progress is logged while the cluster comes up
         await log.debug(`Cluster health status: ${health}`);
 
         if (health) {
