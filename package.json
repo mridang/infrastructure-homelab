@@ -1,5 +1,6 @@
 {
   "name": "@mridang/homelab",
+  "description": "Pulumi infrastructure for the homelab Kubernetes cluster",
   "type": "module",
   "scripts": {
     "build": "tsc --noEmit",

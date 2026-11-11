@@ -1,4 +1,20 @@
 {
   "type": "commonjs",
-  "name": "core"
+  "name": "core",
+  "version": "0.0.0-development",
+  "description": "Pulumi program that provisions the homelab Kubernetes cluster services",
+  "license": "UNLICENSED",
+  "author": "Mridang Agarwalla",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mridang/infrastructure-homelab.git"
+  },
+  "sideEffects": true,
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "Pulumi.yaml"
+  ]
 }

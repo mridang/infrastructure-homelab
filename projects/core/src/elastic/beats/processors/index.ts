@@ -72,7 +72,7 @@ const dummyEvent = {
 // eslint-disable-next-line unicorn/prefer-module -- this package is CommonJS, where __dirname is defined
 const processorDirectory = __dirname;
 
-// eslint-disable-next-line n/no-sync -- sync is fine in a script/bootstrap, run once when Pulumi loads the stack
+// eslint-disable-next-line n/no-sync -- scriptProcessors is a synchronous module-level export read at require time by the Pulumi program, so it cannot await
 const processorFiles = readdirSync(processorDirectory);
 
 export const scriptProcessors = processorFiles
@@ -80,7 +80,7 @@ export const scriptProcessors = processorFiles
   .map((file) => {
     return {
       processorId: path.basename(file, '.ts'),
-      // eslint-disable-next-line n/no-sync -- sync is fine in a script/bootstrap, run once when Pulumi loads the stack
+      // eslint-disable-next-line n/no-sync -- scriptProcessors is a synchronous module-level export read at require time by the Pulumi program, so it cannot await
       fileContent: readFileSync(path.join(processorDirectory, file), 'utf8'),
     };
   })
