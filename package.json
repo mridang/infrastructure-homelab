@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@eslint/compat": "^2.1.1",
-    "@mridang/eslint-defaults": "file:../../pack/mridang-eslint-defaults-2.0.1.tgz",
+    "@mridang/eslint-defaults": "^2.1.0",
     "@pulumi/kubernetes": "^4.19.0",
     "@pulumi/pulumi": "^3.272.0",
     "@tsconfig/node20": "latest",
