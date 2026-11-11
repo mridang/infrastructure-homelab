@@ -1,5 +1,8 @@
+/**
+ * @file Creates the Kubernetes secret that holds the Cloudflare API credentials.
+ */
 import { Config } from '@pulumi/pulumi';
-import * as k8s from '@pulumi/kubernetes';
+import { core } from '@pulumi/kubernetes';
 
 const config = new Config();
 const settings = config.requireObject('cloudflare') as {
@@ -8,7 +11,7 @@ const settings = config.requireObject('cloudflare') as {
 };
 
 export const cloudflareEmail = process.env[settings.userEmail] + '';
-export const cloudflareSecret = new k8s.core.v1.Secret('cloudflare-api-token', {
+export const cloudflareSecret = new core.v1.Secret('cloudflare-api-token', {
   metadata: {
     name: 'cloudflare-api-token',
   },

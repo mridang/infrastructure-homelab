@@ -1,4 +1,7 @@
-import * as k8s from '@pulumi/kubernetes';
+/**
+ * @file Installs the Tailscale Kubernetes operator using OAuth credentials from the environment.
+ */
+import { helm } from '@pulumi/kubernetes';
 import provider from '../provider';
 import { Config, getStack } from '@pulumi/pulumi';
 
@@ -8,7 +11,7 @@ const settings = config.requireObject('tailscale') as {
   clientSecret: string;
 };
 
-export const tailscale = new k8s.helm.v3.Release(
+export const tailscale = new helm.v3.Release(
   'tailscale-operator',
   {
     chart: 'tailscale-operator',

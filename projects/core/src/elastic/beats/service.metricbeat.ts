@@ -1,14 +1,17 @@
-import * as k8s from '@pulumi/kubernetes';
+/**
+ * @file Deploys Metricbeat as a daemonset that collects node, pod and Prometheus metrics.
+ */
+import { apiextensions, core, rbac } from '@pulumi/kubernetes';
 import { elasticsearch } from '../elastic';
 import provider from '../../provider';
 import { ELASTIC_VERSION } from '../constants';
 import { kibana } from '../kibana';
 
-const metricbeatServiceAccount = new k8s.core.v1.ServiceAccount('metricbeat', {
+const metricbeatServiceAccount = new core.v1.ServiceAccount('metricbeat', {
   metadata: { name: 'metricbeat' },
 });
 
-const metricbeatClusterRole = new k8s.rbac.v1.ClusterRole('metricbeat', {
+const metricbeatClusterRole = new rbac.v1.ClusterRole('metricbeat', {
   metadata: { name: 'metricbeat' },
   rules: [
     {
@@ -38,7 +41,7 @@ const metricbeatClusterRole = new k8s.rbac.v1.ClusterRole('metricbeat', {
   ],
 });
 
-new k8s.rbac.v1.ClusterRoleBinding('metricbeat', {
+new rbac.v1.ClusterRoleBinding('metricbeat', {
   metadata: { name: 'metricbeat' },
   subjects: [
     {
@@ -61,7 +64,7 @@ new k8s.rbac.v1.ClusterRoleBinding('metricbeat', {
  * The prometheus endpoint comes from `prometheus.io/scrape` and the
  * port from `prometheus.io/port`.
  */
-new k8s.apiextensions.CustomResource(
+new apiextensions.CustomResource(
   'metricbeat',
   {
     apiVersion: 'beat.k8s.elastic.co/v1beta1',

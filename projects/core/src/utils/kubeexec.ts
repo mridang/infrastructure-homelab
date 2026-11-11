@@ -1,3 +1,7 @@
+/**
+ * @file Runs a TypeScript script inside a short-lived Kubernetes pod and removes the pod afterwards.
+ */
+
 import { execSync } from 'node:child_process';
 
 /**
@@ -6,10 +10,14 @@ import { execSync } from 'node:child_process';
  * @param podName - The name of the pod to use - any name will do.
  * @param scriptPath - The absolute path to the script to run.
  * @param namespace - The name to run the pod in - defaults to "default".
- * @param imageName
+ * @param imageName - The container image that runs the script, defaulting to node:22-slim.
  * @param envArgs - Any additional arguments for the pod.
+ * @example
+ * kubeexec('esidx', '/abs/path/to/scripts/index.ts', 'default', 'node:22-slim', [
+ *   { name: 'ELASTICSEARCH_HOSTNAME', value: 'my-cluster-es-http' },
+ * ]);
  */
-export default function (
+export default function kubeexec(
   podName: string,
   scriptPath: string,
   namespace: string = 'default',
@@ -18,6 +26,7 @@ export default function (
 ) {
   try {
     console.log(`Creating a ${imageName} container pod: ${podName}...`);
+    // eslint-disable-next-line n/no-sync -- sync is fine in a script/bootstrap, pod steps run in order
     execSync(
       `kubectl run ${podName} --image=${imageName} --restart=Never --command --namespace=${namespace} --overrides='${JSON.stringify(
         {
@@ -38,18 +47,21 @@ export default function (
     );
 
     console.log('Waiting for the pod to be ready...');
+    // eslint-disable-next-line n/no-sync -- sync is fine in a script/bootstrap, pod steps run in order
     execSync(
       `kubectl wait pod/${podName} --for=condition=Ready --timeout=60s --namespace=${namespace}`,
       { stdio: 'inherit' },
     );
 
     console.log(`Copying the script to pod ${podName}...`);
+    // eslint-disable-next-line n/no-sync -- sync is fine in a script/bootstrap, pod steps run in order
     execSync(
       `kubectl cp ${scriptPath} ${namespace}/${podName}:/tmp/script.ts`,
       { stdio: 'inherit' },
     );
 
     console.log(`Executing the script in pod ${podName}...`);
+    // eslint-disable-next-line n/no-sync -- sync is fine in a script/bootstrap, pod steps run in order
     execSync(
       `kubectl exec ${podName} --namespace=${namespace} -- node --no-warnings --experimental-strip-types /tmp/script.ts`,
       { stdio: 'inherit' },
@@ -64,6 +76,7 @@ export default function (
     }
   } finally {
     console.log(`Cleaning up: Deleting pod ${podName}`);
+    // eslint-disable-next-line n/no-sync -- sync is fine in a script/bootstrap, pod steps run in order
     execSync(
       `kubectl delete pod ${podName} --namespace=${namespace} --ignore-not-found`,
       { stdio: 'inherit' },

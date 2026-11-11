@@ -1,8 +1,11 @@
-import * as k8s from '@pulumi/kubernetes';
+/**
+ * @file Patches CoreDNS annotations and its Corefile so upstream queries use Cloudflare DNS over TLS.
+ */
+import { apps, core } from '@pulumi/kubernetes';
 import provider from './provider';
 import { settings } from './settings';
 
-new k8s.apps.v1.DeploymentPatch(
+new apps.v1.DeploymentPatch(
   'coredns-annotations-patch',
   {
     metadata: {
@@ -43,7 +46,7 @@ new k8s.apps.v1.DeploymentPatch(
  *
  * `kubectl logs --namespace=kube-system --selector=k8s-app=kube-dns --follow`.
  */
-new k8s.core.v1.ConfigMap(
+new core.v1.ConfigMap(
   'coredns',
   {
     metadata: {

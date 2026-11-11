@@ -1,4 +1,7 @@
-import * as k8s from '@pulumi/kubernetes';
+/**
+ * @file Deploys an Elastic APM server with a Traefik route for browser telemetry and a Tailscale ingress.
+ */
+import { apiextensions, networking } from '@pulumi/kubernetes';
 import { ELASTIC_VERSION } from './constants';
 import provider from '../provider';
 import { elasticsearch } from './elastic';
@@ -9,7 +12,7 @@ import { tailscale } from '../tailscale';
 
 const APM_PORT = 8200;
 
-const apmServer = new k8s.apiextensions.CustomResource(
+const apmServer = new apiextensions.CustomResource(
   'apm-server-instance',
   {
     apiVersion: 'apm.k8s.elastic.co/v1',
@@ -44,7 +47,7 @@ const apmServer = new k8s.apiextensions.CustomResource(
   },
 );
 
-new k8s.apiextensions.CustomResource(
+new apiextensions.CustomResource(
   'rum-ingressroute',
   {
     apiVersion: 'traefik.io/v1alpha1',
@@ -77,7 +80,7 @@ new k8s.apiextensions.CustomResource(
   },
 );
 
-new k8s.networking.v1.Ingress(
+new networking.v1.Ingress(
   'tailscale-apm-ingress',
   {
     metadata: {

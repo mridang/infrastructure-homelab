@@ -1,18 +1,21 @@
-import * as k8s from '@pulumi/kubernetes';
+/**
+ * @file Deploys Packetbeat as a host-network daemonset that captures DNS and HTTP traffic.
+ */
+import { apiextensions, core, rbac } from '@pulumi/kubernetes';
 import { elasticsearch } from '../elastic';
 import provider from '../../provider';
 import { ELASTIC_VERSION } from '../constants';
 import { kibana } from '../kibana';
 
-const packetbeatServiceAccount = new k8s.core.v1.ServiceAccount('packetbeat', {
+const packetbeatServiceAccount = new core.v1.ServiceAccount('packetbeat', {
   metadata: { name: 'packetbeat' },
 });
 
-const packetbeatClusterRole = new k8s.rbac.v1.ClusterRole('packetbeat', {
+const packetbeatClusterRole = new rbac.v1.ClusterRole('packetbeat', {
   metadata: { name: 'packetbeat' },
 });
 
-new k8s.rbac.v1.ClusterRoleBinding('packetbeat', {
+new rbac.v1.ClusterRoleBinding('packetbeat', {
   metadata: { name: 'packetbeat' },
   subjects: [
     {
@@ -28,7 +31,7 @@ new k8s.rbac.v1.ClusterRoleBinding('packetbeat', {
   },
 });
 
-new k8s.apiextensions.CustomResource(
+new apiextensions.CustomResource(
   'packetbeat',
   {
     apiVersion: 'beat.k8s.elastic.co/v1beta1',

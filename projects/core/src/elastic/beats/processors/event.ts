@@ -1,4 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/**
+ * @file Declares the global Beats event interface that the processor scripts are written against.
+ */
+
+// eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars -- Event is a global declaration shared by the parse_*.ts processors
 interface Event {
   Get<T>(key: string): T | undefined;
   Put(key: string, value: string): string;

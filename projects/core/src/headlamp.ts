@@ -1,9 +1,12 @@
-import * as k8s from '@pulumi/kubernetes';
+/**
+ * @file Installs the Headlamp dashboard and exposes it through a Tailscale ingress.
+ */
+import { helm, networking } from '@pulumi/kubernetes';
 import provider from './provider';
 import { tailscale } from './tailscale';
 import { settings } from './settings';
 
-const headlamp = new k8s.helm.v3.Chart('headlamp', {
+const headlamp = new helm.v3.Chart('headlamp', {
   chart: 'headlamp',
   version: '0.28.0',
   fetchOpts: {
@@ -14,7 +17,7 @@ const headlamp = new k8s.helm.v3.Chart('headlamp', {
   },
 });
 
-new k8s.networking.v1.Ingress(
+new networking.v1.Ingress(
   'tailscale-headlamp-ingress',
   {
     metadata: {

@@ -1,4 +1,7 @@
-import * as k8s from '@pulumi/kubernetes';
+/**
+ * @file Installs Traefik as the ingress controller with ACME certificates and a Tailscale ingress.
+ */
+import { helm, networking } from '@pulumi/kubernetes';
 import provider from '../provider';
 import { cloudflareSecret } from '../cloudflare';
 import { apmServerUrl } from '../elastic';
@@ -19,7 +22,7 @@ import { tailscale } from '../tailscale';
  * When running on Docker Desktop, there is only a single node and that
  * is not tainted.
  */
-export const traefik = new k8s.helm.v3.Chart(
+export const traefik = new helm.v3.Chart(
   'traefik',
   {
     chart: 'traefik',
@@ -131,6 +134,7 @@ export const traefik = new k8s.helm.v3.Chart(
             storage: '/data/acme.json',
             dnsChallenge: {
               provider: 'cloudflare',
+              // eslint-disable-next-line sonarjs/no-hardcoded-ip -- public Cloudflare resolvers are required configuration, not secrets
               resolvers: ['1.1.1.1', '1.0.0.1'],
               delayBeforeCheck: 60,
             },
@@ -149,7 +153,7 @@ export const traefik = new k8s.helm.v3.Chart(
   { provider },
 );
 
-new k8s.networking.v1.Ingress(
+new networking.v1.Ingress(
   'tailscale-traefik-ingress',
   {
     metadata: {
@@ -181,24 +185,3 @@ new k8s.networking.v1.Ingress(
     dependsOn: [tailscale, traefik],
   },
 );
-
-//
-// traefik.ready.apply((t) => {
-//   new k8s.apiextensions.CustomResource(
-//     'compression-middleware',
-//     {
-//       apiVersion: 'traefik.io/v1alpha1',
-//       kind: 'Middleware',
-//       metadata: {
-//         name: 'compression-middleware',
-//         namespace: 'default',
-//       },
-//       spec: {
-//         compress: {
-//           //
-//         },
-//       },
-//     },
-//     { provider },
-//   );
-// });

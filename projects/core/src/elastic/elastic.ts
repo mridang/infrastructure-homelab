@@ -1,11 +1,14 @@
-import * as k8s from '@pulumi/kubernetes';
+/**
+ * @file Deploys the Elasticsearch cluster and a Tailscale ingress that exposes it.
+ */
+import { apiextensions, networking } from '@pulumi/kubernetes';
 import { ELASTIC_VERSION } from './constants';
 import provider from '../provider';
 import { interpolate } from '@pulumi/pulumi';
 import { tailscale } from '../tailscale';
 import { settings } from '../settings';
 
-export const elasticsearch = new k8s.apiextensions.CustomResource(
+export const elasticsearch = new apiextensions.CustomResource(
   'elasticsearch-cluster',
   {
     apiVersion: 'elasticsearch.k8s.elastic.co/v1',
@@ -49,7 +52,7 @@ export const elasticsearch = new k8s.apiextensions.CustomResource(
   },
 );
 
-new k8s.networking.v1.Ingress(
+new networking.v1.Ingress(
   'tailscale-elasticsearch-ingress',
   {
     metadata: {
