@@ -1,15 +1,13 @@
 /**
  * @file Global Jest setup that points Pulumi at a temporary backend and creates a KinD cluster.
  */
-import { execSync } from 'node:child_process';
 import { config } from 'dotenv';
-import { mkdtempSync } from 'node:fs';
+import { mkdtemp } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
+import { run } from './utils/exec';
 
 config();
-// eslint-disable-next-line n/no-sync -- sync is fine in a script/bootstrap, and the directory is made once before tests start
-process.env.PULUMI_BACKEND_URL = `file://${mkdtempSync(path.join(tmpdir(), 'pulumi-'))}`;
 process.env.PULUMI_CONFIG_PASSPHRASE = 'insecure';
 
 /**
@@ -17,15 +15,22 @@ process.env.PULUMI_CONFIG_PASSPHRASE = 'insecure';
  * @throws {Error} When the KinD cluster cannot be created.
  * @example
  * // Jest calls this once, before the first test file runs.
- * setup();
+ * await setup();
  */
-export default function setup(): void {
+export default async function setup(): Promise<void> {
+  process.env.PULUMI_BACKEND_URL = `file://${await mkdtemp(path.join(tmpdir(), 'pulumi-'))}`;
   try {
     console.log('Creating KinD cluster...');
-    // eslint-disable-next-line n/no-sync, sonarjs/no-os-command-from-path -- sync is fine in a script/bootstrap, and kind is a devbox-provided tool
-    execSync('kind create cluster --name=homelab-dev', {
-      stdio: 'inherit',
-    });
+    const code = await run(
+      'kind',
+      ['create', 'cluster', '--name=homelab-dev'],
+      {
+        stdio: 'inherit',
+      },
+    );
+    if (code !== 0) {
+      throw new Error(`kind exited with code ${code}`);
+    }
   } catch (error) {
     console.error('Error during global setup:', error);
     throw new Error('Global setup failed to create the KinD cluster.');
