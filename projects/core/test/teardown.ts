@@ -1,12 +1,30 @@
-import { execSync } from 'child_process';
+/**
+ * @file Global Jest teardown that deletes the KinD cluster created by the setup.
+ */
+import { run } from './utils/exec';
 
-// noinspection JSUnusedGlobalSymbols
+/**
+ * Deletes the KinD cluster used by the integration tests, or aborts the run when that fails.
+ * @throws {Error} When the KinD cluster cannot be deleted.
+ * @example
+ * // Jest calls this once, after the last test file has finished.
+ * await teardown();
+ */
 export default async function teardown(): Promise<void> {
   try {
     console.log('Deleting KinD cluster...');
-    execSync('kind delete cluster --name=homelab-dev', { stdio: 'inherit' });
-  } catch (err) {
-    console.error('Error during global teardown:', err);
-    process.exit(1);
+    const code = await run(
+      'kind',
+      ['delete', 'cluster', '--name=homelab-dev'],
+      {
+        stdio: 'inherit',
+      },
+    );
+    if (code !== 0) {
+      throw new Error(`kind exited with code ${code}`);
+    }
+  } catch (error) {
+    console.error('Error during global teardown:', error);
+    throw new Error('Global teardown failed to delete the KinD cluster.');
   }
 }

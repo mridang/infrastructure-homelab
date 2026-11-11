@@ -1,10 +1,13 @@
-import * as k8s from '@pulumi/kubernetes';
+/**
+ * @file Deploys Argo CD with its GitHub webhook secret and a Tailscale ingress.
+ */
+import { core, helm, networking } from '@pulumi/kubernetes';
 import { interpolate } from '@pulumi/pulumi';
 import provider from '../provider';
 import { tailscale } from '../tailscale';
 import { settings } from '../settings';
 
-new k8s.core.v1.Secret('argocd-webhook-secret', {
+new core.v1.Secret('argocd-webhook-secret', {
   metadata: {
     name: 'argocd-webhook-secret',
   },
@@ -13,7 +16,7 @@ new k8s.core.v1.Secret('argocd-webhook-secret', {
   },
 });
 
-const argoCD = new k8s.helm.v3.Release('argocd-operator', {
+const argoCD = new helm.v3.Release('argocd-operator', {
   name: 'argocd-operator',
   chart: 'argo-cd',
   version: '7.7.18',
@@ -41,7 +44,7 @@ const argoCD = new k8s.helm.v3.Release('argocd-operator', {
   },
 });
 
-new k8s.networking.v1.Ingress(
+new networking.v1.Ingress(
   'tailscale-argocd-ingress',
   {
     metadata: {

@@ -1,14 +1,21 @@
-import * as k8s from '@pulumi/kubernetes';
+/**
+ * @file Deploys the Elastic operator and, when lazy operations are enabled, seeds Elasticsearch once it is healthy.
+ */
+import { helm } from '@pulumi/kubernetes';
 import provider from '../provider';
 import { elasticsearch } from './elastic';
-import { execSync } from 'node:child_process';
+import { exec } from 'node:child_process';
+import { promisify } from 'node:util';
 import kubeexec from '../utils/kubeexec';
-import path from 'path';
-import * as pulumi from '@pulumi/pulumi';
+import path from 'node:path';
+import { setTimeout } from 'node:timers/promises';
+import { log } from '@pulumi/pulumi';
 import { ELASTIC_VERSION } from './constants';
 import { settings } from '../settings';
 
-new k8s.helm.v3.Release(
+const execAsync = promisify(exec);
+
+new helm.v3.Release(
   'eck-operator',
   {
     name: 'operator-elk',
@@ -23,74 +30,72 @@ new k8s.helm.v3.Release(
   },
 );
 
-export * from './elastic';
-export * from './kibana';
-export * from './apm';
-export * from './beats/service.filebeat';
-export * from './beats/service.metricbeat';
-export * from './beats/service.packetbeat';
+export { elasticsearch } from './elastic';
+export { kibana } from './kibana';
+export { apmServerUrl } from './apm';
+import './beats/service.filebeat';
+import './beats/service.metricbeat';
+import './beats/service.packetbeat';
 
 if (settings.lazyOps) {
   elasticsearch.metadata.apply(async (metadata) => {
-    const name = metadata.name;
-    const namespace = metadata.namespace;
+    const { name, namespace } = metadata;
 
-    // eslint-disable-next-line testing-library/no-debugging-utils
-    await pulumi.log.debug(
-      'Waiting for Elasticsearch cluster to become healthy...',
-    );
+    await log.debug('Waiting for Elasticsearch cluster to become healthy...');
 
-    let health = '';
-    for (let i = 0; i < 10; i++) {
+    /**
+     * Checks the cluster once and, when it is healthy, seeds it.
+     * @returns Whether the cluster was healthy and the seeding step ran.
+     * @example
+     * const seeded = await attempt();
+     */
+    async function attempt(): Promise<boolean> {
       try {
-        const result = execSync(
+        const { stdout: result } = await execAsync(
           `kubectl get elasticsearch ${name} -n ${namespace} -o json`,
-          { encoding: 'utf-8' },
         );
         const jsonResult = JSON.parse(result);
-        health = jsonResult?.status?.health || '';
+        const health = jsonResult?.status?.health || '';
 
-        // eslint-disable-next-line testing-library/no-debugging-utils
-        await pulumi.log.debug(`Cluster health status: ${health}`);
+        await log.debug(`Cluster health status: ${health}`);
 
         if (health) {
-          await pulumi.log.info('Elasticsearch cluster is healthy!');
-          kubeexec(
+          await log.info('Elasticsearch cluster is healthy!');
+          await kubeexec(
             'esidx',
+            // eslint-disable-next-line unicorn/prefer-module -- this package is CommonJS, where __dirname is defined
             path.join(__dirname, 'scripts', 'index.ts'),
-            metadata.namespace,
+            namespace,
             'node:22-slim',
             [
-              {
-                name: 'ELASTICSEARCH_VERSION',
-                value: ELASTIC_VERSION,
-              },
-              {
-                name: 'ELASTICSEARCH_HOSTNAME',
-                value: `${metadata.name}-es-http`,
-              },
-              {
-                name: 'ELASTICSEARCH_USERNAME',
-                value: 'elastic',
-              },
+              { name: 'ELASTICSEARCH_VERSION', value: ELASTIC_VERSION },
+              { name: 'ELASTICSEARCH_HOSTNAME', value: `${name}-es-http` },
+              { name: 'ELASTICSEARCH_USERNAME', value: 'elastic' },
               {
                 name: 'ELASTICSEARCH_PASSWORD',
                 valueFrom: {
                   secretKeyRef: {
-                    name: `${metadata.name}-es-elastic-user`,
+                    name: `${name}-es-elastic-user`,
                     key: 'elastic',
                   },
                 },
               },
             ],
           );
-          return;
+          return true;
         }
       } catch (error) {
         console.warn(`Error checking cluster status: ${error}`);
       }
+      return false;
+    }
 
-      execSync('sleep 10');
+    for (let i = 0; i < 10; i++) {
+      if (await attempt()) {
+        return;
+      }
+
+      await setTimeout(10_000);
     }
 
     throw new Error(

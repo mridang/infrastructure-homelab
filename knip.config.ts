@@ -1,3 +1,6 @@
+/**
+ * @file Knip configuration that declares the entry points and ignored files for unused-code checks.
+ */
 export default {
   workspaces: {
     'projects/core': {

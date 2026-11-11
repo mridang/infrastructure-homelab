@@ -1,3 +1,6 @@
+/**
+ * @file Reads the cluster configuration from the Pulumi stack.
+ */
 import { Config } from '@pulumi/pulumi';
 
 export const settings = new Config().requireObject('cluster') as {

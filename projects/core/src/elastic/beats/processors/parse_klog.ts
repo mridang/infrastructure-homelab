@@ -1,3 +1,8 @@
+/* eslint-disable unicorn/filename-case -- the processor id is the file name, so renaming it would change the Beats processor id */
+
+/**
+ * @file Beats script processor that maps the severity letter and message of a klog line onto ECS fields.
+ */
 // @ts-expect-error since this is not actually declared multiple times
 const ecsLevels = {
   i: 'info',
@@ -8,18 +13,18 @@ const ecsLevels = {
 
 // @ts-expect-error since this is not actually declared multiple times
 const logPattern =
+  // eslint-disable-next-line sonarjs/super-linear-regex -- the overlapping whitespace and wildcard have no exactly equivalent non-overlapping form, and the input is one log line
   /^([IWEF])(\d{4} \d{2}:\d{2}:\d{2}\.\d+)\s+\d+\s+.*?]\s(.*)$/;
 
 /**
- * I0117 07:28:57.028111       1 controller.go:1293] provision "default/elasticsearch-data-my-cluster-es-default-0" class "hostpath": volume "pvc-38511ace-7194-496b-b3a4-0df77072775f" provisioned
- * I0117 07:28:57.028123       1 controller.go:1310] provision "default/elasticsearch-data-my-cluster-es-default-0" class "hostpath": succeeded
- * I0117 07:28:57.028132       1 volume_store.go:212] Trying to save persistentvolume "pvc-38511ace-7194-496b-b3a4-0df77072775f"
- * I0117 07:28:57.030812       1 volume_store.go:219] persistentvolume "pvc-38511ace-7194-496b-b3a4-0df77072775f" saved
- *
- * @param event
+ * Maps the severity letter and message of a klog line onto ECS fields.
+ * @param event - The Beats event whose message field holds the log line.
+ * @example
+ * // Input: I0117 07:28:57.028132       1 volume_store.go:212] Trying to save persistentvolume
+ * processLog(event);
  */
 // @ts-expect-error the unused warning since this method is actually used
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line unused-imports/no-unused-vars, sonarjs/declarations-in-global-scope -- processLog is called by the processors index through a vm context
 function processLog(event: Event): void {
   const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {
@@ -27,3 +32,4 @@ function processLog(event: Event): void {
     event.Put('message', logMatch[3]);
   }
 }
+/* eslint-enable unicorn/filename-case -- end of the file-wide filename exemption */

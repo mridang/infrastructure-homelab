@@ -1,15 +1,18 @@
-import * as k8s from '@pulumi/kubernetes';
+/**
+ * @file Deploys Filebeat as a daemonset that ships container logs to Elasticsearch.
+ */
+import { apiextensions, core, rbac } from '@pulumi/kubernetes';
 import { elasticsearch } from '../elastic';
 import provider from '../../provider';
 import { ELASTIC_VERSION } from '../constants';
 import { kibana } from '../kibana';
 import { scriptProcessors } from './processors';
 
-const filebeatServiceAccount = new k8s.core.v1.ServiceAccount('filebeat', {
+const filebeatServiceAccount = new core.v1.ServiceAccount('filebeat', {
   metadata: { name: 'filebeat' },
 });
 
-const filebeatClusterRole = new k8s.rbac.v1.ClusterRole('filebeat', {
+const filebeatClusterRole = new rbac.v1.ClusterRole('filebeat', {
   metadata: { name: 'filebeat' },
   rules: [
     {
@@ -30,7 +33,7 @@ const filebeatClusterRole = new k8s.rbac.v1.ClusterRole('filebeat', {
   ],
 });
 
-new k8s.rbac.v1.ClusterRoleBinding('filebeat', {
+new rbac.v1.ClusterRoleBinding('filebeat', {
   metadata: { name: 'filebeat' },
   subjects: [
     {
@@ -46,7 +49,7 @@ new k8s.rbac.v1.ClusterRoleBinding('filebeat', {
   },
 });
 
-new k8s.apiextensions.CustomResource(
+new apiextensions.CustomResource(
   'filebeat',
   {
     apiVersion: 'beat.k8s.elastic.co/v1beta1',

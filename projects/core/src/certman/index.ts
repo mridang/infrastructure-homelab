@@ -1,10 +1,13 @@
-import * as k8s from '@pulumi/kubernetes';
-import * as helm from '@pulumi/kubernetes/helm/v3';
+/**
+ * @file Installs cert-manager, a Let's Encrypt Cloudflare issuer and a test certificate.
+ */
+import { apiextensions } from '@pulumi/kubernetes';
+import { Release } from '@pulumi/kubernetes/helm/v3';
 import provider from '../provider';
 import { cloudflareEmail, cloudflareSecret } from '../cloudflare';
 import { settings } from '../settings';
 
-const certManagerHelmRelease = new helm.Release('cert-manager', {
+const certManagerHelmRelease = new Release('cert-manager', {
   chart: 'cert-manager',
   version: '1.16.3',
   repositoryOpts: {
@@ -20,7 +23,7 @@ const certManagerHelmRelease = new helm.Release('cert-manager', {
   },
 });
 
-const certificateIssuer = new k8s.apiextensions.CustomResource(
+const certificateIssuer = new apiextensions.CustomResource(
   'letsencrypt-issuer',
   {
     apiVersion: 'cert-manager.io/v1',
@@ -60,13 +63,13 @@ const certificateIssuer = new k8s.apiextensions.CustomResource(
  * requires the cert-manager webhook server, which takes some time to start up.
  *
  * If everything is configured correctly, you should be able to see the issued
- * cert with this command
+ * cert with this command.
  *
  * ```
  * kubectl get secret test-certificate-secret -o=jsonpath='{.data.tls\.crt}' | base64 --decode | openssl x509 -noout -text
  * ```
  */
-new k8s.apiextensions.CustomResource(
+new apiextensions.CustomResource(
   'dummy-certificate',
   {
     apiVersion: 'cert-manager.io/v1',

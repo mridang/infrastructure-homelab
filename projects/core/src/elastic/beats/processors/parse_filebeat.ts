@@ -1,3 +1,8 @@
+/* eslint-disable unicorn/filename-case -- the processor id is the file name, so renaming it would change the Beats processor id */
+
+/**
+ * @file Beats script processor that maps the bracketed level and text of a Filebeat log line onto ECS fields.
+ */
 // @ts-expect-error since this is not actually declared multiple times
 const ecsLevels: Record<string, string> = {
   debug: 'debug',
@@ -10,16 +15,18 @@ const ecsLevels: Record<string, string> = {
 };
 
 // @ts-expect-error since this is not actually declared multiple times
+// eslint-disable-next-line sonarjs/super-linear-regex -- the overlapping whitespace and wildcard have no exactly equivalent non-overlapping form, and the input is one log line
 const logPattern = /^\[(debug|info|warn|error|dpanic|panic|fatal)\]\s+(.+)$/;
 
 /**
- * time="2025-01-20T15:01:53Z" level=error msg="Port 443 for service traefik is already opened by another service"
- * time="2025-01-20T15:01:53Z" level=error msg="Port 443 for service traefik is already opened by another service"
- *
- * @param event
+ * Maps the bracketed level and text of a Filebeat log line onto ECS fields.
+ * @param event - The Beats event whose message field holds the log line.
+ * @example
+ * // Input: [error] Port 443 for service traefik is already opened by another service
+ * processLog(event);
  */
 // @ts-expect-error the unused warning since this method is actually used
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line unused-imports/no-unused-vars, sonarjs/declarations-in-global-scope -- processLog is called by the processors index through a vm context
 function processLog(event: Event): void {
   const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {
@@ -27,3 +34,4 @@ function processLog(event: Event): void {
     event.Put('message', logMatch[2]);
   }
 }
+/* eslint-enable unicorn/filename-case -- end of the file-wide filename exemption */

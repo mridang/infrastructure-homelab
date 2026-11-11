@@ -1,38 +1,45 @@
-import * as ts from 'typescript';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as vm from 'vm';
+/**
+ * @file Builds the Elastic Beats script processors from the `parse_*.ts` files stored next to it.
+ */
+import { ModuleKind, ScriptTarget, transpileModule } from 'typescript';
+import { readdirSync, readFileSync } from 'node:fs';
+import path from 'node:path';
+import { createContext, runInContext } from 'node:vm';
 
-// noinspection JSUnusedGlobalSymbols
+const dummyData = {
+  message: 'foo',
+} as Record<string, string>;
+
+/**
+ * Stand-in for the Beats event object, used to run each processor once at build time.
+ */
+/* eslint-disable sonarjs/function-name -- the Beats event API fixes these method names */
 const dummyEvent = {
-  data: {
-    message: 'foo',
-  } as Record<string, string>,
-
+  // The Beats event API fixes these method names.
   Get<T>(key: string): T | undefined {
-    if (this.data[key]) {
-      return this.data[key] as T;
+    if (dummyData[key]) {
+      return dummyData[key] as T;
     }
     return undefined;
   },
 
   Put(key: string, value: string): string {
-    this.data[key] = value;
+    dummyData[key] = value;
     return value;
   },
 
   Rename(sourceKey: string, targetKey: string): boolean {
-    if (this.data[sourceKey] !== undefined) {
-      this.data[targetKey] = this.data[sourceKey];
-      delete this.data[sourceKey];
+    if (dummyData[sourceKey] !== undefined) {
+      dummyData[targetKey] = dummyData[sourceKey];
+      delete dummyData[sourceKey];
       return true;
     }
     return false;
   },
 
   Delete(key: string): boolean {
-    if (this.data[key] !== undefined) {
-      delete this.data[key];
+    if (dummyData[key] !== undefined) {
+      delete dummyData[key];
       return true;
     }
     return false;
@@ -47,50 +54,62 @@ const dummyEvent = {
   },
 
   AppendTo(key: string, value: string): void {
-    if (this.data[key]) {
-      this.data[key] += value; // Append value to existing data
+    if (dummyData[key]) {
+      dummyData[key] += value; // Append value to existing data
     } else {
-      this.data[key] = value; // If key doesn't exist, create it
+      dummyData[key] = value; // If key doesn't exist, create it
     }
   },
 };
+/* eslint-enable sonarjs/function-name -- end of the Beats event API stand-in */
 
-export const scriptProcessors = fs
-  .readdirSync(__dirname)
+// This package is CommonJS, so __dirname is defined at runtime.
+// eslint-disable-next-line unicorn/prefer-module -- this package is CommonJS, where __dirname is defined
+const processorDirectory = __dirname;
+
+// eslint-disable-next-line n/no-sync -- scriptProcessors is a synchronous module-level export read at require time by the Pulumi program, so it cannot await
+const processorFiles = readdirSync(processorDirectory);
+
+export const scriptProcessors = processorFiles
   .filter((file) => /^parse_.*\.ts$/.test(file))
   .map((file) => {
     return {
       processorId: path.basename(file, '.ts'),
-      fileContent: fs.readFileSync(path.join(__dirname, file), 'utf8'),
+      // eslint-disable-next-line n/no-sync -- scriptProcessors is a synchronous module-level export read at require time by the Pulumi program, so it cannot await
+      fileContent: readFileSync(path.join(processorDirectory, file), 'utf8'),
     };
   })
   .map(({ processorId, fileContent }) => {
-    const { outputText: transpiledCode } = ts.transpileModule(fileContent, {
+    const { outputText: transpiledCode } = transpileModule(fileContent, {
       compilerOptions: {
-        target: ts.ScriptTarget.ES5,
-        module: ts.ModuleKind.CommonJS,
+        // The Beats JavaScript processor engine only runs ES5 output.
+        // eslint-disable-next-line sonarjs/deprecation -- the Beats engine only runs ES5 output
+        target: ScriptTarget.ES5,
+        module: ModuleKind.CommonJS,
         removeComments: true,
       },
     });
 
-    if (!transpiledCode) {
-      throw new Error(`Transpilation failed for file: ${processorId}`);
-    } else {
+    if (transpiledCode) {
       return {
         processorId,
         transpiledCode,
       };
+    } else {
+      throw new Error(`Transpilation failed for file: ${processorId}`);
     }
   })
   .map(({ processorId, transpiledCode }) => {
-    const context = vm.createContext({
+    const context = createContext({
       module: { exports: {} },
       exports: {},
+      // eslint-disable-next-line unicorn/prefer-module -- processors may load CommonJS modules through this require
       require,
       dummyEvent,
     });
 
-    vm.runInContext(transpiledCode, context);
+    // eslint-disable-next-line sonarjs/code-eval -- the code is a repository file transpiled at build time
+    runInContext(transpiledCode, context);
 
     if (typeof context.processLog === 'function') {
       context.processLog(context.dummyEvent);
@@ -105,7 +124,7 @@ export const scriptProcessors = fs
                     1,
                     context.logPattern.toString().endsWith('/g') ? -2 : -1,
                   )
-                  .replace(/\\u00/g, '\\\\u0000'),
+                  .replaceAll(String.raw`\u00`, String.raw`\\u0000`),
               },
             },
             lang: 'javascript',
@@ -117,6 +136,8 @@ export const scriptProcessors = fs
         throw new Error(`Invalid data encountered in file: ${processorId}`);
       }
     } else {
-      throw new Error(`'process' function not found in file: ${processorId}`);
+      throw new TypeError(
+        `'process' function not found in file: ${processorId}`,
+      );
     }
   });
