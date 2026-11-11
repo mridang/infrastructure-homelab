@@ -7,6 +7,7 @@ import { elasticsearch } from './elastic';
 import { execSync } from 'node:child_process';
 import kubeexec from '../utils/kubeexec';
 import path from 'node:path';
+import { setTimeout } from 'node:timers/promises';
 import { log } from '@pulumi/pulumi';
 import { ELASTIC_VERSION } from './constants';
 import { settings } from '../settings';
@@ -93,8 +94,7 @@ if (settings.lazyOps) {
         console.warn(`Error checking cluster status: ${error}`);
       }
 
-      // eslint-disable-next-line n/no-sync, sonarjs/no-os-command-from-path -- sync is fine in a script/bootstrap, and sleep is a fixed system command
-      execSync('sleep 10');
+      await setTimeout(10_000);
     }
 
     throw new Error(
