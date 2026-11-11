@@ -4,13 +4,16 @@
 import { helm } from '@pulumi/kubernetes';
 import provider from '../provider';
 import { elasticsearch } from './elastic';
-import { execSync } from 'node:child_process';
+import { exec } from 'node:child_process';
+import { promisify } from 'node:util';
 import kubeexec from '../utils/kubeexec';
 import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import { log } from '@pulumi/pulumi';
 import { ELASTIC_VERSION } from './constants';
 import { settings } from '../settings';
+
+const execAsync = promisify(exec);
 
 new helm.v3.Release(
   'eck-operator',
@@ -44,54 +47,51 @@ if (settings.lazyOps) {
     let health = '';
     for (let i = 0; i < 10; i++) {
       try {
-        // eslint-disable-next-line n/no-sync -- sync is fine in a script/bootstrap, polling runs once while Pulumi applies
-        const result = execSync(
+        const { stdout: result } = await execAsync(
           `kubectl get elasticsearch ${name} -n ${namespace} -o json`,
-          { encoding: 'utf8' },
         );
         const jsonResult = JSON.parse(result);
         health = jsonResult?.status?.health || '';
 
         // eslint-disable-next-line testing-library/no-debugging-utils -- progress is logged while the cluster comes up
         await log.debug(`Cluster health status: ${health}`);
-
-        // eslint-disable-next-line sonarjs/nested-control-flow -- the retry loop reads most clearly as one block
-        if (health) {
-          await log.info('Elasticsearch cluster is healthy!');
-          kubeexec(
-            'esidx',
-            // eslint-disable-next-line unicorn/prefer-module -- this package is CommonJS, where __dirname is defined
-            path.join(__dirname, 'scripts', 'index.ts'),
-            namespace,
-            'node:22-slim',
-            [
-              {
-                name: 'ELASTICSEARCH_VERSION',
-                value: ELASTIC_VERSION,
-              },
-              {
-                name: 'ELASTICSEARCH_HOSTNAME',
-                value: `${name}-es-http`,
-              },
-              {
-                name: 'ELASTICSEARCH_USERNAME',
-                value: 'elastic',
-              },
-              {
-                name: 'ELASTICSEARCH_PASSWORD',
-                valueFrom: {
-                  secretKeyRef: {
-                    name: `${name}-es-elastic-user`,
-                    key: 'elastic',
-                  },
-                },
-              },
-            ],
-          );
-          return;
-        }
       } catch (error) {
         console.warn(`Error checking cluster status: ${error}`);
+      }
+
+      if (health) {
+        await log.info('Elasticsearch cluster is healthy!');
+        await kubeexec(
+          'esidx',
+          // eslint-disable-next-line unicorn/prefer-module -- this package is CommonJS, where __dirname is defined
+          path.join(__dirname, 'scripts', 'index.ts'),
+          namespace,
+          'node:22-slim',
+          [
+            {
+              name: 'ELASTICSEARCH_VERSION',
+              value: ELASTIC_VERSION,
+            },
+            {
+              name: 'ELASTICSEARCH_HOSTNAME',
+              value: `${name}-es-http`,
+            },
+            {
+              name: 'ELASTICSEARCH_USERNAME',
+              value: 'elastic',
+            },
+            {
+              name: 'ELASTICSEARCH_PASSWORD',
+              valueFrom: {
+                secretKeyRef: {
+                  name: `${name}-es-elastic-user`,
+                  key: 'elastic',
+                },
+              },
+            },
+          ],
+        );
+        return;
       }
 
       await setTimeout(10_000);

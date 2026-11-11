@@ -13,9 +13,9 @@ const dummyData = {
 /**
  * Stand-in for the Beats event object, used to run each processor once at build time.
  */
+/* eslint-disable sonarjs/function-name -- the Beats event API fixes these method names */
 const dummyEvent = {
   // The Beats event API fixes these method names.
-  // eslint-disable-next-line sonarjs/function-name -- Beats event API method names are fixed
   Get<T>(key: string): T | undefined {
     if (dummyData[key]) {
       return dummyData[key] as T;
@@ -23,13 +23,11 @@ const dummyEvent = {
     return undefined;
   },
 
-  // eslint-disable-next-line sonarjs/function-name -- Beats event API method names are fixed
   Put(key: string, value: string): string {
     dummyData[key] = value;
     return value;
   },
 
-  // eslint-disable-next-line sonarjs/function-name -- Beats event API method names are fixed
   Rename(sourceKey: string, targetKey: string): boolean {
     if (dummyData[sourceKey] !== undefined) {
       dummyData[targetKey] = dummyData[sourceKey];
@@ -39,7 +37,6 @@ const dummyEvent = {
     return false;
   },
 
-  // eslint-disable-next-line sonarjs/function-name -- Beats event API method names are fixed
   Delete(key: string): boolean {
     if (dummyData[key] !== undefined) {
       delete dummyData[key];
@@ -48,17 +45,14 @@ const dummyEvent = {
     return false;
   },
 
-  // eslint-disable-next-line sonarjs/function-name -- Beats event API method names are fixed
   Cancel(): void {
     //
   },
 
-  // eslint-disable-next-line sonarjs/function-name -- Beats event API method names are fixed
   Tag(): void {
     //
   },
 
-  // eslint-disable-next-line sonarjs/function-name -- Beats event API method names are fixed
   AppendTo(key: string, value: string): void {
     if (dummyData[key]) {
       dummyData[key] += value; // Append value to existing data
@@ -67,6 +61,7 @@ const dummyEvent = {
     }
   },
 };
+/* eslint-enable sonarjs/function-name -- end of the Beats event API stand-in */
 
 // This package is CommonJS, so __dirname is defined at runtime.
 // eslint-disable-next-line unicorn/prefer-module -- this package is CommonJS, where __dirname is defined

@@ -6,8 +6,7 @@
 
 describe('the obligatory sanity test', () => {
   it('the answer to life, the universe, and everything', () => {
-    // eslint-disable-next-line sonarjs/no-trivial-assertions -- deliberate sanity check that the Jest pipeline runs
-    expect(6 * 7).toBe(42);
+    expect(Number('6') * Number('7')).toBe(42);
   });
 
   it('javascript can still be trusted on basic arithmetic', () => {

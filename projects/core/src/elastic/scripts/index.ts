@@ -3,8 +3,8 @@
  */
 
 // The package is CommonJS, so the work runs in an async function rather than at the top level.
-// eslint-disable-next-line unicorn/prefer-top-level-await, @typescript-eslint/no-floating-promises -- CommonJS package cannot use top-level await, and the pod runs this file as an ES module
-(async () => {
+// eslint-disable-next-line unicorn/prefer-top-level-await -- the package is CommonJS, where tsc rejects top-level await
+void (async () => {
   /**
    * Sends one authenticated request to the in-cluster Elasticsearch HTTP API.
    * @param path - The API path, beginning with a slash.
