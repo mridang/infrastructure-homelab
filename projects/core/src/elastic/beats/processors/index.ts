@@ -67,11 +67,13 @@ const dummyEvent = {
 // eslint-disable-next-line unicorn/prefer-module -- this package is CommonJS, where __dirname is defined
 const processorDirectory = __dirname;
 
+/** Matches the TypeScript file name of a script processor. */
+const PARSER_FILE_PATTERN = /^parse_.*\.ts$/;
 // eslint-disable-next-line n/no-sync -- scriptProcessors is a synchronous module-level export read at require time by the Pulumi program, so it cannot await
 const processorFiles = readdirSync(processorDirectory);
 
 export const scriptProcessors = processorFiles
-  .filter((file) => /^parse_.*\.ts$/.test(file))
+  .filter((file) => PARSER_FILE_PATTERN.test(file))
   .map((file) => {
     return {
       processorId: path.basename(file, '.ts'),

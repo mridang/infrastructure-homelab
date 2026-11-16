@@ -4,6 +4,9 @@
 // Sanity check — proves the jest pipeline actually executes a test file here.
 // Reach this far, the canonical jest setup is wired correctly.
 
+/** Matches the word `canon` in a string. */
+const CANONICAL_PATTERN = /canon/;
+
 describe('the obligatory sanity test', () => {
   it('the answer to life, the universe, and everything', () => {
     expect(Number('6') * Number('7')).toBe(42);
@@ -14,6 +17,6 @@ describe('the obligatory sanity test', () => {
   });
 
   it('yes, the canonical jest.config.mjs has indeed been adopted', () => {
-    expect('canonical').toMatch(/canon/);
+    expect('canonical').toMatch(CANONICAL_PATTERN);
   });
 });

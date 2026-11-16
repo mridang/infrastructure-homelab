@@ -90,7 +90,7 @@ if (settings.lazyOps) {
       return false;
     }
 
-    for (let i = 0; i < 10; i++) {
+    for (let index = 0; index < 10; index++) {
       if (await attempt()) {
         return;
       }

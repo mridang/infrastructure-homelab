@@ -1,6 +1,7 @@
 /**
  * @file Global Jest setup that points Pulumi at a temporary backend and creates a KinD cluster.
  */
+// eslint-disable-next-line e18e/ban-dependencies -- process.loadEnvFile throws when .env is missing where config() ignores it, so the swap would change test setup
 import { config } from 'dotenv';
 import { mkdtemp } from 'node:fs/promises';
 import path from 'node:path';
