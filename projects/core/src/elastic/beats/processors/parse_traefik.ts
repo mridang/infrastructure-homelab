@@ -3,7 +3,6 @@
 /**
  * @file Beats script processor that maps the level and message of a Traefik log line onto ECS fields.
  */
-// @ts-expect-error since this is not actually declared multiple times
 const ecsLevels: Record<string, string> = {
   trc: 'debug',
   dbg: 'debug',
@@ -14,7 +13,6 @@ const ecsLevels: Record<string, string> = {
   pnc: 'critical',
 };
 
-// @ts-expect-error since this is not actually declared multiple times
 const logPattern =
   /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)\s+(TRC|DBG|INF|WRN|ERR|FTL|PNC)\s+((?:\S.*)?)$/;
 
@@ -25,9 +23,8 @@ const logPattern =
  * // Input: 2025-01-20T15:01:53Z INF Configuration loaded from file
  * processLog(event);
  */
-// @ts-expect-error the unused warning since this method is actually used
 // eslint-disable-next-line unused-imports/no-unused-vars, sonarjs/declarations-in-global-scope -- processLog is called by the processors index through a vm context
-function processLog(event: Event): void {
+function processLog(event: BeatsEvent): void {
   const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {
     event.Put('log.level', ecsLevels[logMatch[2]?.toLowerCase()] || 'unknown');

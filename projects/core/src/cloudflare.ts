@@ -5,10 +5,10 @@ import { Config } from '@pulumi/pulumi';
 import { core } from '@pulumi/kubernetes';
 
 const config = new Config();
-const settings = config.requireObject('cloudflare') as {
+const settings = config.requireObject<{
   userEmail: string;
   apiToken: string;
-};
+}>('cloudflare');
 
 export const cloudflareEmail = process.env[settings.userEmail] + '';
 export const cloudflareSecret = new core.v1.Secret('cloudflare-api-token', {

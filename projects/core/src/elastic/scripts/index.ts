@@ -15,20 +15,17 @@ void (async () => {
    * const response = await elasticRequest('/_ilm/policy/packetbeat', 'PUT', { policy: {} });
    */
   async function elasticRequest(path: string, method: string, body?: unknown) {
-    const credentials = `${process.env['ELASTICSEARCH_USERNAME']}:${process.env['ELASTICSEARCH_PASSWORD']}`;
+    const credentials = `${process.env.ELASTICSEARCH_USERNAME}:${process.env.ELASTICSEARCH_PASSWORD}`;
     // noinspection HttpUrlsUsage
     // eslint-disable-next-line n/no-unsupported-features/node-builtins -- fetch is stable in the Node 22 image this script runs in
-    return await fetch(
-      `http://${process.env['ELASTICSEARCH_HOSTNAME']}:9200${path}`,
-      {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Basic ${btoa(credentials)}`,
-        },
-        body: body === undefined ? undefined : JSON.stringify(body),
+    return fetch(`http://${process.env.ELASTICSEARCH_HOSTNAME}:9200${path}`, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${btoa(credentials)}`,
       },
-    );
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
   }
 
   /**
@@ -136,7 +133,7 @@ void (async () => {
   for (const beat of ['filebeat', 'packetbeat', 'metricbeat']) {
     try {
       const response = await elasticRequest(
-        `/${beat}-${process.env['ELASTICSEARCH_VERSION']}/_rollover`,
+        `/${beat}-${process.env.ELASTICSEARCH_VERSION}/_rollover`,
         'POST',
       );
       if (!response.ok) {

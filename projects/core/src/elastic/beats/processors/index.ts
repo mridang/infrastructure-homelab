@@ -69,6 +69,16 @@ const processorDirectory = __dirname;
 
 /** Matches the TypeScript file name of a script processor. */
 const PARSER_FILE_PATTERN = /^parse_.*\.ts$/;
+
+/** The sandbox a processor script runs in, and the globals it leaves on it. */
+type ProcessorSandbox = {
+  module: { exports: object };
+  exports: object;
+  require: NodeRequire;
+  dummyEvent: typeof dummyEvent;
+  processLog?: (event: typeof dummyEvent) => void;
+  logPattern?: RegExp;
+};
 // eslint-disable-next-line n/no-sync -- scriptProcessors is a synchronous module-level export read at require time by the Pulumi program, so it cannot await
 const processorFiles = readdirSync(processorDirectory);
 
@@ -85,7 +95,7 @@ export const scriptProcessors = processorFiles
     const { outputText: transpiledCode } = transpileModule(fileContent, {
       compilerOptions: {
         // The Beats JavaScript processor engine only runs ES5 output.
-        // eslint-disable-next-line sonarjs/deprecation -- the Beats engine only runs ES5 output
+        // eslint-disable-next-line sonarjs/deprecation, @typescript-eslint/no-deprecated -- the Beats engine only runs ES5 output
         target: ScriptTarget.ES5,
         module: ModuleKind.CommonJS,
         removeComments: true,
@@ -102,13 +112,15 @@ export const scriptProcessors = processorFiles
     }
   })
   .map(({ processorId, transpiledCode }) => {
-    const context = createContext({
+    const context: ProcessorSandbox = {
       module: { exports: {} },
       exports: {},
       // eslint-disable-next-line unicorn/prefer-module -- processors may load CommonJS modules through this require
       require,
       dummyEvent,
-    });
+    };
+    // createContext contextifies the object in place, so the script's globals are read back from it.
+    createContext(context);
 
     // eslint-disable-next-line sonarjs/code-eval -- the code is a repository file transpiled at build time
     runInContext(transpiledCode, context);

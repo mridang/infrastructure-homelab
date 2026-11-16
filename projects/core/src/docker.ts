@@ -5,10 +5,10 @@ import { core } from '@pulumi/kubernetes';
 import { Config } from '@pulumi/pulumi';
 
 const config = new Config();
-const settings = config.requireObject('github') as {
+const settings = config.requireObject<{
   registryUsername: string;
   registryPassword: string;
-};
+}>('github');
 
 const dockerRegistrySecret = new core.v1.Secret('docker-credentials-github', {
   metadata: {

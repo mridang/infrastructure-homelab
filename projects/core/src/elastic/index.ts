@@ -15,6 +15,11 @@ import { settings } from '../settings';
 
 const execAsync = promisify(exec);
 
+/** The part of the output of `kubectl get elasticsearch -o json` that this module reads. */
+interface ElasticsearchResource {
+  status?: { health?: string };
+}
+
 new helm.v3.Release(
   'eck-operator',
   {
@@ -54,7 +59,8 @@ if (settings.lazyOps) {
         const { stdout: result } = await execAsync(
           `kubectl get elasticsearch ${name} -n ${namespace} -o json`,
         );
-        const jsonResult = JSON.parse(result);
+        const jsonResult = JSON.parse(result) as
+          ElasticsearchResource | undefined;
         const health = jsonResult?.status?.health || '';
 
         await log.debug(`Cluster health status: ${health}`);
@@ -85,7 +91,7 @@ if (settings.lazyOps) {
           return true;
         }
       } catch (error) {
-        console.warn(`Error checking cluster status: ${error}`);
+        console.warn(`Error checking cluster status: ${String(error)}`);
       }
       return false;
     }

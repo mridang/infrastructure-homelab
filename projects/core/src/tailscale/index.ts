@@ -6,10 +6,10 @@ import provider from '../provider';
 import { Config, getStack } from '@pulumi/pulumi';
 
 const config = new Config();
-const settings = config.requireObject('tailscale') as {
+const settings = config.requireObject<{
   clientId: string;
   clientSecret: string;
-};
+}>('tailscale');
 
 export const tailscale = new helm.v3.Release(
   'tailscale-operator',

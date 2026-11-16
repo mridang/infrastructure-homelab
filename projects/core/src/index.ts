@@ -9,31 +9,33 @@ import './tailscale';
 import './argocd';
 import './headlamp';
 import { settings } from './settings';
-import {
-  getOrganization,
-  getProject,
-  getStack,
-  ResourceTransformArgs,
-  runtime,
-} from '@pulumi/pulumi';
+import type { ResourceTransformArgs } from '@pulumi/pulumi';
+import { getOrganization, getProject, getStack, runtime } from '@pulumi/pulumi';
 
 export { apmServerUrl, elasticsearch, kibana } from './elastic';
 export { gcrCredentials } from './docker';
 
+/** The resource properties this transform reads and labels, typed once here. */
+interface ResourceProps {
+  metadata?: { labels?: Record<string, string>; [key: string]: unknown };
+  [key: string]: unknown;
+}
+
 runtime.registerResourceTransform((args: ResourceTransformArgs) => {
-  args.props.metadata = {
+  const props = args.props as ResourceProps;
+  props.metadata = {
     labels: {
       'custom.mrida.ng/organization': getOrganization(),
       'custom.mrida.ng/project': getProject(),
       'custom.mrida.ng/stack': getStack(),
       'custom.mrida.ng/environment': settings.environmentName,
-      ...args.props.metadata?.labels,
+      ...props.metadata?.labels,
     },
-    ...args.props.metadata,
+    ...props.metadata,
   };
 
   return {
-    props: args.props,
+    props,
     opts: args.opts,
   };
 });
