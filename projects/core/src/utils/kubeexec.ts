@@ -35,8 +35,10 @@ async function execInherit(command: string): Promise<void> {
 export default async function kubeexec(
   podName: string,
   scriptPath: string,
-  namespace: string = 'default',
-  imageName: string = 'node:22-slim',
+  // eslint-disable-next-line @typescript-eslint/default-param-last -- envArgs must stay the last parameter so the existing positional call in elastic/index.ts keeps its argument order
+  namespace = 'default',
+  // eslint-disable-next-line @typescript-eslint/default-param-last -- envArgs must stay the last parameter so the existing positional call in elastic/index.ts keeps its argument order
+  imageName = 'node:22-slim',
   envArgs: { name: string; value?: string; valueFrom?: unknown }[],
 ): Promise<void> {
   try {

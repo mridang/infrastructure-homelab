@@ -3,7 +3,6 @@
 /**
  * @file Beats script processor that removes the hash field from an etcd event whose message mentions a hash.
  */
-// @ts-expect-error since this is not actually declared multiple times
 const logPattern = /\shash/;
 
 /**
@@ -13,9 +12,8 @@ const logPattern = /\shash/;
  * // Input: a message containing " hash", such as an etcd snapshot hash report
  * processLog(event);
  */
-// @ts-expect-error the unused warning since this method is actually used
 // eslint-disable-next-line unused-imports/no-unused-vars, sonarjs/declarations-in-global-scope -- processLog is called by the processors index through a vm context
-function processLog(event: Event): void {
+function processLog(event: BeatsEvent): void {
   const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {
     event.Delete('hash');
