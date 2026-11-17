@@ -2,12 +2,12 @@
  * @file Deploys a Kibana instance connected to Elasticsearch and a Tailscale ingress for it.
  */
 import { apiextensions, networking } from '@pulumi/kubernetes';
-import { ELASTIC_VERSION } from './constants';
-import provider from '../provider';
-import { elasticsearch } from './elastic';
 import { interpolate } from '@pulumi/pulumi';
+import provider from '../provider';
 import { tailscale } from '../tailscale';
 import { settings } from '../settings';
+import { elasticsearch } from './elastic';
+import { ELASTIC_VERSION } from './constants';
 
 export const kibana = new apiextensions.CustomResource('kibana-instance', {
   apiVersion: 'kibana.k8s.elastic.co/v1',
@@ -57,6 +57,7 @@ export const kibana = new apiextensions.CustomResource('kibana-instance', {
   },
 });
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new networking.v1.Ingress(
   'tailscale-kibana-ingress',
   {

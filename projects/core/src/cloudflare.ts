@@ -10,13 +10,13 @@ const settings = config.requireObject<{
   apiToken: string;
 }>('cloudflare');
 
-export const cloudflareEmail = process.env[settings.userEmail] + '';
+export const cloudflareEmail = `${process.env[settings.userEmail]}`;
 export const cloudflareSecret = new core.v1.Secret('cloudflare-api-token', {
   metadata: {
     name: 'cloudflare-api-token',
   },
   stringData: {
-    CF_API_EMAIL: process.env[settings.userEmail] + '',
-    CF_DNS_API_TOKEN: process.env[settings.apiToken] + '',
+    CF_API_EMAIL: `${process.env[settings.userEmail]}`,
+    CF_DNS_API_TOKEN: `${process.env[settings.apiToken]}`,
   },
 });

@@ -3,6 +3,7 @@
 /**
  * @file Beats script processor that maps the level and message of a VPNKit logfmt line onto ECS fields.
  */
+// eslint-disable-next-line tslop/no-known-value-widening -- the level is looked up by a string captured from the log line, so the dictionary must stay open
 const ecsLevels: Record<string, string> = {
   debug: 'debug',
   info: 'info',
@@ -13,7 +14,7 @@ const ecsLevels: Record<string, string> = {
 };
 
 const logPattern =
-  /^time="([^"]+)"\s+level=(debug|info|warning|error|panic|fatal)\s+msg="([^"]+)"$/;
+  /^time="([^"]+)"\s+level=(debug|info|warning|error|panic|fatal)\s+msg="([^"]+)"$/u;
 
 /**
  * Maps the level and message of a VPNKit logfmt line onto ECS fields.

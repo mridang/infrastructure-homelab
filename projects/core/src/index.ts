@@ -8,9 +8,9 @@ import './certman';
 import './tailscale';
 import './argocd';
 import './headlamp';
+import { getOrganization, getProject, getStack, runtime } from '@pulumi/pulumi';
 import { settings } from './settings';
 import type { ResourceTransformArgs } from '@pulumi/pulumi';
-import { getOrganization, getProject, getStack, runtime } from '@pulumi/pulumi';
 
 export { apmServerUrl, elasticsearch, kibana } from './elastic';
 export { gcrCredentials } from './docker';
@@ -23,6 +23,7 @@ interface ResourceProps {
 
 runtime.registerResourceTransform((args: ResourceTransformArgs) => {
   const props = args.props as ResourceProps;
+  // eslint-disable-next-line functional/immutable-data -- a Pulumi resource transform adjusts the incoming props in place
   props.metadata = {
     labels: {
       'custom.mrida.ng/organization': getOrganization(),

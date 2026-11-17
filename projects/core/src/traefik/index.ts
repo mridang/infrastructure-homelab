@@ -153,6 +153,7 @@ export const traefik = new helm.v3.Chart(
   { provider },
 );
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new networking.v1.Ingress(
   'tailscale-traefik-ingress',
   {

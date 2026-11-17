@@ -2,11 +2,11 @@
  * @file Deploys the Elasticsearch cluster and a Tailscale ingress that exposes it.
  */
 import { apiextensions, networking } from '@pulumi/kubernetes';
-import { ELASTIC_VERSION } from './constants';
-import provider from '../provider';
 import { interpolate } from '@pulumi/pulumi';
+import provider from '../provider';
 import { tailscale } from '../tailscale';
 import { settings } from '../settings';
+import { ELASTIC_VERSION } from './constants';
 
 export const elasticsearch = new apiextensions.CustomResource(
   'elasticsearch-cluster',
@@ -52,6 +52,7 @@ export const elasticsearch = new apiextensions.CustomResource(
   },
 );
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new networking.v1.Ingress(
   'tailscale-elasticsearch-ingress',
   {

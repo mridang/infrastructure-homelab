@@ -3,7 +3,7 @@
 /**
  * @file Beats script processor that removes the hash field from an etcd event whose message mentions a hash.
  */
-const logPattern = /\shash/;
+const logPattern = /\shash/u;
 
 /**
  * Removes the hash field from an etcd event whose message mentions a hash.

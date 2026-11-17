@@ -1,17 +1,17 @@
 /**
  * @file Deploys the Elastic operator and, when lazy operations are enabled, seeds Elasticsearch once it is healthy.
  */
-import { helm } from '@pulumi/kubernetes';
-import provider from '../provider';
-import { elasticsearch } from './elastic';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
-import kubeexec from '../utils/kubeexec';
 import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
+import { helm } from '@pulumi/kubernetes';
 import { log } from '@pulumi/pulumi';
-import { ELASTIC_VERSION } from './constants';
+import kubeexec from '../utils/kubeexec';
+import provider from '../provider';
 import { settings } from '../settings';
+import { elasticsearch } from './elastic';
+import { ELASTIC_VERSION } from './constants';
 
 const execAsync = promisify(exec);
 
@@ -20,6 +20,7 @@ interface ElasticsearchResource {
   status?: { health?: string };
 }
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new helm.v3.Release(
   'eck-operator',
   {
@@ -95,7 +96,7 @@ if (settings.lazyOps) {
       }
       return false;
     }
-
+    // eslint-disable-next-line functional/no-loop-statements, functional/no-let -- the requests run one after another and each waits on the previous one
     for (let index = 0; index < 10; index++) {
       if (await attempt()) {
         return;

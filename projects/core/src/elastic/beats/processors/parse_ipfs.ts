@@ -3,6 +3,7 @@
 /**
  * @file Beats script processor that maps the timestamped level and text of an IPFS log line onto ECS fields.
  */
+// eslint-disable-next-line tslop/no-known-value-widening -- the level is looked up by a string captured from the log line, so the dictionary must stay open
 const ecsLevels: Record<string, string> = {
   debug: 'debug',
   info: 'info',
@@ -13,7 +14,7 @@ const ecsLevels: Record<string, string> = {
 };
 
 const logPattern =
-  /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)\s+(DEBUG|INFO|WARN|ERROR|DPANIC|FATAL)\s+((?:\S.*)?)$/;
+  /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)\s+(DEBUG|INFO|WARN|ERROR|DPANIC|FATAL)\s+((?:\S.*)?)$/u;
 
 /**
  * Maps the timestamped level and text of an IPFS log line onto ECS fields.

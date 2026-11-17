@@ -2,13 +2,13 @@
  * @file Deploys an Elastic APM server with a Traefik route for browser telemetry and a Tailscale ingress.
  */
 import { apiextensions, networking } from '@pulumi/kubernetes';
-import { ELASTIC_VERSION } from './constants';
-import provider from '../provider';
-import { elasticsearch } from './elastic';
 import { interpolate } from '@pulumi/pulumi';
+import provider from '../provider';
 import { settings } from '../settings';
 import { traefik } from '../traefik';
 import { tailscale } from '../tailscale';
+import { elasticsearch } from './elastic';
+import { ELASTIC_VERSION } from './constants';
 
 const APM_PORT = 8200;
 
@@ -47,6 +47,7 @@ const apmServer = new apiextensions.CustomResource(
   },
 );
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new apiextensions.CustomResource(
   'rum-ingressroute',
   {
@@ -80,6 +81,7 @@ new apiextensions.CustomResource(
   },
 );
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new networking.v1.Ingress(
   'tailscale-apm-ingress',
   {

@@ -15,6 +15,7 @@ const packetbeatClusterRole = new rbac.v1.ClusterRole('packetbeat', {
   metadata: { name: 'packetbeat' },
 });
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new rbac.v1.ClusterRoleBinding('packetbeat', {
   metadata: { name: 'packetbeat' },
   subjects: [
@@ -31,6 +32,7 @@ new rbac.v1.ClusterRoleBinding('packetbeat', {
   },
 });
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new apiextensions.CustomResource(
   'packetbeat',
   {

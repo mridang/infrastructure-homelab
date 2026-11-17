@@ -69,6 +69,7 @@ const certificateIssuer = new apiextensions.CustomResource(
  * kubectl get secret test-certificate-secret -o=jsonpath='{.data.tls\.crt}' | base64 --decode | openssl x509 -noout -text
  * ```
  */
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new apiextensions.CustomResource(
   'dummy-certificate',
   {

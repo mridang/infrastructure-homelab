@@ -130,6 +130,7 @@ void (async () => {
     console.error(error);
   }
 
+  // eslint-disable-next-line functional/no-loop-statements -- the requests run one after another and each waits on the previous one
   for (const beat of ['filebeat', 'packetbeat', 'metricbeat']) {
     try {
       const response = await elasticRequest(

@@ -2,8 +2,8 @@
  * @file Installs the Tailscale Kubernetes operator using OAuth credentials from the environment.
  */
 import { helm } from '@pulumi/kubernetes';
-import provider from '../provider';
 import { Config, getStack } from '@pulumi/pulumi';
+import provider from '../provider';
 
 const config = new Config();
 const settings = config.requireObject<{

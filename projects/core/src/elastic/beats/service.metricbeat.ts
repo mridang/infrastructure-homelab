@@ -41,6 +41,7 @@ const metricbeatClusterRole = new rbac.v1.ClusterRole('metricbeat', {
   ],
 });
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new rbac.v1.ClusterRoleBinding('metricbeat', {
   metadata: { name: 'metricbeat' },
   subjects: [
@@ -64,6 +65,7 @@ new rbac.v1.ClusterRoleBinding('metricbeat', {
  * The prometheus endpoint comes from `prometheus.io/scrape` and the
  * port from `prometheus.io/port`.
  */
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new apiextensions.CustomResource(
   'metricbeat',
   {
@@ -90,6 +92,7 @@ new apiextensions.CustomResource(
             providers: [
               {
                 type: 'kubernetes',
+                // eslint-disable-next-line no-template-curly-in-string -- the ${...} placeholder is expanded by the Beats config, not by JavaScript
                 node: '${NODE_NAME}',
                 hints: {
                   enabled: true,
@@ -98,6 +101,7 @@ new apiextensions.CustomResource(
               },
               {
                 type: 'kubernetes',
+                // eslint-disable-next-line no-template-curly-in-string -- the ${...} placeholder is expanded by the Beats config, not by JavaScript
                 host: '${HOSTNAME}',
                 templates: [
                   {
@@ -109,9 +113,11 @@ new apiextensions.CustomResource(
                         module: 'prometheus',
                         period: '10s',
                         hosts: [
+                          // eslint-disable-next-line no-template-curly-in-string -- the ${...} placeholder is expanded by the Beats config, not by JavaScript
                           '${data.host}:${data.kubernetes.annotations.prometheus.io/port}',
                         ],
                         metrics_path:
+                          // eslint-disable-next-line no-template-curly-in-string -- the ${...} placeholder is expanded by the Beats config, not by JavaScript
                           '${data.kubernetes.annotations.prometheus.io/path:/metrics}',
                       },
                     ],
@@ -164,7 +170,9 @@ new apiextensions.CustomResource(
             {
               module: 'kubernetes',
               period: '10s',
+              // eslint-disable-next-line no-template-curly-in-string -- the ${...} placeholder is expanded by the Beats config, not by JavaScript
               node: '${NODE_NAME}',
+              // eslint-disable-next-line no-template-curly-in-string -- the ${...} placeholder is expanded by the Beats config, not by JavaScript
               hosts: ['https://${NODE_IP}:10250'],
               bearer_token_file:
                 '/var/run/secrets/kubernetes.io/serviceaccount/token',

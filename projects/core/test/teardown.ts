@@ -25,6 +25,8 @@ export default async function teardown(): Promise<void> {
     }
   } catch (error) {
     console.error('Error during global teardown:', error);
-    throw new Error('Global teardown failed to delete the KinD cluster.');
+    throw new Error('Global teardown failed to delete the KinD cluster.', {
+      cause: error,
+    });
   }
 }
