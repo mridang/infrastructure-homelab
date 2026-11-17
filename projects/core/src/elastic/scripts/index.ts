@@ -29,6 +29,13 @@ void (async () => {
   }
 
   /**
+   * Acknowledgement returned by Elasticsearch for an accepted request.
+   */
+  interface Acknowledgement {
+    acknowledged: boolean;
+  }
+
+  /**
    * Rollover response returned by Elasticsearch for a data stream or alias.
    */
   interface RolloverResponse {
@@ -36,6 +43,52 @@ void (async () => {
     rolled_over: boolean;
     old_index: string;
     new_index: string;
+  }
+
+  /**
+   * Checks that the JSON body of an Elasticsearch response acknowledges the request.
+   * @param data - The parsed JSON body.
+   * @returns The body, once it is known to carry a boolean `acknowledged` field.
+   * @example
+   * const { acknowledged } = toAcknowledgement(await response.json());
+   */
+  function toAcknowledgement(data: unknown): Acknowledgement {
+    const fields: Record<string, unknown> =
+      typeof data === 'object' && data !== null
+        ? Object.fromEntries(Object.entries(data))
+        : {};
+    if (typeof fields.acknowledged !== 'boolean') {
+      throw new TypeError(`Unexpected response: ${JSON.stringify(data)}`);
+    }
+    return { acknowledged: fields.acknowledged };
+  }
+
+  /**
+   * Checks that the JSON body of a rollover response carries the fields of a rollover result.
+   * @param data - The parsed JSON body.
+   * @returns The body, once its fields are known to have the types of a rollover result.
+   * @example
+   * const { old_index } = toRollover(await response.json());
+   */
+  function toRollover(data: unknown): RolloverResponse {
+    const fields: Record<string, unknown> =
+      typeof data === 'object' && data !== null
+        ? Object.fromEntries(Object.entries(data))
+        : {};
+    if (
+      typeof fields.acknowledged !== 'boolean' ||
+      typeof fields.rolled_over !== 'boolean' ||
+      typeof fields.old_index !== 'string' ||
+      typeof fields.new_index !== 'string'
+    ) {
+      throw new TypeError(`Unexpected response: ${JSON.stringify(data)}`);
+    }
+    return {
+      acknowledged: fields.acknowledged,
+      rolled_over: fields.rolled_over,
+      old_index: fields.old_index,
+      new_index: fields.new_index,
+    };
   }
 
   try {
@@ -62,7 +115,7 @@ void (async () => {
         `HTTP error! Status: ${response.status} ${response.statusText}`,
       );
     }
-    const data = (await response.json()) as { acknowledged: boolean };
+    const data = toAcknowledgement(await response.json());
     if (data.acknowledged) {
       console.log('Index template "no-replication" upserted successfully');
     } else {
@@ -90,7 +143,7 @@ void (async () => {
         `HTTP error! Status: ${response.status} ${response.statusText}`,
       );
     }
-    const data = (await response.json()) as { acknowledged: boolean };
+    const data = toAcknowledgement(await response.json());
     if (data.acknowledged) {
       console.log('Index template "bump-max-fields" upserted successfully');
     } else {
@@ -120,7 +173,7 @@ void (async () => {
         `HTTP error! Status: ${response.status} ${response.statusText}`,
       );
     }
-    const data = (await response.json()) as { acknowledged: boolean };
+    const data = toAcknowledgement(await response.json());
     if (data.acknowledged) {
       console.log('Lifecycle policy "packetbeat" updated successfully');
     } else {
@@ -142,7 +195,7 @@ void (async () => {
           `HTTP error! Status: ${response.status} ${response.statusText}`,
         );
       }
-      const data = (await response.json()) as RolloverResponse;
+      const data = toRollover(await response.json());
       if (!data.acknowledged || !data.rolled_over) {
         throw new Error(`Unexpected response: ${JSON.stringify(data)}`);
       }

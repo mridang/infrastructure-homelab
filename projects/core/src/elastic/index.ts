@@ -20,6 +20,30 @@ interface ElasticsearchResource {
   status?: { health?: string };
 }
 
+/**
+ * Reads the output of `kubectl get elasticsearch -o json`.
+ * @param json - The JSON text kubectl printed.
+ * @returns The part of the resource this module reads, with the health only when it is a string.
+ * @example
+ * const { status } = parseElasticsearchResource('{"status":{"health":"green"}}');
+ */
+function parseElasticsearchResource(json: string): ElasticsearchResource {
+  const parsed: unknown = JSON.parse(json);
+  if (typeof parsed !== 'object' || parsed === null || !('status' in parsed)) {
+    return {};
+  }
+  const { status } = parsed;
+  if (
+    typeof status !== 'object' ||
+    status === null ||
+    !('health' in status) ||
+    typeof status.health !== 'string'
+  ) {
+    return { status: {} };
+  }
+  return { status: { health: status.health } };
+}
+
 // eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new helm.v3.Release(
   'eck-operator',
@@ -60,9 +84,8 @@ if (settings.lazyOps) {
         const { stdout: result } = await execAsync(
           `kubectl get elasticsearch ${name} -n ${namespace} -o json`,
         );
-        const jsonResult = JSON.parse(result) as
-          ElasticsearchResource | undefined;
-        const health = jsonResult?.status?.health || '';
+        const jsonResult = parseElasticsearchResource(result);
+        const health = jsonResult.status?.health || '';
 
         await log.debug(`Cluster health status: ${health}`);
 

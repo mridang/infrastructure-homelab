@@ -7,9 +7,9 @@ import { createContext, runInContext } from 'node:vm';
 import { ModuleKind, ScriptTarget, transpileModule } from 'typescript';
 
 // eslint-disable-next-line tslop/no-known-value-widening -- the level is looked up by a string captured from the log line, so the dictionary must stay open
-const dummyData = {
+const dummyData: Record<string, string | undefined> = {
   message: 'foo',
-} as Record<string, string>;
+};
 
 /**
  * Stand-in for the Beats event object, used to run each processor once at build time.
@@ -17,11 +17,8 @@ const dummyData = {
 /* eslint-disable sonarjs/function-name -- the Beats event API fixes these method names */
 const dummyEvent = {
   // The Beats event API fixes these method names.
-  Get<T>(key: string): T | undefined {
-    if (dummyData[key]) {
-      return dummyData[key] as T;
-    }
-    return undefined;
+  Get(key: string): string | undefined {
+    return dummyData[key] || undefined;
   },
 
   Put(key: string, value: string): string {
