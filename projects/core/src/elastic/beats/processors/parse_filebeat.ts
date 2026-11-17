@@ -28,7 +28,7 @@ const logPattern = /^\[(debug|info|warn|error|dpanic|panic|fatal)\]\s+(.+)$/u;
 function processLog(event: BeatsEvent): void {
   const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {
-    event.Put('log.level', ecsLevels[logMatch[1]?.toLowerCase()] || 'unknown');
+    event.Put('log.level', ecsLevels[logMatch[1].toLowerCase()] || 'unknown');
     event.Put('message', logMatch[2]);
   }
 }

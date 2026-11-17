@@ -27,7 +27,7 @@ const logPattern =
 function processLog(event: BeatsEvent): void {
   const logMatch = event.Get<string>('message')?.match(logPattern);
   if (logMatch) {
-    event.Put('log.level', ecsLevels[logMatch[2]?.toLowerCase()] || 'unknown');
+    event.Put('log.level', ecsLevels[logMatch[2].toLowerCase()] || 'unknown');
     event.Put('message', logMatch[3]);
   }
 }

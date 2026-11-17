@@ -3,6 +3,7 @@
  */
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
+import { types } from 'node:util';
 import { createContext, runInContext } from 'node:vm';
 import { ModuleKind, ScriptTarget, transpileModule } from 'typescript';
 
@@ -31,7 +32,11 @@ function loadLogPattern(processorId: string): RegExp {
   const context = createContext({ module: { exports: {} }, exports: {} });
   // eslint-disable-next-line sonarjs/code-eval -- the test evaluates a repository processor script to read its pattern, as the processors index does
   runInContext(outputText.replaceAll(/\bconst\b/gu, 'var'), context);
-  return context.logPattern as RegExp;
+  const logPattern: unknown = context.logPattern;
+  if (!types.isRegExp(logPattern)) {
+    throw new TypeError(`${processorId} must define a logPattern`);
+  }
+  return logPattern;
 }
 
 /**

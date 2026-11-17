@@ -12,6 +12,6 @@ export async function run(
   options: SpawnOptions = {},
 ): Promise<number> {
   const child = spawn(command, args, options);
-  const [code] = (await once(child, 'close')) as [number | null];
-  return code ?? 1;
+  await once(child, 'close');
+  return child.exitCode ?? 1;
 }

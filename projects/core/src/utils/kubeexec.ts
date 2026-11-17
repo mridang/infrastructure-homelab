@@ -13,7 +13,8 @@ import { once } from 'node:events';
  */
 async function execInherit(command: string): Promise<void> {
   const child = spawn(command, { shell: true, stdio: 'inherit' });
-  const [code] = (await once(child, 'close')) as [number | null];
+  await once(child, 'close');
+  const code = child.exitCode;
   if (code !== 0) {
     throw new Error(`Command failed with exit code ${code}: ${command}`);
   }
