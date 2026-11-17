@@ -16,5 +16,8 @@
   "files": [
     "src",
     "Pulumi.yaml"
-  ]
+  ],
+  "engines": {
+    "node": ">=20"
+  }
 }

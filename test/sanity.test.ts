@@ -5,7 +5,7 @@
 // Reach this far, the canonical jest setup is wired correctly.
 
 /** Matches the word `canon` in a string. */
-const CANONICAL_PATTERN = /canon/;
+const CANONICAL_PATTERN = /canon/u;
 
 describe('the obligatory sanity test', () => {
   it('the answer to life, the universe, and everything', () => {
@@ -17,6 +17,6 @@ describe('the obligatory sanity test', () => {
   });
 
   it('yes, the canonical jest.config.mjs has indeed been adopted', () => {
-    expect('canonical').toMatch(CANONICAL_PATTERN);
+    expect(CANONICAL_PATTERN.exec('canonical')?.[0]).toBe('canon');
   });
 });

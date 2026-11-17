@@ -1,11 +1,12 @@
 /**
  * @file Global Jest setup that points Pulumi at a temporary backend and creates a KinD cluster.
  */
-// eslint-disable-next-line e18e/ban-dependencies -- process.loadEnvFile throws when .env is missing where config() ignores it, so the swap would change test setup
-import { config } from 'dotenv';
+
 import { mkdtemp } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
+// eslint-disable-next-line e18e/ban-dependencies -- process.loadEnvFile throws when .env is missing where config() ignores it, so the swap would change test setup
+import { config } from 'dotenv';
 import { run } from './utils/exec';
 
 config();
@@ -34,6 +35,8 @@ export default async function setup(): Promise<void> {
     }
   } catch (error) {
     console.error('Error during global setup:', error);
-    throw new Error('Global setup failed to create the KinD cluster.');
+    throw new Error('Global setup failed to create the KinD cluster.', {
+      cause: error,
+    });
   }
 }

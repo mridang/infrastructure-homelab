@@ -3,6 +3,7 @@
 /**
  * @file Beats script processor that maps the severity letter and message of a klog line onto ECS fields.
  */
+// eslint-disable-next-line tslop/no-known-value-widening -- the level is looked up by a string captured from the log line, so the dictionary must stay open
 const ecsLevels: Record<string, string> = {
   i: 'info',
   w: 'warn',
@@ -12,7 +13,7 @@ const ecsLevels: Record<string, string> = {
 
 const logPattern =
   // eslint-disable-next-line sonarjs/super-linear-regex -- the overlapping whitespace and wildcard have no exactly equivalent non-overlapping form, and the input is one log line
-  /^([IWEF])(\d{4} \d{2}:\d{2}:\d{2}\.\d+)\s+\d+\s+.*?]\s(.*)$/;
+  /^([IWEF])(\d{4} \d{2}:\d{2}:\d{2}\.\d+)\s+\d+\s+.*?\]\s(.*)$/u;
 
 /**
  * Maps the severity letter and message of a klog line onto ECS fields.

@@ -1,11 +1,12 @@
 /**
  * @file Builds the Elastic Beats script processors from the `parse_*.ts` files stored next to it.
  */
-import { ModuleKind, ScriptTarget, transpileModule } from 'typescript';
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { createContext, runInContext } from 'node:vm';
+import { ModuleKind, ScriptTarget, transpileModule } from 'typescript';
 
+// eslint-disable-next-line tslop/no-known-value-widening -- the level is looked up by a string captured from the log line, so the dictionary must stay open
 const dummyData = {
   message: 'foo',
 } as Record<string, string>;
@@ -24,13 +25,16 @@ const dummyEvent = {
   },
 
   Put(key: string, value: string): string {
+    // eslint-disable-next-line functional/immutable-data -- this stand-in stores event fields in place, as the Beats event object does
     dummyData[key] = value;
     return value;
   },
 
   Rename(sourceKey: string, targetKey: string): boolean {
     if (dummyData[sourceKey] !== undefined) {
+      // eslint-disable-next-line functional/immutable-data -- this stand-in stores event fields in place, as the Beats event object does
       dummyData[targetKey] = dummyData[sourceKey];
+      // eslint-disable-next-line functional/immutable-data -- this stand-in stores event fields in place, as the Beats event object does
       delete dummyData[sourceKey];
       return true;
     }
@@ -39,6 +43,7 @@ const dummyEvent = {
 
   Delete(key: string): boolean {
     if (dummyData[key] !== undefined) {
+      // eslint-disable-next-line functional/immutable-data -- this stand-in stores event fields in place, as the Beats event object does
       delete dummyData[key];
       return true;
     }
@@ -55,8 +60,10 @@ const dummyEvent = {
 
   AppendTo(key: string, value: string): void {
     if (dummyData[key]) {
+      // eslint-disable-next-line functional/immutable-data -- this stand-in stores event fields in place, as the Beats event object does
       dummyData[key] += value; // Append value to existing data
     } else {
+      // eslint-disable-next-line functional/immutable-data -- this stand-in stores event fields in place, as the Beats event object does
       dummyData[key] = value; // If key doesn't exist, create it
     }
   },
@@ -68,7 +75,7 @@ const dummyEvent = {
 const processorDirectory = __dirname;
 
 /** Matches the TypeScript file name of a script processor. */
-const PARSER_FILE_PATTERN = /^parse_.*\.ts$/;
+const PARSER_FILE_PATTERN = /^parse_.*\.ts$/u;
 
 /** The sandbox a processor script runs in, and the globals it leaves on it. */
 type ProcessorSandbox = {
@@ -84,13 +91,11 @@ const processorFiles = readdirSync(processorDirectory);
 
 export const scriptProcessors = processorFiles
   .filter((file) => PARSER_FILE_PATTERN.test(file))
-  .map((file) => {
-    return {
-      processorId: path.basename(file, '.ts'),
-      // eslint-disable-next-line n/no-sync -- scriptProcessors is a synchronous module-level export read at require time by the Pulumi program, so it cannot await
-      fileContent: readFileSync(path.join(processorDirectory, file), 'utf8'),
-    };
-  })
+  .map((file) => ({
+    processorId: path.basename(file, '.ts'),
+    // eslint-disable-next-line n/no-sync -- scriptProcessors is a synchronous module-level export read at require time by the Pulumi program, so it cannot await
+    fileContent: readFileSync(path.join(processorDirectory, file), 'utf8'),
+  }))
   .map(({ processorId, fileContent }) => {
     const { outputText: transpiledCode } = transpileModule(fileContent, {
       compilerOptions: {
@@ -107,9 +112,8 @@ export const scriptProcessors = processorFiles
         processorId,
         transpiledCode,
       };
-    } else {
-      throw new Error(`Transpilation failed for file: ${processorId}`);
     }
+    throw new Error(`Transpilation failed for file: ${processorId}`);
   })
   .map(({ processorId, transpiledCode }) => {
     const context: ProcessorSandbox = {
@@ -146,9 +150,8 @@ export const scriptProcessors = processorFiles
             source: transpiledCode.replace('processLog', 'process'),
           },
         };
-      } else {
-        throw new Error(`Invalid data encountered in file: ${processorId}`);
       }
+      throw new Error(`Invalid data encountered in file: ${processorId}`);
     } else {
       throw new TypeError(
         `'process' function not found in file: ${processorId}`,

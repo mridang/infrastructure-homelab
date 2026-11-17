@@ -5,6 +5,7 @@ import { apps, core } from '@pulumi/kubernetes';
 import provider from './provider';
 import { settings } from './settings';
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new apps.v1.DeploymentPatch(
   'coredns-annotations-patch',
   {
@@ -46,6 +47,7 @@ new apps.v1.DeploymentPatch(
  *
  * `kubectl logs --namespace=kube-system --selector=k8s-app=kube-dns --follow`.
  */
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new core.v1.ConfigMap(
   'coredns',
   {

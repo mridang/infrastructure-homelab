@@ -3,6 +3,7 @@
 /**
  * @file Beats script processor that maps the bracketed level and text of a Filebeat log line onto ECS fields.
  */
+// eslint-disable-next-line tslop/no-known-value-widening -- the level is looked up by a string captured from the log line, so the dictionary must stay open
 const ecsLevels: Record<string, string> = {
   debug: 'debug',
   info: 'info',
@@ -14,7 +15,7 @@ const ecsLevels: Record<string, string> = {
 };
 
 // eslint-disable-next-line sonarjs/super-linear-regex -- the overlapping whitespace and wildcard have no exactly equivalent non-overlapping form, and the input is one log line
-const logPattern = /^\[(debug|info|warn|error|dpanic|panic|fatal)\]\s+(.+)$/;
+const logPattern = /^\[(debug|info|warn|error|dpanic|panic|fatal)\]\s+(.+)$/u;
 
 /**
  * Maps the bracketed level and text of a Filebeat log line onto ECS fields.

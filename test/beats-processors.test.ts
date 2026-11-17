@@ -30,7 +30,7 @@ function loadLogPattern(processorId: string): RegExp {
   });
   const context = createContext({ module: { exports: {} }, exports: {} });
   // eslint-disable-next-line sonarjs/code-eval -- the test evaluates a repository processor script to read its pattern, as the processors index does
-  runInContext(outputText.replaceAll(/\bconst\b/g, 'var'), context);
+  runInContext(outputText.replaceAll(/\bconst\b/gu, 'var'), context);
   return context.logPattern as RegExp;
 }
 
@@ -41,7 +41,7 @@ function loadLogPattern(processorId: string): RegExp {
  * const tails = buildTails();
  */
 function buildTails(): string[] {
-  const pieces = [' ', 'x', '\n', '\r', ' ', 'a b'];
+  const pieces = [' ', 'x', '\n', '\r', '\u2028', 'a b'];
   let tails = [''];
   for (let round = 0; round < 4; round++) {
     tails = [
@@ -56,7 +56,7 @@ function buildTails(): string[] {
 const rows: [string, RegExp, string[]][] = [
   [
     'parse_ipfs',
-    /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)\s+(DEBUG|INFO|WARN|ERROR|DPANIC|FATAL)\s+(.*)$/,
+    /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)\s+(DEBUG|INFO|WARN|ERROR|DPANIC|FATAL)\s+(.*)$/u,
     [
       '2025-01-20T15:01:53.123Z INFO',
       '2025-01-20T15:01:53.123Z  FATAL',
@@ -65,7 +65,7 @@ const rows: [string, RegExp, string[]][] = [
   ],
   [
     'parse_traefik',
-    /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)\s+(TRC|DBG|INF|WRN|ERR|FTL|PNC)\s+(.*)$/,
+    /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)\s+(TRC|DBG|INF|WRN|ERR|FTL|PNC)\s+(.*)$/u,
     [
       '2025-01-20T15:01:53Z INF',
       '2025-01-20T15:01:53Z  PNC',
@@ -74,7 +74,7 @@ const rows: [string, RegExp, string[]][] = [
   ],
   [
     'parse_tailscale',
-    /^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})\s+(.*)$/,
+    /^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})\s+(.*)$/u,
     ['2025/01/20 02:48:34', '2025/01/20 02:48:3'],
   ],
 ];

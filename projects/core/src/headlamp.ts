@@ -17,6 +17,7 @@ const headlamp = new helm.v3.Chart('headlamp', {
   },
 });
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new networking.v1.Ingress(
   'tailscale-headlamp-ingress',
   {

@@ -7,6 +7,7 @@ import provider from '../provider';
 import { tailscale } from '../tailscale';
 import { settings } from '../settings';
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new core.v1.Secret('argocd-webhook-secret', {
   metadata: {
     name: 'argocd-webhook-secret',
@@ -44,6 +45,7 @@ const argoCD = new helm.v3.Release('argocd-operator', {
   },
 });
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new networking.v1.Ingress(
   'tailscale-argocd-ingress',
   {

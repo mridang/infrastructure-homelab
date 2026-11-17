@@ -3,6 +3,7 @@
 /**
  * @file Beats script processor that maps the level and message of an Argo CD logfmt line onto ECS fields.
  */
+// eslint-disable-next-line tslop/no-known-value-widening -- the level is looked up by a string captured from the log line, so the dictionary must stay open
 const ecsLevels: Record<string, string> = {
   debug: 'debug',
   info: 'info',
@@ -11,7 +12,7 @@ const ecsLevels: Record<string, string> = {
 };
 
 const logPattern =
-  /^time="(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)"\s+level=(debug|info|warn|error)\s+msg="([^"]+)"/;
+  /^time="(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)"\s+level=(debug|info|warn|error)\s+msg="([^"]+)"/u;
 
 /**
  * Maps the level and message of an Argo CD logfmt line onto ECS fields.

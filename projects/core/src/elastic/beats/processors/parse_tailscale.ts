@@ -3,7 +3,7 @@
 /**
  * @file Beats script processor that strips the date and time from a Tailscale log line and sets its level to info.
  */
-const logPattern = /^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})\s+((?:\S.*)?)$/;
+const logPattern = /^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})\s+((?:\S.*)?)$/u;
 
 /**
  * Strips the date and time from a Tailscale log line and sets its level to info.

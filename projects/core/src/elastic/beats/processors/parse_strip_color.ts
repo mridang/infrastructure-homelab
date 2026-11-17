@@ -4,7 +4,7 @@
  * @file Beats script processor that removes ANSI colour escape sequences from the event message.
  */
 const logPattern =
-  /[\u001B\u009B][[()#;?]*(?:\d{1,4}(?:;\d{0,4})*)?[0-9A-ORZcf-nqry=><]/g; // eslint-disable-line no-control-regex, sonarjs/no-control-regex -- ANSI escape sequences are matched on purpose
+  /[\u001B\u009B][[()#;?]*(?:\d{1,4}(?:;\d{0,4})*)?[0-9A-ORZcf-nqry=><]/gu; // eslint-disable-line no-control-regex, sonarjs/no-control-regex -- ANSI escape sequences are matched on purpose
 
 /**
  * Removes ANSI colour escape sequences from the event message.

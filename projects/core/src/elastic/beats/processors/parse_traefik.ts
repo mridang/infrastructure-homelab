@@ -3,6 +3,7 @@
 /**
  * @file Beats script processor that maps the level and message of a Traefik log line onto ECS fields.
  */
+// eslint-disable-next-line tslop/no-known-value-widening -- the level is looked up by a string captured from the log line, so the dictionary must stay open
 const ecsLevels: Record<string, string> = {
   trc: 'debug',
   dbg: 'debug',
@@ -14,7 +15,7 @@ const ecsLevels: Record<string, string> = {
 };
 
 const logPattern =
-  /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)\s+(TRC|DBG|INF|WRN|ERR|FTL|PNC)\s+((?:\S.*)?)$/;
+  /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)\s+(TRC|DBG|INF|WRN|ERR|FTL|PNC)\s+((?:\S.*)?)$/u;
 
 /**
  * Maps the level and message of a Traefik log line onto ECS fields.

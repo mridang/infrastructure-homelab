@@ -33,6 +33,7 @@ const filebeatClusterRole = new rbac.v1.ClusterRole('filebeat', {
   ],
 });
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new rbac.v1.ClusterRoleBinding('filebeat', {
   metadata: { name: 'filebeat' },
   subjects: [
@@ -49,6 +50,7 @@ new rbac.v1.ClusterRoleBinding('filebeat', {
   },
 });
 
+// eslint-disable-next-line no-new -- a Pulumi resource registers itself on construction
 new apiextensions.CustomResource(
   'filebeat',
   {
@@ -75,12 +77,14 @@ new apiextensions.CustomResource(
             providers: [
               {
                 type: 'kubernetes',
+                // eslint-disable-next-line no-template-curly-in-string -- the ${...} placeholder is expanded by the Beats config, not by JavaScript
                 node: '${NODE_NAME}',
                 hints: {
                   enabled: true,
                   default_config: {
                     type: 'container',
                     paths: [
+                      // eslint-disable-next-line no-template-curly-in-string -- the ${...} placeholder is expanded by the Beats config, not by JavaScript
                       '/var/log/containers/*${data.kubernetes.container.id}.log',
                     ],
                   },

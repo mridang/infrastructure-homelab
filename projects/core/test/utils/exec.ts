@@ -1,6 +1,7 @@
-import { exec, execFile, spawn, type SpawnOptions } from 'node:child_process';
+import { exec, execFile, spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { promisify } from 'node:util';
+import type { SpawnOptions } from 'node:child_process';
 
 export const execAsync = promisify(exec);
 export const execFileAsync = promisify(execFile);
